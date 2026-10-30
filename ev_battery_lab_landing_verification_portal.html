@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="et" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GVK FORGE | Elektriautode Veojõuakude Sertifitseeritud Diagnostika Tallinn</title>
+    <meta name="description" content="Sõltumatu elektriautode kõrgepingeaku diagnostika ja ostueelne audit kohalesõiduga Tallinnas ja Harjumaal. UN GTR No. 22 / Euro 7 sertifikaat kohapeal 15 minutiga.">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                            900: '#0f172a',
+                            950: '#020617',
+                        },
+                        accent: {
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            rose: '#ef4444',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono-code { font-family: 'JetBrains Mono', monospace; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-panel-light {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .glow-emerald {
+            box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.3);
+        }
+        .glow-sky {
+            box-shadow: 0 0 25px -5px rgba(2, 132, 199, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 selection:bg-sky-500 selection:text-white antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Top Notice Banner -->
+    <div class="bg-gradient-to-r from-sky-900 via-slate-900 to-emerald-950 border-b border-sky-800/40 text-xs py-2 px-4 text-center font-medium text-slate-300">
+        <span class="inline-flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Euroopa Liidu akuhalduse standard: <strong class="text-white font-semibold">UN GTR No. 22 / Euro 7</strong> ühilduv audit Tallinnas ja Harjumaal
+        </span>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/80 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 via-blue-600 to-emerald-500 p-0.5 shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-transform">
+                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+                        <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-extrabold tracking-tight text-lg text-white">GVK FORGE</span>
+                        <span class="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/30">EV Lab</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 font-medium">Veojõuakude Labor & Telemeetria Audit</p>
+                </div>
+            </a>
+
+            <!-- Nav Links Desktop -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="#teenused" class="hover:text-sky-400 transition-colors">Teenused</a>
+                <a href="#hinnad" class="hover:text-sky-400 transition-colors">Hinnad</a>
+                <a href="#kontroll" class="hover:text-sky-400 transition-colors flex items-center gap-1.5 text-emerald-400 font-semibold">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Sertifikaadi kontroll
+                </a>
+                <a href="#eelised" class="hover:text-sky-400 transition-colors">Eelised</a>
+                <a href="#kontakt" class="hover:text-sky-400 transition-colors">Kontakt</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-3">
+                <a href="tel:+37255550000" class="hidden sm:inline-flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-slate-600 text-slate-300 transition">
+                    <svg class="w-3.5 h-3.5 text-sky-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                    </svg>
+                    <span>+372 5812 3456</span>
+                </a>
+                <button onclick="openBookingModal('Dünaamiline koormustest (135 €)')" class="inline-flex items-center gap-2 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-lg shadow-sky-500/20 active:scale-95 transition">
+                    <span>Telli diagnostika</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden">
+        <!-- Glow spots -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-sky-500/10 blur-[130px] rounded-full pointer-events-none"></div>
+        <div class="absolute top-1/3 right-10 w-[350px] h-[300px] bg-emerald-500/10 blur-[100px] rounded-full pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-700/80 text-xs font-medium text-slate-300 mb-6">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span>Sõltumatu ostueelne ekspertiis Tallinnas</span>
+                    <span class="text-slate-500">|</span>
+                    <span class="text-sky-400 font-semibold">15-20 min kohapeal</span>
+                </div>
+
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
+                    Elektriautode veojõuakude <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-blue-400 to-emerald-400">sertifitseeritud audit</span> kohalesõiduga
+                </h1>
+
+                <p class="mt-6 text-base sm:text-lg text-slate-300 font-normal leading-relaxed">
+                    Täielik kõrgepingeaku telemeetria: <strong>SoH jääkmahtuvus</strong>, 96 elemendi pinge koormuse all, dünaamiline <strong>SAG-proov täisgaasil</strong> ning <strong>UN GTR No. 22 / Euro 7</strong> vastavusakt Auto24 või liisingu jaoks.
+                </p>
+
+                <!-- Action CTAs -->
+                <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button onclick="openBookingModal('Üldine tellimus')" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-sm shadow-xl shadow-sky-500/25 active:scale-95 transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span>Kutsu tehnik kohale</span>
+                    </button>
+                    <a href="#kontroll" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-slate-200 font-semibold text-sm transition">
+                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        <span>Kontrolli sertifikaati</span>
+                    </a>
+                </div>
+
+                <!-- Trust Badges List -->
+                <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-3 text-left">
+                    <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
+                        <div class="text-sky-400 font-bold text-xs uppercase tracking-wider">EL Standard</div>
+                        <div class="text-white font-semibold text-sm mt-0.5">UN GTR No. 22 / Euro 7</div>
+                        <div class="text-[11px] text-slate-400 mt-1">Ametlik aku kulumisnorm</div>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
+                        <div class="text-emerald-400 font-bold text-xs uppercase tracking-wider">Täpne riistvara</div>
+                        <div class="text-white font-semibold text-sm mt-0.5">96 Elemendi Pinge</div>
+                        <div class="text-[11px] text-slate-400 mt-1">Otsene BMS telemeetria</div>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
+                        <div class="text-sky-400 font-bold text-xs uppercase tracking-wider">Kiirus</div>
+                        <div class="text-white font-semibold text-sm mt-0.5">Raport 15 Minutiga</div>
+                        <div class="text-[11px] text-slate-400 mt-1">PDF kohe e-mailile ja QR-ina</div>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
+                        <div class="text-emerald-400 font-bold text-xs uppercase tracking-wider">Sõltumatus</div>
+                        <div class="text-white font-semibold text-sm mt-0.5">100% Erapooletu</div>
+                        <div class="text-[11px] text-slate-400 mt-1">Ei tegele auto müügiga</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LIVE CERTIFICATE VERIFIER SECTION -->
+    <section id="kontroll" class="py-16 bg-slate-900/90 border-y border-slate-800 relative scroll-mt-24">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold uppercase tracking-wider">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    Autentsuse Register
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-3">Ametliku sertifikaadi digitaalne verifitseerimine</h2>
+                <p class="text-slate-400 text-sm mt-2">Sisesta sertifikaadi number (nt trükitud PDF-dokumendilt või Auto24 kuulutusest) või sõiduki registreerimismärk.</p>
+            </div>
+
+            <!-- Search Bar Card -->
+            <div class="p-4 sm:p-6 rounded-2xl bg-slate-950/80 border border-slate-800 shadow-2xl">
+                <form id="verifyForm" class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                        <input type="text" id="certInput" placeholder="Sisesta sertifikaadi nr (nt EV-20261029-153221) või reg märk (275 JPN)" class="w-full pl-11 pr-4 py-3.5 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 font-mono text-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition">
+                    </div>
+                    <button type="submit" class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 active:scale-95 transition">
+                        <span>Kontrolli autentsust</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </form>
+
+                <!-- Quick Samples -->
+                <div class="mt-3.5 pt-3 border-t border-slate-800/80 flex flex-wrap items-center gap-2 text-xs text-slate-400">
+                    <span class="text-slate-500">Proovi näidiseid:</span>
+                    <button type="button" onclick="setQuickSearch('EV-20261029-153221')" class="font-mono text-sky-400 hover:text-sky-300 underline underline-offset-2">EV-20261029-153221 (Nissan Leaf)</button>
+                    <span class="text-slate-600">·</span>
+                    <button type="button" onclick="setQuickSearch('EV-20261028-110419')" class="font-mono text-emerald-400 hover:text-emerald-300 underline underline-offset-2">EV-20261028-110419 (Tesla Model 3)</button>
+                    <span class="text-slate-600">·</span>
+                    <button type="button" onclick="setQuickSearch('275 JPN')" class="font-mono text-slate-300 hover:text-white underline underline-offset-2">275 JPN</button>
+                </div>
+            </div>
+
+            <!-- Verification Result Container (Dynamic) -->
+            <div id="verifyResult" class="mt-6 hidden transition-all duration-300">
+                <!-- Injected via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Services & Pricing -->
+    <section id="hinnad" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-20">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-sky-400 text-xs font-bold uppercase tracking-wider">Hinnakiri & Paketid</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Läbipaistev diagnostika ilma varjatud tasudeta</h2>
+            <p class="text-slate-400 text-sm mt-3">Tuleme kokkulepitud ajaks kohale auto asukohta Tallinnas. Tulemused ja ametlik raport väljastatakse kohapeal.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
+            <!-- Plan 1: Static -->
+            <div class="p-8 rounded-2xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition">
+                <div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 uppercase tracking-wide">Puhkeolekus</span>
+                            <h3 class="text-xl font-bold text-white mt-3">Staatiline Ekspresstest</h3>
+                            <p class="text-xs text-slate-400 mt-1">Kiire müügieelne ja ostueelne põhikontroll kohapeal seisval autol.</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex items-baseline gap-1">
+                        <span class="text-4xl font-extrabold text-white">65</span>
+                        <span class="text-xl font-bold text-slate-300">€</span>
+                        <span class="text-xs text-slate-500 ml-2">/ sõiduk</span>
+                    </div>
+
+                    <ul class="mt-8 space-y-3.5 text-sm text-slate-300">
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span>Ajakulu: <strong>10–15 minutit</strong> kohapeal</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span>Elementide staatiline pingevahe (ΔV norm &lt; 35 mV)</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span>Aku tervis (SoH %) ja tegelik allesolev mahtuvus (kWh)</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span>Kõrgepinge isolatsioonitakistuse kontroll</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span>BMS veamälu ja peidetud veakoodide (DTC) skaneerimine</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span>Ametlik digitaalne PDF sertifikaat unikaalse QR-koodiga</span>
+                        </li>
+                    </ul>
+                </div>
+                <button onclick="openBookingModal('Staatiline ekspresstest (65 €)')" class="mt-8 w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm transition">
+                    Vali ekspresstest
+                </button>
+            </div>
+
+            <!-- Plan 2: Dynamic (Recommended) -->
+            <div class="p-8 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-sky-500/80 flex flex-col justify-between relative shadow-2xl shadow-sky-500/10">
+                <div class="absolute -top-3.5 right-6 bg-gradient-to-r from-sky-500 to-blue-600 text-white text-[11px] font-bold uppercase tracking-wider py-1 px-3 rounded-full shadow-md">
+                    Ostja lemmik / Soovitatud
+                </div>
+                <div>
+                    <div>
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-sky-500/20 text-sky-300 uppercase tracking-wide">Täiskoormusel sõidutest</span>
+                        <h3 class="text-xl font-bold text-white mt-3">Dünaamiline Koormusaudit</h3>
+                        <p class="text-xs text-slate-400 mt-1">Põhjalik laboratoorne analüüs kiirendusel ja rekuperatsioonil (kuni -200 A).</p>
+                    </div>
+
+                    <div class="mt-6 flex items-baseline gap-1">
+                        <span class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400">135</span>
+                        <span class="text-xl font-bold text-white">€</span>
+                        <span class="text-xs text-slate-500 ml-2">/ sõiduk</span>
+                    </div>
+
+                    <ul class="mt-8 space-y-3.5 text-sm text-slate-200">
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-sky-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span><strong>Kõik ekspresstesti parameetrid</strong> hinnas</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-sky-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span><strong>Sõidutest täisgaasil</strong> (koormusvool kuni -200A)</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-sky-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span><strong>Dünaamilise pingelangu (SAG)</strong> ja nõrga elemendi tuvastus</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-sky-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span>Kõikide 96 elemendi <strong>sisetakistuse (mOhm)</strong> maatriks</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-sky-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span><strong>Reaalne sõiduulatus:</strong> Talv (-10°C) vs Suvi (+20°C)</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-sky-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span><strong>UN GTR No. 22 / Euro 7</strong> ametlik vastavushinnang</span>
+                        </li>
+                    </ul>
+                </div>
+                <button onclick="openBookingModal('Dünaamiline koormustest (135 €)')" class="mt-8 w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-sm shadow-lg shadow-sky-500/25 active:scale-95 transition">
+                    Telli täiskoormuse audit
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-8 text-center text-xs text-slate-400 max-w-xl mx-auto">
+            * Kohalesõit Tallinna piires sisaldub hinnas. Harjumaal väljaspool Tallinna linna piiri lisandub kokkuleppel kütusetasu (0.50 € / km).
+        </div>
+    </section>
+
+    <!-- Why GVK Forge (Bento Grid) -->
+    <section id="eelised" class="py-20 bg-slate-900/60 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-sky-400 text-xs font-bold uppercase tracking-wider">Miks tellida meilt</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Miks armatuurlaua näidikust (SoH) ei piisa?</h2>
+                <p class="text-slate-400 text-sm mt-3">Müüjad saavad akukalibratsiooni ajutiselt nullida, kuid füüsilist koormustakistust ei saa peita.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Bento 1 -->
+                <div class="p-6 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 mb-4">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Varjatud defektsed moodulid</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                            Auto võib kohapeal seistes näidata SoH 91%, kuid täisgaasil või talvel kukub üks vigane element 3.2V peale, visates auto kilpkonna-režiimi (Turtle Mode). Me tuvastame selle koheselt.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-900 text-[11px] text-slate-500 font-mono">
+                        Pingelang koormusel (SAG): ΔV analüüs
+                    </div>
+                </div>
+
+                <!-- Bento 2 -->
+                <div class="p-6 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-4">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Osturiski maandamine</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                            Elektriauto aku vahetus või remont maksab esinduses <strong>5 000 – 14 000 €</strong>. 135-eurone audit hoiab ära katastroofilise ostuvea või annab tugeva aluse hinna allakauplemiseks.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-900 text-[11px] text-slate-500 font-mono">
+                        100% sõltumatu ostueelne garantii
+                    </div>
+                </div>
+
+                <!-- Bento 3 -->
+                <div class="p-6 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 mb-4">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Auto24 kiirem ja kallim müük</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                            Müüjana tõestad ametliku sertifikaadiga, et aku on hoitud ja vastab Euro 7 / UN GTR 22 standardile. Ostjad ostavad sellise auto kiiremini ja ei tingi hinda asjatult.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-900 text-[11px] text-slate-500 font-mono">
+                        Otselink ja QR-kood kuulutuse juurde
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative">
+            <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-9 h-9 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white">Telli aku diagnostika</h3>
+                    <p class="text-xs text-slate-400">Tuleme kohale Tallinnas ja Harjumaal</p>
+                </div>
+            </div>
+
+            <form id="orderForm" onsubmit="handleOrderSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Valitud teenus</label>
+                    <input type="text" id="modalService" readonly class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sky-400 font-semibold text-xs focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Sinu nimi</label>
+                    <input type="text" required placeholder="nt. Marko Tamm" id="orderName" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Telefoninumber</label>
+                    <input type="tel" required placeholder="nt. +372 5812 3456" id="orderPhone" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Auto mark & mudel</label>
+                        <input type="text" required placeholder="nt. Nissan Leaf, Tesla 3" id="orderCar" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Asukoht / Linnaosa</label>
+                        <input type="text" required placeholder="nt. Mustamäe / Peetri" id="orderLoc" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-500">
+                    </div>
+                </div>
+
+                <div class="pt-2 flex flex-col gap-2">
+                    <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs uppercase tracking-wider transition">
+                        Kinnita ja saada päring
+                    </button>
+                    <a id="whatsappDirectLink" href="https://wa.me/37258123456" target="_blank" class="w-full py-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 text-center font-semibold text-xs flex items-center justify-center gap-2 transition">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.173.086.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.086s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.158.572 4.186 1.572 5.945l-1.668 6.099 6.273-1.644c1.706.936 3.662 1.47 5.823 1.47 6.627 0 12-5.373 12-12s-5.373-12-12-12z"/></svg>
+                        <span>Või kirjuta kohe WhatsAppi</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <section id="kontakt" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-sky-950/70 border border-slate-800 p-8 sm:p-12 relative overflow-hidden">
+            <div class="max-w-2xl">
+                <span class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Mobiilne labor kohapeal</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">Valmis kontrollima sõidukit juba täna</h2>
+                <p class="text-slate-400 text-sm mt-3 leading-relaxed">
+                    Töötame üle kogu Tallinna ja Harjumaa (Mustamäe, Lasnamäe, Õismäe, Kesklinn, Pirita, Nõmme, Peetri, Viimsi, Jüri, Saue, Keila). Teenindame nii eraisikuid kui ka automüügiplatse ja autoparke.
+                </p>
+
+                <div class="mt-8 flex flex-wrap gap-6 text-sm text-slate-300">
+                    <div>
+                        <div class="text-slate-500 text-xs uppercase font-medium">Telefon / Broneerimine</div>
+                        <div class="font-bold text-white text-base mt-0.5">+372 5812 3456</div>
+                    </div>
+                    <div>
+                        <div class="text-slate-500 text-xs uppercase font-medium">E-post</div>
+                        <div class="font-bold text-white text-base mt-0.5">info@gvkforge.ee</div>
+                    </div>
+                    <div>
+                        <div class="text-slate-500 text-xs uppercase font-medium">Asukoht</div>
+                        <div class="font-bold text-white text-base mt-0.5">Tallinn, Eesti</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 bg-slate-950 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="font-extrabold text-white text-sm">GVK FORGE OÜ</span>
+                    <span class="text-xs text-slate-500">| EV Battery Lab</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Registrikood: 16849201 · Tallinn, Harjumaa, Eesti</p>
+                <p class="text-[11px] text-slate-600 mt-0.5">Kõik mõõtmised viiakse läbi vastavalt Euroopa Liidu määrusele UN GTR No. 22 / Euro 7.</p>
+            </div>
+
+            <div class="text-xs text-slate-500 text-center md:text-right">
+                <div>© 2026 GVK FORGE OÜ. Kõik õigused kaitstud.</div>
+                <div class="text-[11px] text-slate-600 mt-1">Sertifitseeritud sõltumatu telemeetria register</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Verification Logic & Interactive Demo Data -->
+    <script>
+        // In-memory verified registry database (corresponds directly with Python script generator)
+        const CERTIFICATE_REGISTRY = {
+            "EV-20261029-153221": {
+                cert_id: "EV-20261029-153221",
+                mode: "DÜNAAMILINE KOORMUSTEST",
+                timestamp: "2026-10-29 15:32",
+                standard: "UN GTR No. 22 / Euro 7 Compliant",
+                vehicle: {
+                    model: "Nissan Leaf ZE1 (40 kWh)",
+                    plate: "275 JPN",
+                    vin: "SJNFAAZE1U0******",
+                    mileage: "68 450 km"
+                },
+                kpi: {
+                    score: 63,
+                    score_max: 100,
+                    score_status: "VAJAB AUDITIT",
+                    soh: 91.4,
+                    soh_benchmark: "+4.6% üle turu keskmise",
+                    market_avg: "86.8%",
+                    delta_mv: 362.0,
+                    delta_status: "NORMI ÜLETUS",
+                    weakest_cell: "#42",
+                    peak_current: "-184.5 A",
+                    peak_sag_mv: "-452.0 mV",
+                    range_summer: 224,
+                    range_winter: 161
+                },
+                health: "WARNING", // HEALTHY or WARNING
+                verdict: "TÄHELEPANU: Täiskoormusel (vool -184.5 A) tuvastati kriitiline dünaamiline pingelang elementis #42 (3.260V, langus -452.0 mV, ΔV 362.0 mV). SoH (91.4%) vastab EL normile UN GTR 22 (min 80%), kuid BMS-is leiti aktiivsed veakoodid (P31B7, P0AA6). Soovitatav defektse mooduli vahetus enne ostutehingut.",
+                dtc: [
+                    { code: "P31B7", ecu: "BMS / LBC", status: "Kinnitatud", desc: "Kõrgepinge kontaktori ahela kõrvalekalle" },
+                    { code: "P0AA6", ecu: "EV Gateway", status: "Ootel", desc: "Isolatsioonitakistuse langus (< 500 kOhm)" }
+                ],
+                inspector: "GVK Forge Tehniline Audit",
+                hash: "9e107d9d372bb6826bd81d3542a419d6bc436d41829e31d348a47ff768685121",
+                pdf_download_url: "#"
+            },
+            "EV-20261028-110419": {
+                cert_id: "EV-20261028-110419",
+                mode: "DÜNAAMILINE KOORMUSTEST",
+                timestamp: "2026-10-28 11:04",
+                standard: "UN GTR No. 22 / Euro 7 Compliant",
+                vehicle: {
+                    model: "Tesla Model 3 Long Range AWD (75 kWh)",
+                    plate: "450 BMR",
+                    vin: "5YJ3E7EB2LF******",
+                    mileage: "82 100 km"
+                },
+                kpi: {
+                    score: 94,
+                    score_max: 100,
+                    score_status: "EESKUJULIK",
+                    soh: 93.8,
+                    soh_benchmark: "+5.1% üle turu keskmise",
+                    market_avg: "88.7%",
+                    delta_mv: 24.0,
+                    delta_status: "NORMI PIIRES",
+                    weakest_cell: "Puudub (kõik tasakaalus)",
+                    peak_current: "-195.0 A",
+                    peak_sag_mv: "-180.0 mV",
+                    range_summer: 480,
+                    range_winter: 360
+                },
+                health: "HEALTHY",
+                verdict: "EESKUJULIK SEISUKORD: Aku üldine mahtuvus (SoH 93.8%) ja elementide tasakaal koormusel (ΔV 24.0 mV) on ideaalses seisukorras. Veakoode ega isolatsioonirikked ei tuvastatud. Sõiduk on tehniliselt heaks kiidetud ostutehinguks.",
+                dtc: [],
+                inspector: "GVK Forge Tehniline Audit",
+                hash: "a4f891b2c7e90812345d8204b1239aa810d829148c3b17849e018d47ff987621",
+                pdf_download_url: "#"
+            }
+        };
+
+        // Plate alias index for convenience
+        const PLATE_TO_CERT = {
+            "275 JPN": "EV-20261029-153221",
+            "275JPN": "EV-20261029-153221",
+            "450 BMR": "EV-20261028-110419",
+            "450BMR": "EV-20261028-110419"
+        };
+
+        // Automatically check query parameter on page load (e.g. ?cert=EV-20261029-153221)
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const certQuery = urlParams.get('cert') || urlParams.get('c');
+            if (certQuery) {
+                document.getElementById('certInput').value = certQuery;
+                executeSearch(certQuery);
+                // Scroll to verification section
+                const section = document.getElementById('kontroll');
+                if (section) section.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        function setQuickSearch(val) {
+            document.getElementById('certInput').value = val;
+            executeSearch(val);
+        }
+
+        document.getElementById('verifyForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const val = document.getElementById('certInput').value.trim();
+            executeSearch(val);
+        });
+
+        function executeSearch(query) {
+            const resultBox = document.getElementById('verifyResult');
+            resultBox.classList.remove('hidden');
+
+            if (!query) {
+                resultBox.innerHTML = `
+                    <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center text-slate-400 text-sm">
+                        Palun sisesta otsingusse sertifikaadi number või sõiduki reg märk.
+                    </div>
+                `;
+                return;
+            }
+
+            // Normalize input
+            let cleanQuery = query.trim().toUpperCase();
+            let certKey = cleanQuery;
+
+            if (PLATE_TO_CERT[cleanQuery]) {
+                certKey = PLATE_TO_CERT[cleanQuery];
+            }
+
+            const data = CERTIFICATE_REGISTRY[certKey];
+
+            if (data) {
+                renderVerifiedCard(data);
+            } else {
+                renderNotFoundCard(query);
+            }
+        }
+
+        function renderVerifiedCard(data) {
+            const resultBox = document.getElementById('verifyResult');
+            const isHealthy = data.health === "HEALTHY";
+            const borderGlow = isHealthy ? "border-emerald-500/80 glow-emerald" : "border-amber-500/80";
+            const statusBadgeBg = isHealthy ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40" : "bg-amber-500/20 text-amber-400 border-amber-500/40";
+            const statusText = isHealthy ? "AMETLIKULT VERIFITSEERITUD · HEAS SEISUKORRAS" : "VERIFITSEERITUD · HOIATUS: DEFEKT TUVASTATUD";
+
+            resultBox.innerHTML = `
+                <div class="rounded-2xl bg-slate-950 p-6 sm:p-8 border-2 ${borderGlow} shadow-2xl transition-all">
+                    <!-- Top Status Bar -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl ${isHealthy ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'} flex items-center justify-center shrink-0">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${statusBadgeBg}">
+                                    ${statusText}
+                                </span>
+                                <h3 class="text-lg font-bold text-white mt-1">Sertifikaat: <span class="font-mono text-sky-400">${data.cert_id}</span></h3>
+                            </div>
+                        </div>
+
+                        <div class="text-left sm:text-right">
+                            <div class="text-xs text-slate-400">Testi kuupäev ja protokoll:</div>
+                            <div class="text-sm font-semibold text-slate-200">${data.timestamp} · <span class="text-sky-400">${data.mode}</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Vehicle Info Bar -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6 p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-xs">
+                        <div>
+                            <span class="text-slate-500 block">Sõiduk</span>
+                            <strong class="text-white text-sm">${data.vehicle.model}</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block">Reg. märk</span>
+                            <strong class="text-white text-sm font-mono">${data.vehicle.plate}</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block">Läbisõit</span>
+                            <strong class="text-white text-sm">${data.vehicle.mileage}</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block">VIN-kood</span>
+                            <strong class="text-white text-sm font-mono">${data.vehicle.vin}</strong>
+                        </div>
+                    </div>
+
+                    <!-- Core 4 KPI Cards -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6">
+                        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <span class="text-[10px] uppercase font-bold text-slate-400">Battery Score</span>
+                            <div class="text-xl font-extrabold text-white mt-0.5">${data.kpi.score} <span class="text-xs text-slate-500 font-normal">/ 100</span></div>
+                            <span class="text-[11px] text-sky-400 font-semibold">${data.kpi.score_status}</span>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <span class="text-[10px] uppercase font-bold text-slate-400">Aku tervis (SoH)</span>
+                            <div class="text-xl font-extrabold text-white mt-0.5">${data.kpi.soh}%</div>
+                            <span class="text-[11px] text-emerald-400 font-semibold">${data.kpi.soh_benchmark}</span>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <span class="text-[10px] uppercase font-bold text-slate-400">Pingelang (ΔV)</span>
+                            <div class="text-xl font-extrabold ${isHealthy ? 'text-emerald-400' : 'text-rose-400'} mt-0.5">${data.kpi.delta_mv} mV</div>
+                            <span class="text-[11px] text-slate-400">Nõrgim: ${data.kpi.weakest_cell}</span>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <span class="text-[10px] uppercase font-bold text-slate-400">Reaalne sõiduulatus</span>
+                            <div class="text-xl font-extrabold text-sky-400 mt-0.5">${data.kpi.range_summer} km</div>
+                            <span class="text-[11px] text-slate-400">Talvel (-10°C): ~${data.kpi.range_winter} km</span>
+                        </div>
+                    </div>
+
+                    <!-- Official Verdict Quote -->
+                    <div class="p-4 rounded-xl ${isHealthy ? 'bg-emerald-950/30 border border-emerald-800/40 text-emerald-200' : 'bg-amber-950/30 border border-amber-800/40 text-amber-200'} text-xs leading-relaxed">
+                        <strong class="block text-white mb-1 uppercase tracking-wide text-[11px]">Labori eksperthinnang:</strong>
+                        ${data.verdict}
+                    </div>
+
+                    <!-- Hash & Inspector Footer -->
+                    <div class="mt-6 pt-4 border-t border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs">
+                        <div>
+                            <div class="text-slate-500 font-mono text-[10px]">KRÜPTOGRAAFILINE RÄSI:</div>
+                            <div class="font-mono text-slate-400 text-[11px] break-all">${data.hash}</div>
+                            <div class="text-slate-500 text-[11px] mt-0.5">Vastavus: ${data.standard}</div>
+                        </div>
+
+                        <button onclick="downloadSamplePdf('${data.cert_id}')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs border border-slate-700 transition">
+                            <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <span>Laadi alla ametlik PDF</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderNotFoundCard(query) {
+            const resultBox = document.getElementById('verifyResult');
+            resultBox.innerHTML = `
+                <div class="rounded-2xl bg-slate-950 p-6 sm:p-8 border border-rose-500/50 text-center">
+                    <div class="w-12 h-12 rounded-full bg-rose-500/10 text-rose-400 mx-auto flex items-center justify-center mb-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Sertifikaati ei leitud</h3>
+                    <p class="text-xs text-slate-400 mt-1 max-w-md mx-auto">
+                        Päringule <span class="font-mono text-white">"${query}"</span> ei leitud GVK Forge OÜ ametlikus registris vastet. Kontrolli sertifikaadi numbrit või võta meiega ühendust.
+                    </p>
+                </div>
+            `;
+        }
+
+        function downloadSamplePdf(certId) {
+            // Friendly alert replacement
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-5 right-5 z-50 p-4 rounded-xl bg-slate-900 border border-sky-500/60 text-white text-xs shadow-2xl flex items-center gap-3";
+            toast.innerHTML = `
+                <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span>Avatakse sertifikaadi arhiivikirje: <strong>${certId}</strong></span>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
+        }
+
+        // Modal Controls
+        function openBookingModal(serviceName) {
+            document.getElementById('modalService').value = serviceName || 'Dünaamiline koormustest (135 €)';
+            document.getElementById('bookingModal').classList.remove('hidden');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.add('hidden');
+        }
+
+        function handleOrderSubmit(e) {
+            e.preventDefault();
+            const service = document.getElementById('modalService').value;
+            const name = document.getElementById('orderName').value;
+            const phone = document.getElementById('orderPhone').value;
+            const car = document.getElementById('orderCar').value;
+            const loc = document.getElementById('orderLoc').value;
+
+            // Prepare WhatsApp message
+            const text = encodeURIComponent(
+                `Tere! Soovin broneerida elektriauto aku diagnostika:\n` +
+                `Teenus: ${service}\n` +
+                `Nimi: ${name}\n` +
+                `Telefon: ${phone}\n` +
+                `Auto: ${car}\n` +
+                `Asukoht: ${loc}`
+            );
+
+            closeBookingModal();
+            window.open(`https://wa.me/37258123456?text=${text}`, '_blank');
+        }
+    </script>
+</body>
+</html>
