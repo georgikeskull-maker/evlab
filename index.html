@@ -209,25 +209,25 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </div>
-                        <button type="button" onclick="quickCheck('123 ABC')" class="hover:underline text-sky-400">123 ABC (Porsche Cayenne E-Hybrid)</button>
-                    </div>
-                    <button type="submit" class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 active:scale-95 transition">
-                        <span>Kontrolli autentsust</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
-                </form>
+                       <input type="text" id="certInput" name="cert_id" placeholder="nt EV-20261029-153221 või reg märk (123 ABC)" class="w-full pl-11 pr-4 py-3.5 bg-slate-900/90 border border-slate-700/80 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-colors text-sm">
+        </div>
+        <button type="submit" class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm transition-all whitespace-nowrap shadow-lg shadow-emerald-500/20 cursor-pointer">
+          <span>Kontrolli autentsust</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </form>
 
-                <!-- Quick Samples -->
-                <div class="mt-3.5 pt-3 border-t border-slate-800/80 flex flex-wrap items-center gap-2 text-xs text-slate-400">
-                    <span class="text-slate-500">Proovi näidiseid:</span>
-                    <button type="button" onclick="setQuickSearch('EV-20261029-153221')" class="font-mono text-sky-400 hover:text-sky-300 underline underline-offset-2">EV-20261029-153221 (Nissan Leaf)</button>
-                    <span class="text-slate-600">·</span>
-                    <button type="button" onclick="setQuickSearch('EV-20261028-110419')" class="font-mono text-emerald-400 hover:text-emerald-300 underline underline-offset-2">EV-20261028-110419 (Tesla Model 3)</button>
-                    <span class="text-slate-600">·</span>
-                    <button type="button" onclick="setQuickSearch('123 ABC')" class="font-mono text-slate-300 hover:text-white underline underline-offset-2">123 ABC</button>
-                </div>
+      <!-- Quick Samples -->
+      <div class="mt-3.5 pt-3 border-t border-slate-800/80 flex flex-wrap items-center gap-2 text-xs text-slate-400">
+        <span class="text-slate-500">Proovi näidiseid:</span>
+        <button type="button" onclick="setQuickSearch('EV-20261029-153221')" class="font-mono text-sky-400 hover:underline">EV-20261029-153221 (Porsche Cayenne E-Hybrid)</button>
+        <span class="text-slate-600">·</span>
+        <button type="button" onclick="setQuickSearch('EV-20261028-110419')" class="font-mono text-emerald-400 hover:underline">EV-20261028-110419 (Tesla Model 3)</button>
+        <span class="text-slate-600">·</span>
+        <button type="button" onclick="setQuickSearch('123 ABC')" class="font-mono text-slate-300 hover:text-white underline decoration-dotted">123 ABC</button>
+      </div>
             </div>
 
             <!-- Verification Result Container (Dynamic) -->
