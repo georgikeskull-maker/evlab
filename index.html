@@ -222,11 +222,11 @@
       <!-- Quick Samples -->
       <div class="mt-3.5 pt-3 border-t border-slate-800/80 flex flex-wrap items-center gap-2 text-xs text-slate-400">
         <span class="text-slate-500">Proovi näidiseid:</span>
-        <button type="button" onclick="setQuickSearch('EV-20261029-153221')" class="font-mono text-sky-400 hover:underline">EV-20261029-153221 (Porsche Cayenne E-Hybrid)</button>
+        <button type="button" onclick="setQuickSearch('EV-20261029-153221')" class="font-mono text-sky-400 hover:underline">EV-20261029-153221 (Nissan Leaf)</button>
         <span class="text-slate-600">·</span>
         <button type="button" onclick="setQuickSearch('EV-20261028-110419')" class="font-mono text-emerald-400 hover:underline">EV-20261028-110419 (Tesla Model 3)</button>
         <span class="text-slate-600">·</span>
-        <button type="button" onclick="setQuickSearch('123 ABC')" class="font-mono text-slate-300 hover:text-white underline decoration-dotted">123 ABC</button>
+        <button type="button" onclick="setQuickSearch('EV-20261027-094512')" class="font-mono text-purple-400 hover:underline">EV-20261027-094512 (Porsche Cayenne E-Hybrid)</button>
       </div>
             </div>
 
@@ -565,12 +565,38 @@
                 health: "HEALTHY",
                 verdict: "EESKUJULIK SEISUKORD: Aku üldine mahtuvus (SoH 93.8%) ja elementide tasakaal koormusel (ΔV 24.0 mV) on ideaalses seisukorras. Veakoode ega isolatsioonirikked ei tuvastatud. Sõiduk on tehniliselt heaks kiidetud ostutehinguks.",
                 hash: "a4f891b2c7e90812345d8204b1239aa810d829148c3b17849e018d47ff987621"
-            }
+            },
+            "EV-20261027-094512": {
+                cert_id: "EV-20261027-094512",
+                mode: "DÜNAAMILINE KOORMUSTEST",
+                timestamp: "27.10.2026 09:45",
+                standard: "UN GTR No. 22 / Euro 7 Compliant",
+                vehicle: {
+                    model: "Porsche Cayenne E-Hybrid (14.1 kWh)",
+                    plate: "123 ABC",
+                    vin: "WP1ZZZ9Y8KD******",
+                    mileage: "74 200 km"
+                },
+                kpi: {
+                    score: 91,
+                    score_status: "EESKUJULIK",
+                    soh: 92.4,
+                    soh_benchmark: "+3.8% üle turu keskmise",
+                    delta_mv: 18.0,
+                    delta_status: "NORMI PIIRES",
+                    weakest_cell: "Tasakaalustatud",
+                    range_summer: 42,
+                    range_winter: 32
+                },
+                health: "HEALTHY",
+                verdict: "EESKUJULIK SEISUKORD: Aku üldine mahtuvus ja elementide tasakaal koormusel vastavad tootja normidele.",
+                hash: "c8e192a5b10f2d8e4c76b91a2d5e8f3b14a7c0d2e5f8a1b4c7d0e3f6a9b2c5d8"
+    },
         };
 
         const PLATE_TO_CERT = {
-            "123 ABC": "EV-20261029-153221",
-            "123ABC": "EV-20261029-153221",
+            "123 ABC": "EV-20261027-094512",
+            "123ABC": "EV-20261027-094512",
             "450 BMR": "EV-20261028-110419",
             "450BMR": "EV-20261028-110419"
         };
