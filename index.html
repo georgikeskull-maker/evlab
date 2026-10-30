@@ -629,37 +629,46 @@
                 const decodedJson = decodeURIComponent(escape(atob(base64)));
                 const item = JSON.parse(decodedJson);
 
-                const isHealthy = (item.delta <= 40.0) && (item.dtc === 0);
-                const data = {
-                    cert_id: item.id,
-                    mode: "DÜNAAMILINE KOORMUSTEST",
-                    timestamp: item.date || "Täna",
-                    standard: "UN GTR No. 22 / Euro 7 Compliant",
-                    vehicle: {
-                        model: item.model || "Elektrisõiduk",
-                        plate: item.reg || "MÄÄRAMATA",
-                        vin: item.vin || "MÄÄRAMATA",
-                        mileage: "Kontrollitud"
-                    },
-                    kpi: {
-                        score: item.score || 90,
-                        score_status: item.score >= 85 ? "EESKUJULIK" : "VAJAB AUDITIT",
-                        soh: item.soh,
-                        soh_benchmark: "Ametlik mõõtmine",
-                        delta_mv: item.delta,
-                        delta_status: item.delta <= 40.0 ? "NORMI PIIRES" : "NORMI ÜLETUS",
-                        weakest_cell: item.delta > 40.0 ? "Hälbega" : "Tasakaalustatud",
-                        range_summer: Math.round(item.soh * 2.8),
-                        range_winter: Math.round(item.soh * 2.0)
-                    },
-                    health: isHealthy ? "HEALTHY" : "WARNING",
-                    verdict: isHealthy
-                        ? `AUTENTSELT VERIFITSEERITUD: Aku tervis (SoH ${item.soh}%) ja pinge tasakaal koormusel (ΔV ${item.delta} mV) vastavad Euroopa Liidu standarditele. Veakoodid puuduvad.`
-                        : `TÄHELEPANU: Mõõtmisel tuvastati pingelang ΔV ${item.delta} mV või akuhalduse (BMS) veakoodid (${item.dtc} tk). Vajab täiendavat auditit.`,
-                    hash: signature.repeat(4)
-                };
+                const sohVal = item.soh !== undefined ? item.soh : (item.s !== undefined ? item.s : 90);
+        const deltaVal = item.delta !== undefined ? item.delta : (item.d !== undefined ? item.d : 0);
+        const scoreVal = item.score !== undefined ? item.score : (item.sc !== undefined ? item.sc : 85);
+        const certId = item.id || (item.i ? ('EV-' + item.i) : 'KONTROLLITUD');
+        const regPlate = item.reg || item.r || "MÄÄRAMATA";
+        const carModel = item.model || item.m || "Elektrisõiduk";
+        const carVin = item.vin || item.v || "MÄÄRAMATA";
+        const certDate = item.date || item.dt || "Täna";
 
-                document.getElementById('certInput').value = item.id;
+        const isHealthy = (deltaVal <= 40.0) && (item.dtc === undefined || item.dtc === 0);
+        const data = {
+            cert_id: certId,
+            mode: "DÜNAAMILINE KOORMUSTEST",
+            timestamp: certDate,
+            standard: "UN GTR No. 22 / Euro 7 Compliant",
+            vehicle: {
+                model: carModel,
+                plate: regPlate,
+                vin: carVin,
+                mileage: "Kontrollitud"
+            },
+            kpi: {
+                score: scoreVal,
+                score_status: scoreVal >= 85 ? "EESKUJULIK" : "VAJAB AUDITIT",
+                soh: sohVal,
+                soh_benchmark: "Ametlik mõõtmine",
+                delta_mv: deltaVal,
+                delta_status: deltaVal <= 40.0 ? "NORMI PIIRES" : "NORMI ÜLETUS",
+                weakest_cell: deltaVal > 40.0 ? "Hälbega" : "Tasakaalustatud",
+                range_summer: Math.round(sohVal * 2.8),
+                range_winter: Math.round(sohVal * 2.0)
+            },
+            health: isHealthy ? "HEALTHY" : "WARNING",
+            verdict: isHealthy
+                ? `AUTENTSELT VERIFITSEERITUD: Aku tervis (SoH ${sohVal}%) ja pinge tasakaal koormusel (ΔV ${deltaVal} mV) on ideaalses seisukorras.`
+                : `TÄHELEPANU: Mõõtmisel tuvastati pingelang ΔV ${deltaVal} mV või akuhalduse (BMS) veakoodid.`,
+            hash: signature.repeat(2)
+        };
+
+        document.getElementById('certInput').value = certId;
                 renderVerifiedCard(data);
             } catch (err) {
                 renderTamperedCard();
