@@ -220,13 +220,22 @@
       </form>
 
       <!-- Quick Samples -->
-      <div class="mt-3.5 pt-3 border-t border-slate-800/80 flex flex-wrap items-center gap-2 text-xs text-slate-400">
+      <div class="mt-3.5 pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-xs text-slate-400">
         <span class="text-slate-500">Proovi näidiseid:</span>
-        <button type="button" onclick="setQuickSearch('EV-20261029-153221')" class="font-mono text-sky-400 hover:underline">EV-20261029-153221 (Nissan Leaf)</button>
+        <button type="button" onclick="setQuickSearch('EV-20261029-153221')" class="font-mono text-sky-400 hover:underline">
+          <span class="hidden sm:inline">EV-20261029-153221 (Nissan Leaf)</span>
+          <span class="sm:hidden">Nissan Leaf</span>
+        </button>
         <span class="text-slate-600">·</span>
-        <button type="button" onclick="setQuickSearch('EV-20261028-110419')" class="font-mono text-emerald-400 hover:underline">EV-20261028-110419 (Tesla Model 3)</button>
+        <button type="button" onclick="setQuickSearch('EV-20261028-110419')" class="font-mono text-emerald-400 hover:underline">
+          <span class="hidden sm:inline">EV-20261028-110419 (Tesla Model 3)</span>
+          <span class="sm:hidden">Tesla Model 3</span>
+        </button>
         <span class="text-slate-600">·</span>
-        <button type="button" onclick="setQuickSearch('EV-20261027-094512')" class="font-mono text-purple-400 hover:underline">EV-20261027-094512 (Porsche Cayenne E-Hybrid)</button>
+        <button type="button" onclick="setQuickSearch('EV-20261027-094512')" class="font-mono text-purple-400 hover:underline">
+          <span class="hidden sm:inline">EV-20261027-094512 (Porsche Cayenne E-Hybrid)</span>
+          <span class="sm:hidden">Cayenne Hybrid</span>
+        </button>
       </div>
             </div>
 
