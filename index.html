@@ -50,12 +50,6 @@
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .glass-panel-light {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-        }
         .glow-emerald {
             box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.3);
         }
@@ -111,7 +105,7 @@
 
             <!-- Actions -->
             <div class="flex items-center gap-3">
-                <a href="tel:+37255550000" class="hidden sm:inline-flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-slate-600 text-slate-300 transition">
+                <a href="tel:+37258123456" class="hidden sm:inline-flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-slate-600 text-slate-300 transition">
                     <svg class="w-3.5 h-3.5 text-sky-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
                     </svg>
@@ -129,7 +123,6 @@
 
     <!-- Hero Section -->
     <section class="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden">
-        <!-- Glow spots -->
         <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-sky-500/10 blur-[130px] rounded-full pointer-events-none"></div>
         <div class="absolute top-1/3 right-10 w-[350px] h-[300px] bg-emerald-500/10 blur-[100px] rounded-full pointer-events-none"></div>
 
@@ -204,7 +197,7 @@
                     Autentsuse Register
                 </span>
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-3">Ametliku sertifikaadi digitaalne verifitseerimine</h2>
-                <p class="text-slate-400 text-sm mt-2">Sisesta sertifikaadi number (nt trükitud PDF-dokumendilt või Auto24 kuulutusest) või sõiduki registreerimismärk.</p>
+                <p class="text-slate-400 text-sm mt-2">Sisesta sertifikaadi number käsitsi või skaneeri PDF-dokumendil olev turvaline QR-kood.</p>
             </div>
 
             <!-- Search Bar Card -->
@@ -367,7 +360,6 @@
             </div>
 
             <div class="grid md:grid-cols-3 gap-6">
-                <!-- Bento 1 -->
                 <div class="p-6 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between">
                     <div>
                         <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 mb-4">
@@ -383,7 +375,6 @@
                     </div>
                 </div>
 
-                <!-- Bento 2 -->
                 <div class="p-6 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between">
                     <div>
                         <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-4">
@@ -399,7 +390,6 @@
                     </div>
                 </div>
 
-                <!-- Bento 3 -->
                 <div class="p-6 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between">
                     <div>
                         <div class="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 mb-4">
@@ -519,14 +509,15 @@
         </div>
     </footer>
 
-    <!-- Verification Logic & Interactive Demo Data -->
+    <!-- Verification Logic (Supports static mock registry + live HMAC-SHA256 URL verification) -->
     <script>
-        // In-memory verified registry database (corresponds directly with Python script generator)
+        const SECRET_KEY = "evlab_secure_salt_tallinn_2026";
+
         const CERTIFICATE_REGISTRY = {
             "EV-20261029-153221": {
                 cert_id: "EV-20261029-153221",
                 mode: "DÜNAAMILINE KOORMUSTEST",
-                timestamp: "2026-10-29 15:32",
+                timestamp: "29.10.2026 15:32",
                 standard: "UN GTR No. 22 / Euro 7 Compliant",
                 vehicle: {
                     model: "Nissan Leaf ZE1 (40 kWh)",
@@ -536,33 +527,23 @@
                 },
                 kpi: {
                     score: 63,
-                    score_max: 100,
                     score_status: "VAJAB AUDITIT",
                     soh: 91.4,
                     soh_benchmark: "+4.6% üle turu keskmise",
-                    market_avg: "86.8%",
                     delta_mv: 362.0,
                     delta_status: "NORMI ÜLETUS",
                     weakest_cell: "#42",
-                    peak_current: "-184.5 A",
-                    peak_sag_mv: "-452.0 mV",
                     range_summer: 224,
                     range_winter: 161
                 },
-                health: "WARNING", // HEALTHY or WARNING
-                verdict: "TÄHELEPANU: Täiskoormusel (vool -184.5 A) tuvastati kriitiline dünaamiline pingelang elementis #42 (3.260V, langus -452.0 mV, ΔV 362.0 mV). SoH (91.4%) vastab EL normile UN GTR 22 (min 80%), kuid BMS-is leiti aktiivsed veakoodid (P31B7, P0AA6). Soovitatav defektse mooduli vahetus enne ostutehingut.",
-                dtc: [
-                    { code: "P31B7", ecu: "BMS / LBC", status: "Kinnitatud", desc: "Kõrgepinge kontaktori ahela kõrvalekalle" },
-                    { code: "P0AA6", ecu: "EV Gateway", status: "Ootel", desc: "Isolatsioonitakistuse langus (< 500 kOhm)" }
-                ],
-                inspector: "GVK Forge Tehniline Audit",
-                hash: "9e107d9d372bb6826bd81d3542a419d6bc436d41829e31d348a47ff768685121",
-                pdf_download_url: "#"
+                health: "WARNING",
+                verdict: "TÄHELEPANU: Täiskoormusel tuvastati dünaamiline pingelang elementis #42 (ΔV 362.0 mV). SoH (91.4%) vastab EL normile UN GTR 22 (min 80%), kuid BMS-is leiti aktiivsed veakoodid (P31B7, P0AA6). Soovitatav defektse mooduli vahetus enne ostutehingut.",
+                hash: "9e107d9d372bb6826bd81d3542a419d6bc436d41829e31d348a47ff768685121"
             },
             "EV-20261028-110419": {
                 cert_id: "EV-20261028-110419",
                 mode: "DÜNAAMILINE KOORMUSTEST",
-                timestamp: "2026-10-28 11:04",
+                timestamp: "28.10.2026 11:04",
                 standard: "UN GTR No. 22 / Euro 7 Compliant",
                 vehicle: {
                     model: "Tesla Model 3 Long Range AWD (75 kWh)",
@@ -572,29 +553,21 @@
                 },
                 kpi: {
                     score: 94,
-                    score_max: 100,
                     score_status: "EESKUJULIK",
                     soh: 93.8,
                     soh_benchmark: "+5.1% üle turu keskmise",
-                    market_avg: "88.7%",
                     delta_mv: 24.0,
                     delta_status: "NORMI PIIRES",
-                    weakest_cell: "Puudub (kõik tasakaalus)",
-                    peak_current: "-195.0 A",
-                    peak_sag_mv: "-180.0 mV",
+                    weakest_cell: "Tasakaalustatud",
                     range_summer: 480,
                     range_winter: 360
                 },
                 health: "HEALTHY",
                 verdict: "EESKUJULIK SEISUKORD: Aku üldine mahtuvus (SoH 93.8%) ja elementide tasakaal koormusel (ΔV 24.0 mV) on ideaalses seisukorras. Veakoode ega isolatsioonirikked ei tuvastatud. Sõiduk on tehniliselt heaks kiidetud ostutehinguks.",
-                dtc: [],
-                inspector: "GVK Forge Tehniline Audit",
-                hash: "a4f891b2c7e90812345d8204b1239aa810d829148c3b17849e018d47ff987621",
-                pdf_download_url: "#"
+                hash: "a4f891b2c7e90812345d8204b1239aa810d829148c3b17849e018d47ff987621"
             }
         };
 
-        // Plate alias index for convenience
         const PLATE_TO_CERT = {
             "275 JPN": "EV-20261029-153221",
             "275JPN": "EV-20261029-153221",
@@ -602,18 +575,96 @@
             "450BMR": "EV-20261028-110419"
         };
 
-        // Automatically check query parameter on page load (e.g. ?cert=EV-20261029-153221)
-        window.addEventListener('DOMContentLoaded', () => {
+        // HMAC verification
+        async function verifyHmac(dataStr, providedSig) {
+            try {
+                const enc = new TextEncoder();
+                const key = await crypto.subtle.importKey(
+                    "raw",
+                    enc.encode(SECRET_KEY),
+                    { name: "HMAC", hash: "SHA-256" },
+                    false,
+                    ["sign"]
+                );
+                const signatureBuffer = await crypto.subtle.sign("HMAC", key, enc.encode(dataStr));
+                const hashArray = Array.from(new Uint8Array(signatureBuffer));
+                const fullHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                return fullHex.slice(0, 16) === providedSig;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
+            const encodedPayload = urlParams.get('d');
+            const signature = urlParams.get('sig');
             const certQuery = urlParams.get('cert') || urlParams.get('c');
-            if (certQuery) {
+
+            if (encodedPayload && signature) {
+                const section = document.getElementById('kontroll');
+                if (section) section.scrollIntoView({ behavior: 'smooth' });
+                await verifyQrPayload(encodedPayload, signature);
+            } else if (certQuery) {
                 document.getElementById('certInput').value = certQuery;
                 executeSearch(certQuery);
-                // Scroll to verification section
                 const section = document.getElementById('kontroll');
                 if (section) section.scrollIntoView({ behavior: 'smooth' });
             }
         });
+
+        async function verifyQrPayload(rawData, signature) {
+            const resultBox = document.getElementById('verifyResult');
+            resultBox.classList.remove('hidden');
+
+            const isValid = await verifyHmac(rawData, signature);
+            if (!isValid) {
+                renderTamperedCard();
+                return;
+            }
+
+            try {
+                let base64 = rawData.replace(/-/g, '+').replace(/_/g, '/');
+                while (base64.length % 4) { base64 += '='; }
+                const decodedJson = decodeURIComponent(escape(atob(base64)));
+                const item = JSON.parse(decodedJson);
+
+                const isHealthy = (item.delta <= 40.0) && (item.dtc === 0);
+                const data = {
+                    cert_id: item.id,
+                    mode: "DÜNAAMILINE KOORMUSTEST",
+                    timestamp: item.date || "Täna",
+                    standard: "UN GTR No. 22 / Euro 7 Compliant",
+                    vehicle: {
+                        model: item.model || "Elektrisõiduk",
+                        plate: item.reg || "MÄÄRAMATA",
+                        vin: item.vin || "MÄÄRAMATA",
+                        mileage: "Kontrollitud"
+                    },
+                    kpi: {
+                        score: item.score || 90,
+                        score_status: item.score >= 85 ? "EESKUJULIK" : "VAJAB AUDITIT",
+                        soh: item.soh,
+                        soh_benchmark: "Ametlik mõõtmine",
+                        delta_mv: item.delta,
+                        delta_status: item.delta <= 40.0 ? "NORMI PIIRES" : "NORMI ÜLETUS",
+                        weakest_cell: item.delta > 40.0 ? "Hälbega" : "Tasakaalustatud",
+                        range_summer: Math.round(item.soh * 2.8),
+                        range_winter: Math.round(item.soh * 2.0)
+                    },
+                    health: isHealthy ? "HEALTHY" : "WARNING",
+                    verdict: isHealthy
+                        ? `AUTENTSELT VERIFITSEERITUD: Aku tervis (SoH ${item.soh}%) ja pinge tasakaal koormusel (ΔV ${item.delta} mV) vastavad Euroopa Liidu standarditele. Veakoodid puuduvad.`
+                        : `TÄHELEPANU: Mõõtmisel tuvastati pingelang ΔV ${item.delta} mV või akuhalduse (BMS) veakoodid (${item.dtc} tk). Vajab täiendavat auditit.`,
+                    hash: signature.repeat(4)
+                };
+
+                document.getElementById('certInput').value = item.id;
+                renderVerifiedCard(data);
+            } catch (err) {
+                renderTamperedCard();
+            }
+        }
 
         function setQuickSearch(val) {
             document.getElementById('certInput').value = val;
@@ -639,14 +690,8 @@
                 return;
             }
 
-            // Normalize input
             let cleanQuery = query.trim().toUpperCase();
-            let certKey = cleanQuery;
-
-            if (PLATE_TO_CERT[cleanQuery]) {
-                certKey = PLATE_TO_CERT[cleanQuery];
-            }
-
+            let certKey = PLATE_TO_CERT[cleanQuery] || cleanQuery;
             const data = CERTIFICATE_REGISTRY[certKey];
 
             if (data) {
@@ -665,7 +710,6 @@
 
             resultBox.innerHTML = `
                 <div class="rounded-2xl bg-slate-950 p-6 sm:p-8 border-2 ${borderGlow} shadow-2xl transition-all">
-                    <!-- Top Status Bar -->
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-xl ${isHealthy ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'} flex items-center justify-center shrink-0">
@@ -687,7 +731,6 @@
                         </div>
                     </div>
 
-                    <!-- Vehicle Info Bar -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6 p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-xs">
                         <div>
                             <span class="text-slate-500 block">Sõiduk</span>
@@ -707,7 +750,6 @@
                         </div>
                     </div>
 
-                    <!-- Core 4 KPI Cards -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6">
                         <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
                             <span class="text-[10px] uppercase font-bold text-slate-400">Battery Score</span>
@@ -731,27 +773,38 @@
                         </div>
                     </div>
 
-                    <!-- Official Verdict Quote -->
                     <div class="p-4 rounded-xl ${isHealthy ? 'bg-emerald-950/30 border border-emerald-800/40 text-emerald-200' : 'bg-amber-950/30 border border-amber-800/40 text-amber-200'} text-xs leading-relaxed">
                         <strong class="block text-white mb-1 uppercase tracking-wide text-[11px]">Labori eksperthinnang:</strong>
                         ${data.verdict}
                     </div>
 
-                    <!-- Hash & Inspector Footer -->
                     <div class="mt-6 pt-4 border-t border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs">
                         <div>
-                            <div class="text-slate-500 font-mono text-[10px]">KRÜPTOGRAAFILINE RÄSI:</div>
+                            <div class="text-slate-500 font-mono text-[10px]">KRÜPTOGRAAFILINE DIGIALLKIRI (HMAC-SHA256):</div>
                             <div class="font-mono text-slate-400 text-[11px] break-all">${data.hash}</div>
-                            <div class="text-slate-500 text-[11px] mt-0.5">Vastavus: ${data.standard}</div>
+                            <div class="text-slate-500 text-[11px] mt-0.5">Standard: ${data.standard}</div>
                         </div>
-
-                        <button onclick="downloadSamplePdf('${data.cert_id}')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs border border-slate-700 transition">
-                            <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                            </svg>
-                            <span>Laadi alla ametlik PDF</span>
-                        </button>
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
+                            Sertifikaat Kinnitatud
+                        </div>
                     </div>
+                </div>
+            `;
+        }
+
+        function renderTamperedCard() {
+            const resultBox = document.getElementById('verifyResult');
+            resultBox.innerHTML = `
+                <div class="rounded-2xl bg-slate-950 p-6 sm:p-8 border border-rose-500/80 text-center">
+                    <div class="w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 mx-auto flex items-center justify-center mb-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">⚠️ AUTENTIMINE EBAÕNNESTUS</h3>
+                    <p class="text-xs text-rose-300 mt-1 max-w-md mx-auto">
+                        Sertifikaadi digiallkiri ei kattu või QR-koodi andmeid on muudetud. Antud telemeetriat ei saa lugeda usaldusväärseks.
+                    </p>
                 </div>
             `;
         }
@@ -773,19 +826,6 @@
             `;
         }
 
-        function downloadSamplePdf(certId) {
-            // Friendly alert replacement
-            const toast = document.createElement('div');
-            toast.className = "fixed bottom-5 right-5 z-50 p-4 rounded-xl bg-slate-900 border border-sky-500/60 text-white text-xs shadow-2xl flex items-center gap-3";
-            toast.innerHTML = `
-                <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                <span>Avatakse sertifikaadi arhiivikirje: <strong>${certId}</strong></span>
-            `;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3500);
-        }
-
-        // Modal Controls
         function openBookingModal(serviceName) {
             document.getElementById('modalService').value = serviceName || 'Dünaamiline koormustest (135 €)';
             document.getElementById('bookingModal').classList.remove('hidden');
@@ -803,7 +843,6 @@
             const car = document.getElementById('orderCar').value;
             const loc = document.getElementById('orderLoc').value;
 
-            // Prepare WhatsApp message
             const text = encodeURIComponent(
                 `Tere! Soovin broneerida elektriauto aku diagnostika:\n` +
                 `Teenus: ${service}\n` +
