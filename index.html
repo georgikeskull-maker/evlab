@@ -505,50 +505,34 @@
     </section>
 
     <!-- Footer -->
-   <!-- Инженерный подвал EVLAB -->
-<!-- B2B Инженерный футер EVLAB (стандарт AVILOO) -->
-<!-- Чистый монолитный подвал EVLAB без лишних кнопок -->
-<footer class="mt-20 border-t border-slate-800/80 bg-slate-950/70 backdrop-blur-md text-slate-300">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+<!-- Монолитная стеклянная строка EVLAB (в тон верхнему хедеру) -->
+<footer class="mt-16 sm:mt-20 border-t border-slate-800/80 glass-panel py-8 text-slate-400">
+  <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-xs">
     
-    <!-- Верхний ряд: Бренд слева, реквизиты справа -->
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b border-slate-800/60">
-      
-      <!-- Слева: Бренд лаборатории -->
-      <div class="flex items-center gap-3">
-        <div class="relative flex-shrink-0 w-9 h-9 rounded-xl bg-slate-900 border border-teal-400/60 flex items-center justify-center shadow-[0_0_14px_rgba(20,184,166,0.35)] overflow-hidden">
-          <div class="absolute inset-0 bg-teal-400/20 animate-pulse"></div>
-          <svg class="w-5 h-5 text-teal-300 relative z-10 drop-shadow-[0_0_6px_rgba(45,212,191,0.7)]" viewBox="0 0 32 32" fill="currentColor">
-            <path d="M19.5 2 L6 17.5 H16 L12.5 30 L26 14.5 H16 Z" />
-          </svg>
-        </div>
-        <div class="flex flex-col text-left">
-          <div class="flex items-center gap-2">
-            <span class="text-xl font-black tracking-tight text-white">EV<span class="text-teal-400">LAB</span></span>
-            <span class="text-slate-600 font-bold">|</span>
-            <span class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Veojõuakude labor</span>
-          </div>
-          <span class="text-[11px] text-slate-400">Sõltumatu elektriautode diagnostika ja sertifitseerimine</span>
-        </div>
+    <!-- Мини-логотип в стиле шапки -->
+    <div class="flex items-center gap-2">
+      <div class="w-6 h-6 rounded-md bg-slate-900 border border-teal-400/50 flex items-center justify-center shadow-[0_0_10px_rgba(20,184,166,0.3)]">
+        <svg class="w-3.5 h-3.5 text-teal-300" viewBox="0 0 32 32" fill="currentColor">
+          <path d="M19.5 2 L6 17.5 H16 L12.5 30 L26 14.5 H16 Z" />
+        </svg>
       </div>
-
-      <!-- Справа: Юридические контакты -->
-      <div class="text-center sm:text-right text-xs text-slate-400 leading-tight">
-        <p class="font-bold text-slate-200 tracking-wide text-sm">GVK FORGE OÜ</p>
-        <p class="text-[11px] text-slate-400 mt-1">Reg. kood: <span class="text-slate-300 font-medium">17623024</span> · Tallinn, Eesti</p>
-        <p class="text-[11px] text-slate-400 mt-0.5">E-post: <a href="mailto:info@evlab.ee" class="text-teal-400 hover:underline">info@evlab.ee</a></p>
-      </div>
-
+      <span class="font-black tracking-tight text-white text-sm">EV<span class="text-teal-400">LAB</span></span>
     </div>
 
-    <!-- Нижняя центрованная строка -->
-    <div class="pt-5 text-center text-xs text-slate-500">
-      <p>© 2026 EVLAB · <span class="text-slate-300 font-bold">GVK FORGE OÜ</span> (17623024) · Kõik õigused kaitstud.</p>
+    <span class="hidden sm:inline text-slate-600">|</span>
+
+    <!-- Юридические данные и копирайт -->
+    <div class="text-center text-slate-400">
+      <span>© 2026 EVLAB</span>
+      <span class="mx-1.5 text-slate-600">·</span>
+      <span class="text-slate-200 font-semibold tracking-wide">GVK FORGE OÜ</span>
+      <span class="text-slate-400 text-[11px] ml-1">(17623024)</span>
+      <span class="mx-1.5 text-slate-600">·</span>
+      <span>Kõik õigused kaitstud.</span>
     </div>
 
   </div>
 </footer>
-
     <!-- Verification Logic (Supports static mock registry + live HMAC-SHA256 URL verification) -->
     <script>
         const SECRET_KEY = "evlab_secure_salt_tallinn_2026";
