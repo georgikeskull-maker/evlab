@@ -1028,37 +1028,44 @@
   const loc = document.getElementById('orderLoc').value;
 
   // 3. Формируем сообщение для твоего Telegram
+  // 3. Формируем чистое сообщение без риска сбоя HTML-парсера
   const tgMessage = 
-    `🔋 <b>UUS EVLAB BRONEERING!</b>\n\n` +
-    `🛠 <b>Teenus:</b> ${service}\n` +
-    `👤 <b>Klient:</b> ${name}\n` +
-    `📞 <b>Telefon:</b> <a href="tel:${phone}">${phone}</a>\n` +
-    `🚗 <b>Sõiduk:</b> ${car}\n` +
-    `📍 <b>Asukoht:</b> ${loc}\n\n` +
-    `⏱ <i>Aeg: ${new Date().toLocaleString('et-EE')}</i>`;
+`🔋 UUS EVLAB BRONEERING!
 
- // НАСТРОЙКА БОТА: токен и chat_id
-  const TELEGRAM_BOT_TOKEN = '9259118155:AAFhI62W91pzY3kJNqqXdB8u94i9fCt2xOs';
+🛠 Teenus: ${service}
+👤 Klient: ${name}
+📞 Telefon: ${phone}
+🚗 Sõiduk: ${car}
+📍 Asukoht: ${loc}
+
+⏱ Aeg: ${new Date().toLocaleString('et-EE')}`;
+
+  // НАСТРОЙКА БОТА: токен и chat_id
+  const TELEGRAM_BOT_TOKEN = '9259118155:AAFhI62W91pzY3kJNqqXdB8u94i9fCt2x0s';
   const TELEGRAM_CHAT_ID = '111156866';
 
   try {
-    // 4. Мгновенная отправка в Telegram
-    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    // 4. Отправка в Telegram
+    const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         chat_id: TELEGRAM_CHAT_ID,
-        text: tgMessage,
-        parse_mode: 'HTML'
+        text: tgMessage
       })
     });
+
+    const data = await response.json();
+
+    if (!data.ok) {
+      throw new Error(data.description || 'Telegram API Error');
+    }
 
     // 5. Успех: благодарим клиента
     submitBtn.classList.remove('from-sky-500', 'to-blue-600', 'hover:from-sky-400');
     submitBtn.classList.add('bg-emerald-500', 'text-white');
     submitBtn.innerHTML = `✓ Päring saadetud!`;
 
-    // Очищаем форму и закрываем окно через 1.5 секунды
     setTimeout(() => {
       e.target.reset();
       submitBtn.disabled = false;
