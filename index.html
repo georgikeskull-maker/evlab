@@ -726,29 +726,80 @@
             executeSearch(val);
         });
 
-        function executeSearch(query) {
-            const resultBox = document.getElementById('verifyResult');
-            resultBox.classList.remove('hidden');
+        async function executeSearch(query) {
+      const resultBox = document.getElementById('verifyResult');
+      resultBox.classList.remove('hidden');
 
-            if (!query) {
-                resultBox.innerHTML = `
-                    <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center text-slate-400 text-sm">
-                        Palun sisesta otsingusse sertifikaadi number või sõiduki reg märk.
-                    </div>
-                `;
-                return;
-            }
+      if (!query) {
+        resultBox.innerHTML = `
+          <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center text-slate-400">
+            Palun sisesta otsingusse sertifikaadi number või sõiduki reg märk.
+          </div>
+        `;
+        return;
+      }
 
-            let cleanQuery = query.trim().toUpperCase();
-            let certKey = PLATE_TO_CERT[cleanQuery] || cleanQuery;
-            const data = CERTIFICATE_REGISTRY[certKey];
+      // Чистим ввод от пробелов и тире (например "123 ccc" -> "123CCC")
+      const cleanPlate = query.trim().toUpperCase().replace(/[\s\-]/g, '');
+      const rawUpper = query.trim().toUpperCase();
 
-            if (data) {
-                renderVerifiedCard(data);
-            } else {
-                renderNotFoundCard(query);
-            }
+      // 1. Сначала проверяем локальные демо (Leaf, Tesla, Cayenne)
+      let certKey = (typeof PLATE_TO_CERT !== 'undefined' && (PLATE_TO_CERT[rawUpper] || PLATE_TO_CERT[cleanPlate])) || query.trim();
+      let data = (typeof CERTIFICATE_REGISTRY !== 'undefined') ? CERTIFICATE_REGISTRY[certKey] : null;
+
+      if (data) {
+        renderVerifiedCard(data);
+        return;
+      }
+
+      // 2. Если в локальных нет — ищем в облачной базе Supabase
+      try {
+        const { data: dbRows, error } = await supabaseClient
+          .from('certificates')
+          .select('*')
+          .or(`plate_clean.eq.${cleanPlate},cert_id.eq.${query.trim()}`)
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        if (dbRows && dbRows.length > 0) {
+          const row = dbRows[0];
+          // Собираем объект данных в формате для renderVerifiedCard
+          const dbData = {
+            cert_id: row.cert_id,
+            mode: row.test_mode,
+            timestamp: new Date(row.created_at).toLocaleDateString('et-EE') + ' ' + 
+                       new Date(row.created_at).toLocaleTimeString('et-EE', {hour: '2-digit', minute:'2-digit'}),
+            standard: "UN GTR No. 22 / Euro 7 Compliant",
+            vehicle: {
+              model: row.vehicle_model,
+              plate: row.plate_display,
+              vin: row.vin,
+              mileage: row.mileage
+            },
+            kpi: {
+              score: row.score,
+              score_status: row.score_status,
+              soh: row.soh,
+              soh_benchmark: row.soh_benchmark,
+              delta_mv: row.delta_mv,
+              delta_status: row.delta_status,
+              weakest_cell: row.weakest_cell,
+              range_summer: row.range_summer,
+              range_winter: row.range_winter
+            },
+            health: row.health,
+            verdict: row.verdict,
+            hash: row.hash
+          };
+          renderVerifiedCard(dbData);
+        } else {
+          renderNotFoundCard(query);
         }
+      } catch (err) {
+        console.error("Supabase query error:", err);
+        renderNotFoundCard(query);
+      }
+    }
 
         function renderVerifiedCard(data) {
             const resultBox = document.getElementById('verifyResult');
