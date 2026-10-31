@@ -505,23 +505,45 @@
     </section>
 
     <!-- Footer -->
-    <footer class="border-t border-slate-800/80 bg-slate-950 py-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-                <div class="flex items-center gap-2">
-                    <span class="font-extrabold text-white text-sm">GVK FORGE OÜ</span>
-                    <span class="text-xs text-slate-500">| EV Battery Lab</span>
-                </div>
-                <p class="text-xs text-slate-500 mt-1">Registrikood: 16849201 · Tallinn, Harjumaa, Eesti</p>
-                <p class="text-[11px] text-slate-600 mt-0.5">Kõik mõõtmised viiakse läbi vastavalt Euroopa Liidu määrusele UN GTR No. 22 / Euro 7.</p>
-            </div>
-
-            <div class="text-xs text-slate-500 text-center md:text-right">
-                <div>© 2026 GVK FORGE OÜ. Kõik õigused kaitstud.</div>
-                <div class="text-[11px] text-slate-600 mt-1">Sertifitseeritud sõltumatu telemeetria register</div>
-            </div>
+    <footer class="mt-16 sm:mt-24 border-t border-slate-800/80 bg-slate-950/90 py-8 sm:py-10 text-slate-400">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 text-xs">
+      
+      <!-- 1. Бренд и юридические реквизиты -->
+      <div class="flex flex-col items-center md:items-start gap-1.5 text-center md:text-left">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-teal-400 flex-shrink-0" viewBox="0 0 32 32" fill="currentColor">
+            <path d="M19.5 2 L6 17.5 H16 L12.5 30 L26 14.5 H16 Z" />
+          </svg>
+          <span class="font-black tracking-tight text-white text-base">EV<span class="text-teal-400">LAB</span></span>
+          <span class="text-slate-600 font-bold">·</span>
+          <span class="text-slate-400 font-medium">Veojõuakude labor</span>
         </div>
-    </footer>
+        <p class="text-slate-500 text-[11px] leading-relaxed">
+          Teenuseid osutab <span class="text-slate-300 font-semibold">GVK Forge OÜ</span> · Reg. kood 17094008 · Tallinn, Eesti
+        </p>
+      </div>
+
+      <!-- 2. Навигация (легко попадать пальцем на смартфоне) -->
+      <div class="flex flex-wrap justify-center gap-x-5 gap-y-2 font-medium text-slate-300">
+        <a href="#teenused" class="py-1 hover:text-teal-400 transition-colors">Teenused</a>
+        <a href="#hinnad" class="py-1 hover:text-teal-400 transition-colors">Hinnad</a>
+        <a href="#kontroll" class="py-1 hover:text-teal-400 transition-colors">Sertifikaat</a>
+        <a href="#kontakt" class="py-1 hover:text-teal-400 transition-colors">Kontakt</a>
+      </div>
+
+      <!-- 3. Стандарты и авторские права -->
+      <div class="flex flex-col items-center md:items-end gap-1 text-center md:text-right text-[11px] text-slate-500">
+        <div class="inline-flex items-center gap-1.5 text-teal-400/90 font-medium bg-teal-950/40 border border-teal-500/20 px-2.5 py-1 rounded-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
+          <span>UN GTR 22 / Euro 7 standard</span>
+        </div>
+        <p class="mt-1">© 2026 EVLAB. Kõik õigused kaitstud.</p>
+      </div>
+
+    </div>
+  </div>
+</footer>
 
     <!-- Verification Logic (Supports static mock registry + live HMAC-SHA256 URL verification) -->
     <script>
