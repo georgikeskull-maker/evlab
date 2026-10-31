@@ -62,13 +62,23 @@
 </head>
 <body class="bg-slate-950 text-slate-100 selection:bg-sky-500 selection:text-white antialiased min-h-screen flex flex-col justify-between">
 
-    <!-- Top Notice Banner -->
-    <div class="bg-gradient-to-r from-sky-900 via-slate-900 to-emerald-950 border-b border-sky-800/40 text-xs py-2 px-4 text-center font-medium text-slate-300">
-        <span class="inline-flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Euroopa Liidu akuhalduse standard: <strong class="text-white font-semibold">UN GTR No. 22 / Euro 7</strong> ühilduv audit Tallinnas ja Harjumaal
-        </span>
+    <!-- Top Notice Banner (скрыт на мобильных, кликабельный на десктопе) -->
+  <div class="hidden sm:block bg-gradient-to-r from-sky-900 via-slate-900 to-emerald-950 border-b border-sky-800/40 text-xs py-2 px-4 text-center font-medium text-slate-300">
+    <div class="inline-flex items-center justify-center gap-2 flex-wrap">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0"></span>
+      <span>Euroopa Liidu akuhalduse standard:</span>
+      <a href="https://unece.org/transport/documents/2022/04/standards/un-gtr-no22-vehicle-battery-durability-electrified-vehicles" 
+         target="_blank" 
+         rel="noopener noreferrer" 
+         class="inline-flex items-center gap-1 text-white hover:text-teal-300 font-semibold underline decoration-teal-400/50 hover:decoration-teal-300 transition-colors">
+        <span>UN GTR No. 22 / Euro 7</span>
+        <svg class="w-3 h-3 text-slate-400 hover:text-teal-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+        </svg>
+      </a>
+      <span class="text-slate-400">· Ühilduv audit Tallinnas ja Harjumaal</span>
     </div>
+  </div>
 
     <!-- Navigation Bar -->
     <header class="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/80 transition-all">
