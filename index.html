@@ -1037,17 +1037,17 @@
     `📍 <b>Asukoht:</b> ${loc}\n\n` +
     `⏱ <i>Aeg: ${new Date().toLocaleString('et-EE')}</i>`;
 
-  // НАСТРОЙКА БОТА: вставь сюда свой токен и chat_id
-  const TELEGRAM_BOT_TOKEN = 'ВСТАВЬ_СЮДА_ТОКЕН_БОТА';
-  const TELEGRAM_CHAT_ID = 'ВСТАВЬ_СЮДА_СВОЙ_CHAT_ID';
+ // НАСТРОЙКА БОТА: токен и chat_id
+  const TELEGRAM_BOT_TOKEN = '9259118155:AAFhI62W91pzY3kJNqqXdB8u94i9fCt2x0s';
+  const TELEGRAM_CHAT_ID = '111156866';
 
   try {
     // 4. Мгновенная отправка в Telegram
-    await fetch(`https://api.telegram.org/bot${9259118155:AAFhI62W91pzY3kJNqqXdB8u94i9fCt2xOs}/sendMessage`, {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        chat_id: 111156866,
+        chat_id: TELEGRAM_CHAT_ID,
         text: tgMessage,
         parse_mode: 'HTML'
       })
