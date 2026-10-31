@@ -455,7 +455,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Telefoninumber</label>
-                    <input type="tel" required placeholder="nt. +372 5551 6666" id="orderPhone" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-500">
+                    <input type="tel" required placeholder="nt. +372 5123 4567" id="orderPhone" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-500">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
@@ -1004,26 +1004,80 @@
             document.getElementById('bookingModal').classList.add('hidden');
         }
 
-        function handleOrderSubmit(e) {
-            e.preventDefault();
-            const service = document.getElementById('modalService').value;
-            const name = document.getElementById('orderName').value;
-            const phone = document.getElementById('orderPhone').value;
-            const car = document.getElementById('orderCar').value;
-            const loc = document.getElementById('orderLoc').value;
+       async function handleOrderSubmit(e) {
+  e.preventDefault();
 
-            const text = encodeURIComponent(
-                `Tere! Soovin broneerida elektriauto aku diagnostika:\n` +
-                `Teenus: ${service}\n` +
-                `Nimi: ${name}\n` +
-                `Telefon: ${phone}\n` +
-                `Auto: ${car}\n` +
-                `Asukoht: ${loc}`
-            );
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const originalBtnText = submitBtn.innerHTML;
+  
+  // 1. Блокируем кнопку от повторных кликов и показываем процесс
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = `
+    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    Saadan...
+  `;
 
-            closeBookingModal();
-            window.open(`https://wa.me/37255516666?text=${text}`, '_blank');
-        }
+  // 2. Забираем значения полей
+  const service = document.getElementById('modalService').value || 'Mobiilne diagnostika';
+  const name = document.getElementById('orderName').value;
+  const phone = document.getElementById('orderPhone').value;
+  const car = document.getElementById('orderCar').value;
+  const loc = document.getElementById('orderLoc').value;
+
+  // 3. Формируем сообщение для твоего Telegram
+  const tgMessage = 
+    `🔋 <b>UUS EVLAB BRONEERING!</b>\n\n` +
+    `🛠 <b>Teenus:</b> ${service}\n` +
+    `👤 <b>Klient:</b> ${name}\n` +
+    `📞 <b>Telefon:</b> <a href="tel:${phone}">${phone}</a>\n` +
+    `🚗 <b>Sõiduk:</b> ${car}\n` +
+    `📍 <b>Asukoht:</b> ${loc}\n\n` +
+    `⏱ <i>Aeg: ${new Date().toLocaleString('et-EE')}</i>`;
+
+  // НАСТРОЙКА БОТА: вставь сюда свой токен и chat_id
+  const TELEGRAM_BOT_TOKEN = 'ВСТАВЬ_СЮДА_ТОКЕН_БОТА';
+  const TELEGRAM_CHAT_ID = 'ВСТАВЬ_СЮДА_СВОЙ_CHAT_ID';
+
+  try {
+    // 4. Мгновенная отправка в Telegram
+    await fetch(`https://api.telegram.org/bot${9259118155:AAFhI62W91pzY3kJNqqXdB8u94i9fCt2xOs}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: 111156866,
+        text: tgMessage,
+        parse_mode: 'HTML'
+      })
+    });
+
+    // 5. Успех: благодарим клиента
+    submitBtn.classList.remove('from-sky-500', 'to-blue-600', 'hover:from-sky-400');
+    submitBtn.classList.add('bg-emerald-500', 'text-white');
+    submitBtn.innerHTML = `✓ Päring saadetud!`;
+
+    // Очищаем форму и закрываем окно через 1.5 секунды
+    setTimeout(() => {
+      e.target.reset();
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
+      submitBtn.classList.remove('bg-emerald-500', 'text-white');
+      closeBookingModal();
+    }, 1500);
+
+  } catch (error) {
+    console.error('Telegram send error:', error);
+    // Запасной парашют: если интернет сбоит, открываем WhatsApp как раньше
+    const waText = encodeURIComponent(
+      `Tere! Soovin broneerida elektriauto aku diagnostika:\n` +
+      `Teenus: ${service}\nNimi: ${name}\nTelefon: ${phone}\nAuto: ${car}\nAsukoht: ${loc}`
+    );
+    window.open(`https://wa.me/37255516666?text=${waText}`, '_blank');
+    closeBookingModal();
+  }
+}
     </script>
 </body>
 </html>
