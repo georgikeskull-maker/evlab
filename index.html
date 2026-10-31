@@ -506,30 +506,40 @@
 
     <!-- Footer -->
    <!-- Инженерный подвал EVLAB -->
-<footer class="mt-20 border-t border-slate-800/80 bg-slate-950/70 backdrop-blur-md text-slate-300">
-  <div class="max-w-7xl mx-auto px-6 lg:px-8 py-10">
+<!-- Фирменный подвал в стиле верхней панели (glass-panel) -->
+<footer class="mt-20 border-t border-slate-800/80 glass-panel text-slate-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
       
-      <!-- Слева: Бренд + Юрлицо -->
-      <div class="flex flex-col items-center sm:items-start gap-1.5 text-center sm:text-left">
+      <!-- Слева: Брендовый блок один-в-один как в хедере -->
+      <div class="flex flex-col items-center sm:items-start gap-2 text-center sm:text-left">
         <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl bg-slate-900 border border-teal-400/60 flex items-center justify-center shadow-[0_0_14px_rgba(45,212,191,0.35)]">
-            <svg class="w-5 h-5 text-teal-400" viewBox="0 0 32 32" fill="currentColor">
+          
+          <!-- Пульсирующий LED-бокс с силовой молнией -->
+          <div class="relative flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border border-teal-400/70 flex items-center justify-center shadow-[0_0_18px_rgba(20,184,166,0.35)] overflow-hidden">
+            <div class="absolute inset-0 bg-teal-400/20 animate-pulse"></div>
+            <svg class="w-6 h-6 text-teal-300 relative z-10 drop-shadow-[0_0_8px_rgba(45,212,191,0.7)]" viewBox="0 0 32 32" fill="currentColor">
               <path d="M19.5 2 L6 17.5 H16 L12.5 30 L26 14.5 H16 Z" />
             </svg>
           </div>
-          <span class="text-xl font-black tracking-tight text-white">EV<span class="text-teal-400">LAB</span></span>
-          <span class="text-slate-600 font-bold">|</span>
-          <span class="text-sm font-semibold text-slate-200">Veojõuakude labor</span>
+
+          <!-- Слитный EVLAB -->
+          <div class="flex items-center font-black tracking-tight text-2xl leading-none">
+            <span class="text-white">EV</span><span class="text-teal-400 drop-shadow-[0_0_14px_rgba(45,212,191,0.4)]">LAB</span>
+          </div>
+
+          <span class="text-slate-600 font-bold hidden sm:inline">|</span>
+          <span class="text-xs font-semibold text-slate-300 uppercase tracking-wider hidden sm:inline">Veojõuakude labor</span>
         </div>
-        <p class="text-xs text-slate-400 mt-0.5">
+
+        <p class="text-xs text-slate-400">
           Ametlikud akuauditid. Teenuseid osutab <span class="text-slate-100 font-bold">GVK FORGE OÜ</span> (Reg. kood 17623024). Tallinn, Eesti.
         </p>
       </div>
 
       <!-- Справа: Стандарт UN GTR + Копирайт -->
       <div class="flex flex-col items-center sm:items-end gap-2 text-center sm:text-right">
-        <div class="inline-flex items-center gap-2 text-xs font-semibold text-teal-300 bg-slate-900 border border-teal-500/40 px-3.5 py-1.5 rounded-lg shadow-sm">
+        <div class="inline-flex items-center gap-2 text-xs font-semibold text-teal-300 bg-slate-900/80 border border-teal-400/40 px-3.5 py-1.5 rounded-lg shadow-[0_0_12px_rgba(20,184,166,0.2)]">
           <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
           <span>UN GTR 22 / Euro 7 akuauditi metoodika</span>
         </div>
