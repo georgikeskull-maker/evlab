@@ -505,16 +505,27 @@
     </section>
 
     <!-- Footer -->
-<!-- Финальный цоколь EVLAB -->
-<footer class="mt-12 sm:mt-16 border-t border-slate-800/80 bg-slate-950/40 backdrop-blur-md py-6 sm:py-8 text-slate-400 select-none">
-  <div class="max-w-7xl mx-auto px-4 text-center">
-    <p class="text-xs sm:text-sm tracking-normal text-slate-400 font-normal flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-      <span>© 2026 EV LAB</span>
+<!-- Зеркальный футер в тон верхней шапке (хедеру) -->
+<footer class="mt-12 sm:mt-16 border-t border-slate-800/80 bg-slate-950/80 backdrop-blur-md py-6 text-slate-400 select-none">
+  <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm">
+    
+    <!-- Бренд и копирайт -->
+    <div class="flex items-center gap-2 text-slate-400">
+      <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+      <span>© 2026 <strong class="text-white font-bold tracking-tight">EV<span class="text-teal-400">LAB</span></strong></span>
       <span class="text-slate-600">·</span>
-      <span>GVK FORGE OÜ 17623024</span>
-      <span class="text-slate-600">·</span>
-      <span>All rights reserved.</span>
-    </p>
+      <span class="text-slate-400">All rights reserved.</span>
+    </div>
+
+    <!-- Юридические данные -->
+    <div class="text-center sm:text-right text-[11px] sm:text-xs text-slate-500 font-medium">
+      <span class="text-slate-300 font-semibold tracking-wide">GVK FORGE OÜ</span>
+      <span class="text-slate-600 mx-1.5">|</span>
+      <span>Reg. kood 17623024</span>
+      <span class="text-slate-600 mx-1.5">|</span>
+      <span>Tallinn, Eesti</span>
+    </div>
+
   </div>
 </footer>
     <!-- Verification Logic (Supports static mock registry + live HMAC-SHA256 URL verification) -->
