@@ -507,87 +507,45 @@
     <!-- Footer -->
    <!-- Инженерный подвал EVLAB -->
 <!-- B2B Инженерный футер EVLAB (стандарт AVILOO) -->
-<footer class="mt-28 border-t border-slate-800 bg-slate-950 text-slate-400">
-  <div class="max-w-7xl mx-auto px-6 lg:px-8 pt-16 pb-12">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800/80">
+<!-- Чистый монолитный подвал EVLAB без лишних кнопок -->
+<footer class="mt-20 border-t border-slate-800/80 bg-slate-950/70 backdrop-blur-md text-slate-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+    
+    <!-- Верхний ряд: Бренд слева, реквизиты справа -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b border-slate-800/60">
       
-      <!-- 1. Бренд и реквизиты компании (2 колонки) -->
-      <div class="lg:col-span-2 flex flex-col gap-4 text-left">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-slate-900 border border-teal-400/60 flex items-center justify-center shadow-[0_0_15px_rgba(20,184,166,0.3)]">
-            <svg class="w-6 h-6 text-teal-300" viewBox="0 0 32 32" fill="currentColor">
-              <path d="M19.5 2 L6 17.5 H16 L12.5 30 L26 14.5 H16 Z" />
-            </svg>
+      <!-- Слева: Бренд лаборатории -->
+      <div class="flex items-center gap-3">
+        <div class="relative flex-shrink-0 w-9 h-9 rounded-xl bg-slate-900 border border-teal-400/60 flex items-center justify-center shadow-[0_0_14px_rgba(20,184,166,0.35)] overflow-hidden">
+          <div class="absolute inset-0 bg-teal-400/20 animate-pulse"></div>
+          <svg class="w-5 h-5 text-teal-300 relative z-10 drop-shadow-[0_0_6px_rgba(45,212,191,0.7)]" viewBox="0 0 32 32" fill="currentColor">
+            <path d="M19.5 2 L6 17.5 H16 L12.5 30 L26 14.5 H16 Z" />
+          </svg>
+        </div>
+        <div class="flex flex-col text-left">
+          <div class="flex items-center gap-2">
+            <span class="text-xl font-black tracking-tight text-white">EV<span class="text-teal-400">LAB</span></span>
+            <span class="text-slate-600 font-bold">|</span>
+            <span class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Veojõuakude labor</span>
           </div>
-          <span class="text-2xl font-black tracking-tight text-white">EV<span class="text-teal-400">LAB</span></span>
-        </div>
-        <p class="text-xs text-slate-400 max-w-sm leading-relaxed">
-          Sõltumatu elektri- ja hübriidsõidukite kõrgepingeakude diagnostika ning ametlik sertifitseerimine ostueelseks kontrolliks ja garantiiks.
-        </p>
-        <div class="text-xs text-slate-300 space-y-1 pt-1 font-mono">
-          <p class="font-sans font-bold text-white">GVK FORGE OÜ</p>
-          <p class="text-slate-400">Reg. kood: <span class="text-slate-200">17623024</span></p>
-          <p class="text-slate-400">Tallinn, Harjumaa, Eesti</p>
-          <p class="text-slate-400">E-post: <a href="mailto:info@evlab.ee" class="text-teal-400 hover:underline">info@evlab.ee</a></p>
+          <span class="text-[11px] text-slate-400">Sõltumatu elektriautode diagnostika ja sertifitseerimine</span>
         </div>
       </div>
 
-      <!-- 2. Услуги и аудит -->
-      <div class="text-left">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-white mb-4">Teenused</h4>
-        <ul class="space-y-2.5 text-xs">
-          <li><a href="#teenused" class="hover:text-teal-400 transition-colors">Ostueelne aku audit</a></li>
-          <li><a href="#teenused" class="hover:text-teal-400 transition-colors">SoH jääkmahtuvuse test</a></li>
-          <li><a href="#teenused" class="hover:text-teal-400 transition-colors">Elementide pingelang (SAG)</a></li>
-          <li><a href="#teenused" class="hover:text-teal-400 transition-colors">Mobiilne labor kohapeal</a></li>
-        </ul>
-      </div>
-
-      <!-- 3. Клиенты и верификация -->
-      <div class="text-left">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-white mb-4">Usaldusväärsus</h4>
-        <ul class="space-y-2.5 text-xs">
-          <li><a href="#kontroll" class="hover:text-teal-400 transition-colors">Kontrolli sertifikaati</a></li>
-          <li><a href="#hinnad" class="hover:text-teal-400 transition-colors">Hinnakiri ja paketid</a></li>
-          <li><a href="#kontakt" class="hover:text-teal-400 transition-colors">Ärikliendi lahendused</a></li>
-          <li><a href="#kontakt" class="hover:text-teal-400 transition-colors">Auto24 müügitugi</a></li>
-        </ul>
-      </div>
-
-      <!-- 4. Стандарты и методология -->
-      <div class="text-left">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-white mb-4">Metoodika</h4>
-        <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2.5">
-          <div class="flex items-center gap-2 text-xs font-semibold text-teal-300">
-            <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
-            <span>UN GTR 22 / Euro 7</span>
-          </div>
-          <p class="text-[11px] text-slate-400 leading-normal">
-            Vastab ÜRO elektriautode akude kulumisnormi ja EL regulatsiooni standarditele.
-          </p>
-          <a href="https://unece.org/transport/documents/2022/04/standards/un-gtr-no22-vehicle-battery-durability-electrified-vehicles" 
-             target="_blank" 
-             rel="noopener noreferrer" 
-             class="inline-flex items-center gap-1.5 text-[11px] text-teal-400 hover:text-teal-300 font-medium">
-            <span>Ametlik UNECE määrus</span>
-            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-            </svg>
-          </a>
-        </div>
+      <!-- Справа: Юридические контакты -->
+      <div class="text-center sm:text-right text-xs text-slate-400 leading-tight">
+        <p class="font-bold text-slate-200 tracking-wide text-sm">GVK FORGE OÜ</p>
+        <p class="text-[11px] text-slate-400 mt-1">Reg. kood: <span class="text-slate-300 font-medium">17623024</span> · Tallinn, Eesti</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">E-post: <a href="mailto:info@evlab.ee" class="text-teal-400 hover:underline">info@evlab.ee</a></p>
       </div>
 
     </div>
 
-    <!-- Нижняя полоса копирайта -->
-    <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-      <p>© 2026 EVLAB. Kõik õigused kaitstud.</p>
-      <div class="flex items-center gap-6 text-[11px]">
-        <span>Sõltumatu akuauditi platvorm</span>
-        <span>·</span>
-        <span class="text-slate-400">GVK FORGE OÜ (17623024)</span>
-      </div>
+    <!-- Нижняя центрованная строка -->
+    <div class="pt-5 text-center text-xs text-slate-500">
+      <p>© 2026 EVLAB · <span class="text-slate-300 font-bold">GVK FORGE OÜ</span> (17623024) · Kõik õigused kaitstud.</p>
     </div>
+
   </div>
 </footer>
 
