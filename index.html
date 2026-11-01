@@ -571,12 +571,10 @@
 
     <!-- Verification & Telegram Logic -->
     <script>
-        const SECRET_KEY = "evlab_secure_salt_tallinn_2026";
         const SUPABASE_URL = "https://iemzkpzzbvamjajrmegn.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImllbXprcHp6YnZhbWphanJtZWduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0NTA4ODIsImV4cCI6MjEwOTAyNjg4Mn0.V-W8gzPIsOULgEJXEdwrYA36U679o7SK7BMDuA1G02I";
 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
         const CERTIFICATE_REGISTRY = {
             "EV-20261029-153221": {
                 cert_id: "EV-20261029-153221",
@@ -665,32 +663,13 @@
             "450BMR": "EV-20261028-110419"
         };
 
-        async function verifyHmac(dataStr, providedSig) {
-            try {
-                const enc = new TextEncoder();
-                const key = await crypto.subtle.importKey(
-                    "raw",
-                    enc.encode(SECRET_KEY),
-                    { name: "HMAC", hash: "SHA-256" },
-                    false,
-                    ["sign"]
-                );
-                const signatureBuffer = await crypto.subtle.sign("HMAC", key, enc.encode(dataStr));
-                const hashArray = Array.from(new Uint8Array(signatureBuffer));
-                const fullHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-                return fullHex.slice(0, providedSig.length) === providedSig;
-            } catch (e) {
-                return false;
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', async () => {
+       window.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const encodedPayload = urlParams.get('d');
             const signature = urlParams.get('sig');
             const certQuery = urlParams.get('cert') || urlParams.get('c');
 
-            if (encodedPayload && signature) {
+            if (encodedPayload) {
                 const section = document.getElementById('kontroll');
                 if (section) section.scrollIntoView({ behavior: 'smooth' });
                 await verifyQrPayload(encodedPayload, signature);
@@ -702,6 +681,30 @@
             }
         });
 
+        async function verifyQrPayload(rawData, signature) {
+            const resultBox = document.getElementById('verifyResult');
+            resultBox.classList.remove('hidden');
+
+            try {
+                let base64 = rawData.replace(/-/g, '+').replace(/_/g, '/');
+                while (base64.length % 4) { base64 += '='; }
+                const decodedJson = decodeURIComponent(escape(atob(base64)));
+                const item = JSON.parse(decodedJson);
+
+                const certId = item.id || (item.i ? ('EV-' + item.i) : null);
+
+                if (certId) {
+                    document.getElementById('certInput').value = certId;
+                    await executeSearch(certId);
+                } else {
+                    renderTamperedCard();
+                }
+            } catch (err) {
+                console.error("QR decode error:", err);
+                renderTamperedCard();
+            }
+        }
+        
         async function verifyQrPayload(rawData, signature) {
             const resultBox = document.getElementById('verifyResult');
             resultBox.classList.remove('hidden');
