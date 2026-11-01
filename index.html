@@ -1014,31 +1014,23 @@
         }
 
        async function handleOrderSubmit(e) {
-  async function handleOrderSubmit(e) {
-            e.preventDefault();
+  e.preventDefault();
 
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.innerHTML;
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const originalBtnText = submitBtn.innerHTML;
+  
+  // 1. Блокируем кнопку от повторных кликов и показываем процесс
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = `
+    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    Saadan...
+  `;
 
-            // 1. Блокируем кнопку от повторных кликов и показываем спиннер
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `
-                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Saadan...
-            `;
-
-            // 2. Считываем значения из полей формы
-            const service = document.getElementById('modalService').value || 'Dünaamiline koormustest (135 €)';
-            const name = document.getElementById('orderName').value;
-            const phone = document.getElementById('orderPhone').value;
-            const car = document.getElementById('orderCar').value;
-            const loc = document.getElementById('orderLoc').value;
-
-            // 3. Формируем текст заявки
-            const tgMessage = 
+// 3. Чистое сообщение без HTML-ошибок
+  const tgMessage = 
 `🔋 UUS EVLAB BRONEERING!
 
 🛠 Teenus: ${service}
@@ -1049,51 +1041,75 @@
 
 ⏱ Aeg: ${new Date().toLocaleString('et-EE')}`;
 
-            // НАСТРОЙКА БОТА: проверенные токен и chat_id
-            const TELEGRAM_BOT_TOKEN = '9259118155:AAFhI62W91pzY3kJNqqXdB8u94i9fCt2xOs';
-            const TELEGRAM_CHAT_ID = '111156866';
+  // НАСТРОЙКА БОТА: проверенные токен и chat_id
+  const TELEGRAM_BOT_TOKEN = '9259118155:AAFhI62W91pzY3kJNqqXdB8u94i9fCt2x0s';
+  const TELEGRAM_CHAT_ID = '111156866';
 
-            try {
-                // 4. Отправка в Telegram
-                const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: TELEGRAM_CHAT_ID,
-                        text: tgMessage
-                    })
-                });
+  try {
+    // 4. Отправка в Telegram
+    const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: tgMessage
+      })
+    });
 
-                const data = await response.json();
+    const data = await response.json();
 
-                if (!data.ok) {
-                    throw new Error(data.description || 'Telegram API Error');
-                }
+    if (!data.ok) {
+      throw new Error(data.description || 'Telegram API Error');
+    }
 
-                // 5. Успех: зелёная кнопка
-                submitBtn.classList.remove('from-sky-500', 'to-blue-600', 'hover:from-sky-400');
-                submitBtn.classList.add('bg-emerald-500', 'text-white');
-                submitBtn.innerHTML = `✓ Päring saadetud!`;
+    // 5. Успех: меняем кнопку
+    submitBtn.classList.remove('from-sky-500', 'to-blue-600', 'hover:from-sky-400');
+    submitBtn.classList.add('bg-emerald-500', 'text-white');
+    submitBtn.innerHTML = `✓ Päring saadetud!`;
 
-                setTimeout(() => {
-                    e.target.reset();
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalBtnText;
-                    submitBtn.classList.remove('bg-emerald-500', 'text-white');
-                    closeBookingModal();
-                }, 1500);
+    setTimeout(() => {
+      e.target.reset();
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
+      submitBtn.classList.remove('bg-emerald-500', 'text-white');
+      closeBookingModal();
+    }, 1500);
 
-            } catch (error) {
-                console.error('Telegram send error:', error);
-                // Запасной канал: открываем WhatsApp, если Telegram недоступен
-                const waText = encodeURIComponent(
-                    `Tere! Soovin broneerida elektriauto aku diagnostika:\n` +
-                    `Teenus: ${service}\nNimi: ${name}\nTelefon: ${phone}\nAuto: ${car}\nAsukoht: ${loc}`
-                );
-                window.open(`https://wa.me/37255516666?text=${waText}`, '_blank');
-                closeBookingModal();
-            }
-        }
+  } catch (error) {
+    console.error('Telegram send error:', error);
+    // Запасной парашют в WhatsApp
+    const waText = encodeURIComponent(
+      `Tere! Soovin broneerida elektriauto aku diagnostika:\n` +
+      `Teenus: ${service}\nNimi: ${name}\nTelefon: ${phone}\nAuto: ${car}\nAsukoht: ${loc}`
+    );
+    window.open(`https://wa.me/37255516666?text=${waText}`, '_blank');
+    closeBookingModal();
+  }
+
+    // 5. Успех: благодарим клиента
+    submitBtn.classList.remove('from-sky-500', 'to-blue-600', 'hover:from-sky-400');
+    submitBtn.classList.add('bg-emerald-500', 'text-white');
+    submitBtn.innerHTML = `✓ Päring saadetud!`;
+
+    setTimeout(() => {
+      e.target.reset();
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
+      submitBtn.classList.remove('bg-emerald-500', 'text-white');
+      closeBookingModal();
+    }, 1500);
+
+  } catch (error) {
+    console.error('Telegram send error:', error);
+    // Запасной парашют: если интернет сбоит, открываем WhatsApp как раньше
+    const waText = encodeURIComponent(
+      `Tere! Soovin broneerida elektriauto aku diagnostika:\n` +
+      `Teenus: ${service}\nNimi: ${name}\nTelefon: ${phone}\nAuto: ${car}\nAsukoht: ${loc}`
+    );
+    window.open(`https://wa.me/37255516666?text=${waText}`, '_blank');
+    closeBookingModal();
+  }
+}
     </script>
 </body>
 </html>
