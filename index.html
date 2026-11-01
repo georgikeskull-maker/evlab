@@ -1029,15 +1029,7 @@
     Saadan...
   `;
 
-  // 2. Забираем значения полей
-  const service = document.getElementById('modalService').value || 'Mobiilne diagnostika';
-  const name = document.getElementById('orderName').value;
-  const phone = document.getElementById('orderPhone').value;
-  const car = document.getElementById('orderCar').value;
-  const loc = document.getElementById('orderLoc').value;
-
-  // 3. Формируем сообщение для твоего Telegram
-  // 3. Формируем чистое сообщение без риска сбоя HTML-парсера
+// 3. Чистое сообщение без HTML-ошибок
   const tgMessage = 
 `🔋 UUS EVLAB BRONEERING!
 
@@ -1049,8 +1041,8 @@
 
 ⏱ Aeg: ${new Date().toLocaleString('et-EE')}`;
 
-  // НАСТРОЙКА БОТА: токен и chat_id
-  const TELEGRAM_BOT_TOKEN = '9259118155:AAFhI62W91pzY3kJNqqXdB8u94i9fCt2x0s';
+  // НАСТРОЙКА БОТА: проверенные токен и chat_id
+  const TELEGRAM_BOT_TOKEN = '9259118155:AAFhI62W91pzY3kJNqqXdB8u94i9fCt2xOs';
   const TELEGRAM_CHAT_ID = '111156866';
 
   try {
@@ -1069,6 +1061,30 @@
     if (!data.ok) {
       throw new Error(data.description || 'Telegram API Error');
     }
+
+    // 5. Успех: меняем кнопку
+    submitBtn.classList.remove('from-sky-500', 'to-blue-600', 'hover:from-sky-400');
+    submitBtn.classList.add('bg-emerald-500', 'text-white');
+    submitBtn.innerHTML = `✓ Päring saadetud!`;
+
+    setTimeout(() => {
+      e.target.reset();
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
+      submitBtn.classList.remove('bg-emerald-500', 'text-white');
+      closeBookingModal();
+    }, 1500);
+
+  } catch (error) {
+    console.error('Telegram send error:', error);
+    // Запасной парашют в WhatsApp
+    const waText = encodeURIComponent(
+      `Tere! Soovin broneerida elektriauto aku diagnostika:\n` +
+      `Teenus: ${service}\nNimi: ${name}\nTelefon: ${phone}\nAuto: ${car}\nAsukoht: ${loc}`
+    );
+    window.open(`https://wa.me/37255516666?text=${waText}`, '_blank');
+    closeBookingModal();
+  }
 
     // 5. Успех: благодарим клиента
     submitBtn.classList.remove('from-sky-500', 'to-blue-600', 'hover:from-sky-400');
