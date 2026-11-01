@@ -1025,14 +1025,11 @@
 
             } catch (error) {
                 console.error('Submission error:', error);
-                const waText = encodeURIComponent(
-                    `Tere! Soovin broneerida elektriauto aku diagnostika:\n` +
-                    `Teenus: ${service}\nNimi: ${name}\nTelefon: ${phone}\nAuto: ${car}\nAsukoht: ${loc}`
-                );
-                window.open(`https://wa.me/37255516666?text=${waText}`, '_blank');
-                closeBookingModal();
-            }
+              const waMsg = "Tere! Soovin broneerida: " + service + " | Nimi: " + name + " | Tel: " + phone + " | Auto: " + car + " | Linn: " + loc;
+            window.open("https://wa.me/37255516666?text=" + encodeURIComponent(waMsg), "_blank");
+            closeBookingModal();
         }
+    }
     </script>
 </body>
 </html>
