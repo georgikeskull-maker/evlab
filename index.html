@@ -969,6 +969,12 @@
         e.target.reset();
         return;
     }
+    const lastSent = localStorage.getItem('last_lead_sent');
+    if (lastSent && (Date.now() - parseInt(lastSent, 10)) < 60000) {
+        alert('Olete hiljuti päringu saatnud. Võtame teiega peagi ühendust!');
+        closeBookingModal();
+        return;
+    }
             const submitBtn = e.target.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.innerHTML;
 
@@ -999,6 +1005,7 @@
 
                 setTimeout(() => {
                     e.target.reset();
+                    localStorage.setItem('last_lead_sent', Date.now());
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalBtnText;
                     submitBtn.classList.remove('bg-emerald-500', 'text-white');
