@@ -1009,7 +1009,7 @@
             const car = document.getElementById('orderCar').value;
             const loc = document.getElementById('orderLoc').value;
 
-            /// 3. Формируем текст сообщения
+      // 3. Формируем текст сообщения
             const tgMessage = 
 `🔋 UUS EVLAB BRONEERING!
 
@@ -1025,7 +1025,7 @@
             const TELEGRAM_CHAT_ID = '111156866';
 
             try {
-                // 4. Отправка напрямую в Telegram
+                // 4. Отправка напрямую в Telegram API
                 const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1036,11 +1036,12 @@
                 });
 
                 const data = await response.json();
+
                 if (!data.ok) {
                     throw new Error(data.description || 'Telegram API Error');
                 }
 
-                // 5. Успех: меняем цвет кнопки
+                // 5. Успех: меняем кнопку на зеленую
                 submitBtn.classList.remove('from-sky-500', 'to-blue-600', 'hover:from-sky-400');
                 submitBtn.classList.add('bg-emerald-500', 'text-white');
                 submitBtn.innerHTML = `✓ Päring saadetud!`;
@@ -1055,7 +1056,7 @@
 
             } catch (error) {
                 console.error('Telegram send error:', error);
-                // Запасной парашют: WhatsApp
+                // Запасной выход в WhatsApp только при реальном сбое сети
                 const waText = encodeURIComponent(
                     `Tere! Soovin broneerida elektriauto aku diagnostika:\n` +
                     `Teenus: ${service}\nNimi: ${name}\nTelefon: ${phone}\nAuto: ${car}\nAsukoht: ${loc}`
