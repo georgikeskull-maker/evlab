@@ -781,11 +781,7 @@
 
             try {
                 const { data: dbRows, error } = await supabaseClient
-                    .from('certificates')
-                    .select('*')
-                    .or(`plate_clean.eq.${cleanPlate},cert_id.eq.${query.trim()}`)
-                    .order('created_at', { ascending: false })
-                    .limit(1);
+            .rpc('get_certificate', { search_query: query.trim() });
 
                 if (dbRows && dbRows.length > 0) {
                     const row = dbRows[0];
