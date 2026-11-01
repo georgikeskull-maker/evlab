@@ -1025,10 +1025,11 @@
 
             } catch (error) {
                 console.error('Submission error:', error);
-              const waMsg = "Tere! Soovin broneerida: " + service + " | Nimi: " + name + " | Tel: " + phone + " | Auto: " + car + " | Linn: " + loc;
+              const waMsg = "Tere! Soovin broneerida: " + service;
             window.open("https://wa.me/37255516666?text=" + encodeURIComponent(waMsg), "_blank");
             closeBookingModal();
         }
+      }
     }
     </script>
 </body>
