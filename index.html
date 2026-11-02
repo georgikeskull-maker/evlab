@@ -648,17 +648,22 @@
             const urlParams = new URLSearchParams(window.location.search);
             const encodedPayload = urlParams.get('d');
             const signature = urlParams.get('sig');
-            const certQuery = urlParams.get('cert') || urlParams.get('c');
+            // Читаем любой возможный параметр: ?cert=, ?c=, ?id=, ?q= или хэш #
+            const certQuery = urlParams.get('cert') || urlParams.get('c') || urlParams.get('id') || urlParams.get('q') || window.location.hash.replace('#', '');
 
             if (encodedPayload) {
-                const section = document.getElementById('kontroll');
-                if (section) section.scrollIntoView({ behavior: 'smooth' });
                 await verifyQrPayload(encodedPayload, signature);
-            } else if (certQuery) {
-                document.getElementById('certInput').value = certQuery;
-                executeSearch(certQuery);
-                const section = document.getElementById('kontroll');
-                if (section) section.scrollIntoView({ behavior: 'smooth' });
+            } else if (certQuery && certQuery.trim() !== '') {
+                const cleanQuery = decodeURIComponent(certQuery).trim();
+                const input = document.getElementById('certInput');
+                if (input) input.value = cleanQuery;
+                
+                await executeSearch(cleanQuery);
+
+                setTimeout(() => {
+                    const section = document.getElementById('kontroll');
+                    if (section) section.scrollIntoView({ behavior: 'smooth' });
+                }, 150);
             }
         });
 
@@ -672,79 +677,22 @@
                 const decodedJson = decodeURIComponent(escape(atob(base64)));
                 const item = JSON.parse(decodedJson);
 
-                const certId = item.id || (item.i ? ('EV-' + item.i) : null);
+                const certId = item.id || (item.i ? ('EV-' + item.i) : null) || item.cert_id;
 
                 if (certId) {
                     document.getElementById('certInput').value = certId;
                     await executeSearch(certId);
+                    
+                    setTimeout(() => {
+                        const section = document.getElementById('kontroll');
+                        if (section) section.scrollIntoView({ behavior: 'smooth' });
+                    }, 150);
                 } else {
-                    renderTamperedCard();
+                    renderNotFoundCard(rawData);
                 }
             } catch (err) {
                 console.error("QR decode error:", err);
-                renderTamperedCard();
-            }
-        }
-        
-        async function verifyQrPayload(rawData, signature) {
-            const resultBox = document.getElementById('verifyResult');
-            resultBox.classList.remove('hidden');
-
-            const isValid = await verifyHmac(rawData, signature);
-            if (!isValid) {
-                renderTamperedCard();
-                return;
-            }
-
-            try {
-                let base64 = rawData.replace(/-/g, '+').replace(/_/g, '/');
-                while (base64.length % 4) { base64 += '='; }
-                const decodedJson = decodeURIComponent(escape(atob(base64)));
-                const item = JSON.parse(decodedJson);
-
-                const sohVal = item.soh !== undefined ? item.soh : (item.s !== undefined ? item.s : 90);
-                const deltaVal = item.delta !== undefined ? item.delta : (item.d !== undefined ? item.d : 0);
-                const scoreVal = item.score !== undefined ? item.score : (item.sc !== undefined ? item.sc : 85);
-                const certId = item.id || (item.i ? ('EV-' + item.i) : 'KONTROLLITUD');
-                const regPlate = item.reg || item.r || "MÄÄRAMATA";
-                const carModel = item.model || item.m || "Elektrisõiduk";
-                const carVin = item.vin || item.v || "MÄÄRAMATA";
-                const certDate = item.date || item.dt || "Täna";
-
-                const isHealthy = (deltaVal <= 40.0) && (item.dtc === undefined || item.dtc === 0);
-                const data = {
-                    cert_id: certId,
-                    mode: "DÜNAAMILINE KOORMUSTEST",
-                    timestamp: certDate,
-                    standard: "UN GTR No. 22 / Euro 7 Compliant",
-                    vehicle: {
-                        model: carModel,
-                        plate: regPlate,
-                        vin: carVin,
-                        mileage: "Kontrollitud"
-                    },
-                    kpi: {
-                        score: scoreVal,
-                        score_status: scoreVal >= 85 ? "EESKUJULIK" : "VAJAB AUDITIT",
-                        soh: sohVal,
-                        soh_benchmark: "Ametlik mõõtmine",
-                        delta_mv: deltaVal,
-                        delta_status: deltaVal <= 40.0 ? "NORMI PIIRES" : "NORMI ÜLETUS",
-                        weakest_cell: deltaVal > 40.0 ? "Hälbega" : "Tasakaalustatud",
-                        range_summer: Math.round(sohVal * 2.8),
-                        range_winter: Math.round(sohVal * 2.0)
-                    },
-                    health: isHealthy ? "HEALTHY" : "WARNING",
-                    verdict: isHealthy
-                        ? `AUTENTSELT VERIFITSEERITUD: Aku tervis (SoH ${sohVal}%) ja pinge tasakaal koormusel (ΔV ${deltaVal} mV) on ideaalses seisukorras.`
-                        : `TÄHELEPANU: Mõõtmisel tuvastati pingelang ΔV ${deltaVal} mV või akuhalduse (BMS) veakoodid.`,
-                    hash: signature.repeat(2)
-                };
-
-                document.getElementById('certInput').value = certId;
-                renderVerifiedCard(data);
-            } catch (err) {
-                renderTamperedCard();
+                renderNotFoundCard(rawData);
             }
         }
 
