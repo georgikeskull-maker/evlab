@@ -463,74 +463,81 @@
         </div>
     </div>
 
-  <section id="kontakt" class="scroll-mt-24 max-w-5xl mx-auto px-4 sm:px-6 my-8 sm:my-16">
-    <div class="relative rounded-3xl p-5 sm:p-10 lg:p-12 glass-panel border border-slate-800/80 shadow-2xl overflow-hidden">
-            <div class="relative z-10 flex flex-col items-center text-center">
-                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-teal-500/30 text-[11px] sm:text-xs font-semibold text-teal-300 uppercase tracking-wider mb-4">
-                    <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
-                    <span>Mobiilne labor kohapeal</span>
+<section id="kontakt" class="scroll-mt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-10 sm:my-16">
+        <div class="relative rounded-3xl p-6 sm:p-10 lg:p-12 glass-panel border border-slate-800/80 shadow-2xl overflow-hidden bg-gradient-to-br from-slate-900/90 via-slate-950/90 to-slate-900/90">
+            <!-- Фоновое свечение для объема -->
+            <div class="absolute -top-24 -right-24 w-80 h-80 bg-teal-500/10 blur-[100px] rounded-full pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-80 h-80 bg-sky-500/10 blur-[100px] rounded-full pointer-events-none"></div>
+
+            <div class="relative z-10 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                <!-- Левая колонка: Оффер и кнопка -->
+                <div class="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-teal-500/30 text-[11px] sm:text-xs font-semibold text-teal-300 uppercase tracking-wider mb-4">
+                        <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
+                        <span>Mobiilne labor kohapeal</span>
+                    </div>
+
+                    <h3 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight">
+                        Valmis kontrollima sõidukit juba täna
+                    </h3>
+
+                    <p class="mt-3 text-sm text-slate-300 leading-relaxed max-w-xl">
+                        Mobiilne diagnostika Tallinnas ja Harjumaal. Kokkuleppel tuleme kohale <strong class="text-white font-semibold">üle kogu Eesti</strong>. Teenindame nii eraisikuid kui ka autoparke ja automüügiplatse.
+                    </p>
+
+                    <div class="mt-6 sm:mt-8 w-full sm:w-auto">
+                        <button type="button" onclick="openBookingModal('Mobiilne labor kohapeal')" 
+                                class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 hover:from-sky-400 hover:to-teal-300 text-slate-950 font-bold text-sm tracking-wide shadow-[0_0_20px_rgba(20,184,166,0.35)] transition-all cursor-pointer active:scale-95">
+                            <svg class="w-4 h-4 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            <span>Kutsu tehnik kohale</span>
+                        </button>
+                    </div>
                 </div>
 
-                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight max-w-2xl">
-                    Valmis kontrollima sõidukit juba täna
-                </h3>
-
-               <p class="mt-3 text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
-                    Mobiilne diagnostika Tallinnas ja Harjumaal. Kokkuleppel tuleme kohale <strong class="text-white font-semibold">üle kogu Eesti</strong>. Teenindame nii eraisikuid kui ka autoparke ja automüügiplatse.
-                </p>
-
-                <div class="mt-6 sm:mt-8 w-full sm:w-auto">
-                    <button type="button" onclick="openBookingModal('Mobiilne labor kohapeal')" 
-                            class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 hover:from-sky-400 hover:to-teal-300 text-slate-950 font-bold text-sm tracking-wide shadow-[0_0_18px_rgba(20,184,166,0.35)] transition-all cursor-pointer">
-                        <svg class="w-4 h-4 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        <span>Kutsu tehnik kohale</span>
-                    </button>
-                </div>
-
-                <div class="mt-8 pt-6 border-t border-slate-800/80 w-full grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-left">
-                    <a href="tel:+37255516666" class="p-3.5 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-teal-400/40 transition-colors flex items-center gap-3 group">
-                        <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700/60 flex items-center justify-center text-teal-400 group-hover:text-teal-300 transition-colors flex-shrink-0">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <!-- Правая колонка: Контакты в 1 столбец -->
+                <div class="lg:col-span-5 flex flex-col gap-3 w-full">
+                    <a href="tel:+37255516666" class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 hover:border-teal-400/50 hover:bg-slate-900 transition-all flex items-center gap-4 group">
+                        <div class="w-10 h-10 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 group-hover:scale-105 transition-all shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                             </svg>
                         </div>
                         <div class="min-w-0">
-                            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">Broneerimine</span>
-                            <span class="text-xs font-bold text-white group-hover:text-teal-300 transition-colors truncate block">+372 5551 6666</span>
+                            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">Broneerimine telefoni teel</span>
+                            <span class="text-sm font-bold text-white group-hover:text-teal-300 transition-colors block">+372 5551 6666</span>
                         </div>
                     </a>
 
-                    <a href="mailto:info@evlab.ee" class="p-3.5 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-teal-400/40 transition-colors flex items-center gap-3 group">
-                        <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700/60 flex items-center justify-center text-teal-400 group-hover:text-teal-300 transition-colors flex-shrink-0">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="mailto:info@evlab.ee" class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 hover:border-teal-400/50 hover:bg-slate-900 transition-all flex items-center gap-4 group">
+                        <div class="w-10 h-10 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 group-hover:scale-105 transition-all shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                             </svg>
                         </div>
                         <div class="min-w-0">
-                            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">E-post</span>
-                            <span class="text-xs font-bold text-white group-hover:text-teal-300 transition-colors truncate block">info@evlab.ee</span>
+                            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">Ametlikud päringud</span>
+                            <span class="text-sm font-bold text-white group-hover:text-teal-300 transition-colors block">info@evlab.ee</span>
                         </div>
                     </a>
 
-                    <a href="https://maps.google.com/?q=Tallinn,+Harjumaa" target="_blank" rel="noopener noreferrer" class="p-3.5 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-teal-400/40 transition-colors flex items-center gap-3 group">
-                        <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700/60 flex items-center justify-center text-teal-400 group-hover:text-teal-300 transition-colors flex-shrink-0">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                             </svg>
                         </div>
                         <div class="min-w-0">
-                            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">Asukoht</span>
-                            <span class="text-xs font-bold text-white group-hover:text-teal-300 transition-colors truncate block">Tallinn ja Harjumaa</span>
+                            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">Tegevuspiirkond</span>
+                            <span class="text-sm font-bold text-white block">Tallinn, Harjumaa & üle Eesti</span>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-
    <footer class="mt-6 sm:mt-12 border-t border-slate-800/80 bg-slate-950/80 backdrop-blur-md py-5 text-slate-400 select-none">
         <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm">
             <div class="flex items-center gap-2 text-slate-400">
