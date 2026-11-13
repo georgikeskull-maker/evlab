@@ -251,7 +251,7 @@
       this.cb = $(".evd-cv-back", host); this.cf = $(".evd-cv-front", host);
       this.xb = this.cb.getContext("2d"); this.xf = this.cf.getContext("2d");
       this.body = $(".evd-body", host); this.par = $(".evd-parallax", host);
-      this.boost = 0; this.target = 0; this.last = 0;
+      this.boost = 0; this.target = 0; this.flash = 0; this.last = 0;
       this.parts = [];
       RINGS.forEach((ring, ri) => {
         const n = Math.round(ring.n * this.o.density);
@@ -274,13 +274,21 @@
       const s = this.host.clientWidth || this.o.size || 160;
       const dpr = Math.min(2, window.devicePixelRatio || 1);
       this.s = s;
-      [this.cb, this.cf].forEach((c) => { c.width = Math.round(s * dpr); c.height = Math.round(s * dpr); });
-      [this.xb, this.xf].forEach((x) => x.setTransform(dpr, 0, 0, dpr, 0, 0));
+      // canvases overhang the stage by PAD on every side (CSS inset:-18%), so the boosted vortex,
+      // arcs and shockwave are never clipped; drawing stays in stage coordinates via the translate.
+      const PAD = 0.18, S = s * (1 + 2 * PAD);
+      this.pad = s * PAD; this.S = S;
+      [this.cb, this.cf].forEach((c) => { c.width = Math.round(S * dpr); c.height = Math.round(S * dpr); });
+      [this.xb, this.xf].forEach((x) => x.setTransform(dpr, 0, 0, dpr, dpr * this.pad, dpr * this.pad));
       // droid image box inside the scene (matches .evd-body: left 18%, top 14%, size 64%)
       this.D = s * 0.64; this.bx = s * 0.18; this.by = s * 0.14;
       this.draw(0.9, 0);
     }
     pt(p) { return [this.bx + (p[0] / 100) * this.D, this.by + (p[1] / 100) * this.D]; }
+    /** hover / finger down: accelerate; press(): additional burst (shockwave + arcs) */
+    boostOn(on) { this.target = on ? 1 : 0; Loop.kick(); }
+    press() { this.flash = 1; this.target = 1; Loop.kick(); }
+    active() { return this.target > 0 || this.boost > 0.02 || this.flash > 0; }
     hover(dx, dy) {
       this.body.style.setProperty("--evd-rx", (-dy * 10).toFixed(1) + "deg");
       this.body.style.setProperty("--evd-ry", (dx * 14).toFixed(1) + "deg");
@@ -288,25 +296,28 @@
     }
     draw(t, dt) {
       const { xb, xf, s } = this;
-      this.boost += (this.target - this.boost) * Math.min(1, dt * 5 || 0.1);
-      const cx = s / 2, cy = s * 0.47, k = s / 160, B = this.boost;
-      xb.clearRect(0, 0, s, s); xf.clearRect(0, 0, s, s);
+      this.boost += (this.target - this.boost) * Math.min(1, dt * 6 || 0.1);
+      this.flash = Math.max(0, this.flash - dt * 1.4);
+      const cx = s / 2, cy = s * 0.47, k = s / 160, B = this.boost, F = this.flash;
+      const o = this.pad, S = this.S;
+      xb.clearRect(-o, -o, S, S); xf.clearRect(-o, -o, S, S);
       xb.globalCompositeOperation = xf.globalCompositeOperation = "lighter";
 
-      // soft core glow behind the droid
-      const glow = xb.createRadialGradient(cx, cy, s * 0.05, cx, cy, s * 0.48);
-      glow.addColorStop(0, `rgba(0,240,255,${0.16 + 0.1 * B})`);
+      // soft core glow behind the droid (flares up on hover / press)
+      const glow = xb.createRadialGradient(cx, cy, s * 0.05, cx, cy, s * (0.5 + 0.12 * B));
+      glow.addColorStop(0, `rgba(0,240,255,${Math.min(0.75, 0.16 + 0.24 * B + 0.4 * F)})`);
       glow.addColorStop(1, "rgba(0,240,255,0)");
-      xb.fillStyle = glow; xb.fillRect(0, 0, s, s);
+      xb.fillStyle = glow; xb.fillRect(-o, -o, S, S);
 
       // thruster flames (behind the body, so the nozzles cover the roots)
       NOZ.forEach((nz, i) => this.flame(xb, nz, t, i));
 
       // vortex particles
-      const spd = 1 + B * 1.4;
+      const spd = 1 + B * 2.4 + F * 2.5;
+      const grow = 0.11 * B + 0.12 * F;
       for (const p of this.parts) {
         const ring = RINGS[p.ri];
-        const R = s * ring.r * (1 + 0.03 * Math.sin(t * 1.3 + p.ri) + 0.07 * B) * p.r;
+        const R = s * ring.r * (1 + 0.03 * Math.sin(t * 1.3 + p.ri) + grow) * p.r;
         const n = p.comet ? 5 : 1;
         for (let j = 0; j < n; j++) {
           const ang = p.a + (t - j * 0.035) * p.sp * spd;
@@ -318,12 +329,26 @@
           const depth = 0.5 + 0.5 * z3;                       // 0 back .. 1 front
           const tw = 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(t * 2.6 + p.ph));
           let a = ring.alpha * tw * (0.35 + 0.65 * depth) * (1 - j / n);
-          a = Math.min(1, a + 0.25 * B);
-          const z = p.sz * (0.6 + 0.8 * depth) * k * 2.3 * (j ? 0.75 : 1);
+          a = Math.min(1, a + 0.35 * B + 0.45 * F);
+          const z = p.sz * (0.6 + 0.8 * depth) * k * 2.3 * (j ? 0.75 : 1) * (1 + 0.35 * B + 0.35 * F);
           const ctx = z3 >= 0 ? xf : xb;
           ctx.globalAlpha = a;
           ctx.drawImage(SPR[p.spr], x - z, y - z, z * 2, z * 2);
         }
+      }
+
+      // electric arcs: hull -> vortex, flicker every frame; strong on hover/press, rare at idle
+      const nArcs = Math.round(3.2 * B + 4 * F + (Math.random() < 0.012 ? 1 : 0));
+      for (let i = 0; i < nArcs; i++) this.arc(xf, cx, cy, s, k, 0.45 + 0.4 * B + 0.4 * F);
+
+      // press shockwave
+      if (F > 0) {
+        xf.globalAlpha = F;
+        xf.strokeStyle = "rgba(160,250,255,.9)";
+        xf.lineWidth = (1 + 2.5 * F) * k;
+        xf.beginPath();
+        xf.ellipse(cx, cy, s * (0.24 + (1 - F) * 0.28), s * (0.24 + (1 - F) * 0.28) * 0.94, 0, 0, Math.PI * 2);
+        xf.stroke();
       }
 
       // exhaust sparks (in front)
@@ -341,16 +366,42 @@
       xb.globalAlpha = xf.globalAlpha = 1;
       xb.globalCompositeOperation = xf.globalCompositeOperation = "source-over";
     }
+    arc(ctx, cx, cy, s, k, alpha) {
+      const a0 = Math.random() * Math.PI * 2;
+      const a1 = a0 + (Math.random() - 0.5) * 0.9;
+      const r0 = s * 0.25, r1 = s * (0.41 + Math.random() * 0.08);
+      let x = cx + Math.cos(a0) * r0, y = cy + Math.sin(a0) * r0 * 0.94;
+      const x1 = cx + Math.cos(a1) * r1, y1 = cy + Math.sin(a1) * r1 * 0.94;
+      const seg = 7, dx = (x1 - x) / seg, dy = (y1 - y) / seg, len = Math.hypot(dx, dy);
+      const nx = -dy / (len || 1), ny = dx / (len || 1);
+      const pts = [[x, y]];
+      for (let i = 1; i < seg; i++) {
+        const j = (Math.random() - 0.5) * s * 0.06;
+        pts.push([x + dx * i + nx * j, y + dy * i + ny * j]);
+      }
+      pts.push([x1, y1]);
+      for (const [w, col] of [[3.2, "rgba(0,240,255,.28)"], [1.1, "rgba(225,255,255,.95)"]]) {
+        ctx.globalAlpha = Math.min(1, alpha * (0.6 + 0.4 * Math.random()));
+        ctx.strokeStyle = col; ctx.lineWidth = w * k; ctx.lineJoin = "round";
+        ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+        for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = Math.min(1, alpha);
+      const z = 3.2 * k;
+      ctx.drawImage(SPR[2], x1 - z, y1 - z, z * 2, z * 2);            // hot spot where the arc hits the vortex
+    }
     flame(ctx, nz, t, i) {
       const [x, y] = this.pt(nz.a);
-      const f = 0.82 + 0.12 * Math.sin(t * 29 + i * 2) + 0.08 * Math.sin(t * 47 + i * 5) + 0.12 * this.boost;
-      const L = this.D * nz.len * f, w = this.D * nz.w * (0.92 + 0.08 * Math.sin(t * 37 + i));
+      const B = this.boost, F = this.flash;
+      const f = 0.82 + 0.12 * Math.sin(t * 29 + i * 2) + 0.08 * Math.sin(t * 47 + i * 5) + 0.45 * B + 0.6 * F;
+      const L = this.D * nz.len * f, w = this.D * nz.w * (0.92 + 0.08 * Math.sin(t * 37 + i)) * (1 + 0.25 * B);
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(nz.dir - Math.PI / 2);
       ctx.globalAlpha = 1;
       const g1 = ctx.createRadialGradient(0, L * 0.25, 0, 0, L * 0.25, L * 0.7);
-      g1.addColorStop(0, "rgba(0,200,255,.45)");
+      g1.addColorStop(0, `rgba(0,200,255,${Math.min(0.85, 0.45 + 0.3 * B + 0.3 * F)})`);
       g1.addColorStop(1, "rgba(0,120,255,0)");
       ctx.fillStyle = g1;
       ctx.beginPath(); ctx.ellipse(0, L * 0.3, w * 1.5, L * 0.7, 0, 0, Math.PI * 2); ctx.fill();
@@ -368,7 +419,7 @@
       ctx.restore();
     }
     spawn(dt, t) {
-      this._acc = (this._acc || 0) + dt * (18 + 30 * this.boost);
+      this._acc = (this._acc || 0) + dt * (18 + 70 * this.boost + 120 * this.flash);
       while (this._acc >= 1) {
         this._acc -= 1;
         const sp = this.sparks.find((q) => q.life <= 0);
@@ -383,20 +434,27 @@
     }
   }
 
+  // Animation loop. With prefers-reduced-motion the droid stays still while idle and only animates
+  // during user-initiated interaction (hover / press / waiting for an answer), then settles to a still frame.
   const Loop = {
     scenes: new Set(), raf: 0, t0: performance.now(), last: 0,
     set(sc, on) {
       if (on) this.scenes.add(sc); else this.scenes.delete(sc);
-      if (REDUCED) { if (on) sc.draw(0.9, 0); return; }
+      if (on && REDUCED) sc.draw(0.9, 0);
       this.kick();
     },
-    kick() { if (!this.raf && !document.hidden && this.scenes.size) this.raf = requestAnimationFrame(this.tick); },
+    wanted() { for (const s of this.scenes) if (!REDUCED || s.active()) return true; return false; },
+    kick() { if (!this.raf && !document.hidden && this.wanted()) this.raf = requestAnimationFrame(this.tick); },
     tick(now) {
       Loop.raf = 0;
       const t = (now - Loop.t0) / 1000;
       const dt = Math.min(0.05, Loop.last ? t - Loop.last : 0.016);
       Loop.last = t;
-      Loop.scenes.forEach((s) => s.draw(t, dt));
+      Loop.scenes.forEach((s) => {
+        if (!REDUCED || s.active()) { s.draw(t, dt); s.settled = false; }
+        else if (!s.settled) { s.boost = 0; s.flash = 0; s.draw(0.9, 0); s.settled = true; }
+      });
+      if (!Loop.wanted()) Loop.last = 0;
       Loop.kick();
     },
   };
@@ -427,10 +485,20 @@
     launchScene = new Scene(stage, { density: 1, sparks: 28, size: 168 });
     Loop.set(launchScene, true);
 
-    launcher.addEventListener("click", () => toggle(true));
-    launcher.addEventListener("pointerenter", () => { launchScene.target = 1; ensureBuilt(); });
-    launcher.addEventListener("focus", ensureBuilt);
-    launcher.addEventListener("pointerleave", () => { launchScene.target = 0; launchScene.hover(0, 0); });
+    // Same "power-up" for mouse hover (desktop) and finger hold (touch); press/click adds a burst.
+    const boost = (on) => { launchScene.boostOn(on); launcher.classList.toggle("is-boost", on); };
+    launcher.addEventListener("pointerenter", () => { boost(true); ensureBuilt(); });
+    launcher.addEventListener("pointerdown", () => { boost(true); launchScene.press(); ensureBuilt(); });
+    launcher.addEventListener("pointerleave", () => { boost(false); launchScene.hover(0, 0); });
+    launcher.addEventListener("pointercancel", () => boost(false));
+    launcher.addEventListener("focus", () => { ensureBuilt(); boost(true); });
+    launcher.addEventListener("blur", () => boost(false));
+    let opening = 0;
+    launcher.addEventListener("click", (e) => {
+      if (opening) return;
+      if (e.detail === 0) launchScene.press();                       // keyboard activation: same burst
+      opening = setTimeout(() => { opening = 0; toggle(true); }, REDUCED ? 120 : 260);  // let the burst show
+    });
     launcher.addEventListener("pointermove", (e) => {
       const b = launcher.getBoundingClientRect();
       launchScene.hover((e.clientX - b.left) / b.width - 0.5, (e.clientY - b.top) / b.height - 0.5);
@@ -556,10 +624,14 @@
     isOpen = open;
     root.classList.toggle("is-open", open);
     launcher.setAttribute("aria-expanded", String(open));
+    launchScene.target = 0; launchScene.flash = 0;               // launcher is hidden/shown calm
+    launcher.classList.remove("is-boost");
     Loop.set(launchScene, !open);
     Loop.set(headScene, open);
     if (open) {
       headScene.resize();
+      headScene.press();
+      setTimeout(() => headScene.boostOn(false), 300);
       setMood("scan", 900);
       setTimeout(() => input.focus({ preventScroll: true }), 350);
       if (typeof window.gtag === "function") window.gtag("event", "evd_open", { lang });
@@ -620,7 +692,7 @@
     const topic = topicOf(text);
     if (KW.book.test(text)) setTimeout(() => openSheet(true), 600);
     setMood("scan");
-    if (headScene) headScene.target = 1;
+    if (headScene) headScene.boostOn(true);
     const loader = addMsg("⏳ " + T[lang].thinking, "bot");
     const thinkTimer = setTimeout(() => setMood("think"), 1200);
 
@@ -642,7 +714,7 @@
     } finally {
       clearTimeout(timer);
       clearTimeout(thinkTimer);
-      if (headScene) headScene.target = 0;
+      if (headScene) headScene.boostOn(false);
     }
 
     if (!reply) {
