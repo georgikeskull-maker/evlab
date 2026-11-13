@@ -84,9 +84,55 @@
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+      // Consent Mode v2: analytics is OFF until the visitor accepts (choice kept in localStorage `evl_consent`)
+      gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', wait_for_update: 500 });
+      try { if (localStorage.getItem('evl_consent') === 'granted') gtag('consent', 'update', { analytics_storage: 'granted' }); } catch (e) {}
       gtag('js', new Date());
 
       gtag('config', 'G-HPW2L6CEG7');
+    </script>
+    <style>
+      #evl-consent{position:fixed;left:16px;bottom:16px;z-index:9995;max-width:420px;padding:16px 18px;border-radius:14px;background:#0b1220;border:1px solid #1e293b;box-shadow:0 12px 40px rgba(0,0,0,.55);color:#cbd5e1;font:14px/1.5 Inter,system-ui,sans-serif}
+      #evl-consent p{margin:0 0 12px}
+      #evl-consent a{color:#2dd4bf;text-decoration:underline}
+      #evl-consent .evl-cc-row{display:flex;gap:10px}
+      #evl-consent button{flex:1;min-height:44px;border-radius:10px;border:1px solid #334155;background:#111a2e;color:#fff;font:600 14px Inter,system-ui,sans-serif;cursor:pointer}
+      #evl-consent button:hover{border-color:#2dd4bf}
+      #evl-consent button:focus-visible{outline:2px solid #2dd4bf;outline-offset:2px}
+      @media (max-width:640px){#evl-consent{left:0;right:0;bottom:0;max-width:none;border-radius:14px 14px 0 0;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}}
+    </style>
+    <script>
+      (function () {
+        var K = 'evl_consent';
+        var L = (navigator.language || 'et').slice(0, 2);
+        var TXT = {
+          et: { t: 'Kasutame Google Analyticsi küpsiseid, et mõista, kuidas veebilehte kasutatakse ja seda parandada. Analüütika lülitub sisse ainult sinu nõusolekul.', y: 'Nõustun', n: 'Keeldun', p: 'Privaatsuspoliitika', a: 'Küpsiste seaded' },
+          ru: { t: 'Мы используем cookies Google Analytics, чтобы понимать, как используется сайт, и улучшать его. Аналитика включается только с вашего согласия.', y: 'Согласен', n: 'Отказаться', p: 'Политика конфиденциальности', a: 'Настройки cookies' },
+          en: { t: 'We use Google Analytics cookies to understand how the site is used and to improve it. Analytics is enabled only with your consent.', y: 'Accept', n: 'Decline', p: 'Privacy policy', a: 'Cookie settings' }
+        };
+        var T = TXT[L] || TXT.et;
+        function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
+        function set(v) { try { localStorage.setItem(K, v); } catch (e) {} }
+        function choose(v) {
+          set(v);
+          gtag('consent', 'update', { analytics_storage: v === 'granted' ? 'granted' : 'denied' });
+          var b = document.getElementById('evl-consent'); if (b) b.remove();
+        }
+        function show() {
+          if (document.getElementById('evl-consent')) return;
+          var b = document.createElement('div');
+          b.id = 'evl-consent'; b.setAttribute('role', 'dialog'); b.setAttribute('aria-label', 'Cookies');
+          b.innerHTML = '<p>' + T.t + ' <a href="/privaatsuspoliitika.html">' + T.p + '</a></p>' +
+            '<div class="evl-cc-row"><button type="button" data-v="denied">' + T.n + '</button><button type="button" data-v="granted">' + T.y + '</button></div>';
+          b.addEventListener('click', function (e) { var v = e.target && e.target.getAttribute && e.target.getAttribute('data-v'); if (v) choose(v); });
+          document.body.appendChild(b);
+        }
+        window.evlCookieSettings = show;
+        document.addEventListener('DOMContentLoaded', function () {
+          if (!get()) show();
+          var f = document.getElementById('evl-cookie-link'); if (f) f.textContent = T.a;
+        });
+      })();
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -605,6 +651,8 @@
                 <span>Tallinn, Eesti</span>
                 <span class="text-slate-600 mx-1.5">|</span>
                 <a href="/privaatsuspoliitika.html" class="hover:text-teal-300 underline decoration-slate-600 underline-offset-2">Privaatsuspoliitika</a>
+                <span class="text-slate-600 mx-1.5">|</span>
+                <a href="#" id="evl-cookie-link" onclick="evlCookieSettings();return false;" class="hover:text-teal-300 underline decoration-slate-600 underline-offset-2">Küpsiste seaded</a>
             </div>
         </div>
     </footer>
