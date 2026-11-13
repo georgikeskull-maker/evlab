@@ -1384,7 +1384,8 @@
         { label: "📅 Broneeri väljakutse", text: "Soovin broneerida aku diagnostika Tallinnas." }
       ],
       reviewTitle: "Kas jäid konsultatsiooni või EV Lab teenusega rahule? Sinu 5★ tagasiside aitab meid väga!",
-      thinking: "Analüüsin telemeetria andmebaasi..."
+      thinking: "Analüüsin telemeetria andmebaasi...",
+      error: "⚠️ AI-insener on hetkel kättesaamatu. Helista +372 5551 6666 või kirjuta WhatsAppi (wa.me/37255516666) — vastame kiiresti!"
     },
     ru: {
       badge: "⚡ EV AI-Инженер • Проверка батареи",
@@ -1396,7 +1397,8 @@
         { label: "📅 Записаться на выезд", text: "Хочу записаться на выездную диагностику батареи в Таллинне." }
       ],
       reviewTitle: "Понравилась консультация или работа EV Lab? Будем благодарны за оценку 5★!",
-      thinking: "Анализирую базу батарей..."
+      thinking: "Анализирую базу батарей...",
+      error: "⚠️ AI-инженер временно недоступен. Позвоните +372 5551 6666 или напишите в WhatsApp (wa.me/37255516666) — ответим быстро!"
     },
     en: {
       badge: "⚡ EV AI-Engineer • Battery Check",
@@ -1408,7 +1410,8 @@
         { label: "📅 Book mobile check", text: "I want to book a mobile battery diagnostic in Tallinn." }
       ],
       reviewTitle: "Found our advice or EV Lab service helpful? Your 5★ review means a lot to us!",
-      thinking: "Analyzing EV battery database..."
+      thinking: "Analyzing EV battery database...",
+      error: "⚠️ The AI engineer is temporarily unavailable. Call +372 5551 6666 or message us on WhatsApp (wa.me/37255516666) — we reply fast!"
     }
   };
 
@@ -1484,17 +1487,30 @@
     evAddMsg(text, "user");
     const loader = evAddMsg("⏳ " + EV_I18N[currentLang].thinking, "bot");
 
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 45000);
     try {
       const res = await fetch(EV_WEBHOOK_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, lang: currentLang })
+        body: JSON.stringify({ message: text, lang: currentLang }),
+        signal: ctrl.signal
       });
-      const data = await res.json();
-      loader.textContent = data.reply || "OK";
+      let data = null;
+      try { data = await res.json(); } catch (_) { /* не-JSON ответ */ }
+      const reply = data && typeof data.reply === "string" ? data.reply.trim() : "";
+      if (!res.ok || !reply) {
+        console.error("[EV Drone] bad backend response", res.status, data);
+        loader.textContent = EV_I18N[currentLang].error;
+        return;
+      }
+      loader.textContent = reply;
       if (data.show_review_cta) evShowReviewCard();
     } catch (err) {
-      loader.textContent = "⚠️ Ühenduse viga / Connection error. Helista: +372 или kirjuta WhatsAppi!";
+      console.error("[EV Drone] request failed", err);
+      loader.textContent = EV_I18N[currentLang].error;
+    } finally {
+      clearTimeout(timer);
     }
   }
 
