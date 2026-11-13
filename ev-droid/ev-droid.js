@@ -628,6 +628,7 @@
     launcher.classList.remove("is-boost");
     Loop.set(launchScene, !open);
     Loop.set(headScene, open);
+    syncViewport();
     if (open) {
       headScene.resize();
       headScene.press();
@@ -639,6 +640,24 @@
       openSheet(false);
       launcher.focus({ preventScroll: true });
     }
+  }
+  // Keep the panel inside the *visual* viewport: on iOS/Android the on-screen keyboard does not shrink 100dvh.
+  const vv = window.visualViewport;
+  function syncViewport() {
+    const mobile = window.matchMedia && matchMedia("(max-width: 640px)").matches;
+    if (!vv || !isOpen || !mobile) {
+      root.classList.remove("evd-vv");
+      root.style.removeProperty("--evd-vh"); root.style.removeProperty("--evd-vt");
+      return;
+    }
+    root.style.setProperty("--evd-vh", Math.round(vv.height) + "px");
+    root.style.setProperty("--evd-vt", Math.round(vv.offsetTop) + "px");
+    root.classList.add("evd-vv");
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+  if (vv) {
+    vv.addEventListener("resize", syncViewport);
+    vv.addEventListener("scroll", syncViewport);
   }
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape" || !isOpen) return;

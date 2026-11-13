@@ -99,6 +99,7 @@
   bottom: calc(18px + env(safe-area-inset-bottom, 0px));
   z-index: 9991;
   width: min(440px, calc(100vw - 24px));
+  height: min(680px, calc(100vh - 36px));   /* fallback: browsers without dvh */
   height: min(680px, calc(100dvh - 36px));
   display: flex; flex-direction: column;
   background:
@@ -211,11 +212,28 @@
 
 /* ------------------------------------------------------------ responsive */
 @media (max-width: 640px) {
-  .evd-launcher { width: 132px; height: 132px; right: calc(2px + env(safe-area-inset-right, 0px)); bottom: calc(2px + env(safe-area-inset-bottom, 0px)); }
+  .evd-launcher { width: 100px; height: 100px; right: calc(2px + env(safe-area-inset-right, 0px)); bottom: calc(2px + env(safe-area-inset-bottom, 0px)); }
   .evd-badge { display: none; }
-  .evd-panel { right: 0; bottom: 0; width: 100vw; height: 100dvh; border-radius: 0; border-left: 0; border-right: 0; }
+  .evd-panel { right: 0; bottom: 0; width: 100%; height: 100vh; height: 100dvh; border-radius: 0; border-left: 0; border-right: 0; }
+  /* JS (visualViewport) sets --evd-vh / --evd-vt while the panel is open, so the keyboard never covers the input */
+  .evd-root.evd-vv .evd-panel { top: var(--evd-vt, 0px); bottom: auto; height: var(--evd-vh); }
   .evd-title b { font-size: 12px; letter-spacing: .1em; }
   .evd-avatar { width: 56px; height: 56px; }
+  /* iOS Safari zooms the page on focus when the font is < 16px */
+  .evd-input input, .evd-field input, .evd-field select { font-size: 16px; }
+}
+@media (max-width: 400px) {
+  .evd-avatar { display: none; }  /* make room for 40px controls in the header */
+}
+/* touch targets >= 40px on phones / touch screens */
+@media (max-width: 640px), (pointer: coarse) {
+  .evd-lang, .evd-icon { height: 40px; min-width: 40px; font-size: 12px; }
+  .evd-ctrls { gap: 3px; }
+  .evd-btn { width: 44px; height: 44px; }
+  .evd-input input, .evd-field input, .evd-field select { height: 44px; }
+  .evd-chip { min-height: 40px; padding: 0 14px; font-size: 13px; display: inline-flex; align-items: center; }
+  .evd-review a { min-height: 40px; display: flex; align-items: center; justify-content: center; padding: 6px; }
+  .evd-submit, .evd-cancel { height: 44px; }
 }
 /* Reduced motion (e.g. Windows "Animation effects" off): no idle looping animation (float, blink, LED loops)
    and no panel scale/slide; hover/press glow still responds (short transitions), canvas animates only
