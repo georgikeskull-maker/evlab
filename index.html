@@ -855,7 +855,7 @@
                 return;
             }
 
-            const cleanPlate = query.trim().toUpperCase().replace(/[\s\-]/g, '');
+            const cleanPlate = (window.EvlConsent && EvlConsent.latinize ? EvlConsent.latinize(query.trim()) : query.trim().toUpperCase()).replace(/[\s\-]/g, '');
             const rawUpper = query.trim().toUpperCase();
 
             let certKey = (typeof PLATE_TO_CERT !== 'undefined' && (PLATE_TO_CERT[rawUpper] || PLATE_TO_CERT[cleanPlate])) || query.trim();

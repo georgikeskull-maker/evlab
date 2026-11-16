@@ -42,7 +42,23 @@
     }
   };
 
-  function normPlate(v) { return String(v || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
+  /* Госномер: верхний регистр, визуально похожие кириллические буквы -> латиница, без пробелов, дефисов и прочих знаков. */
+  var CYR2LAT = { '\u0410': 'A', '\u0412': 'B', '\u0415': 'E', '\u041A': 'K', '\u041C': 'M', '\u041D': 'H',
+                  '\u041E': 'O', '\u0420': 'P', '\u0421': 'C', '\u0422': 'T', '\u0423': 'Y', '\u0425': 'X' };
+  function latinize(v) {
+    return String(v || '').toUpperCase().replace(/[\u0410\u0412\u0415\u041A\u041C\u041D\u041E\u0420\u0421\u0422\u0423\u0425]/g, function (c) { return CYR2LAT[c]; });
+  }
+  function normPlate(v) { return latinize(v).replace(/[^A-Z0-9]/g, ''); }
+  // Нормализует значение поля «на лету» и сохраняет позицию курсора (ввод в середине строки не прыгает в конец).
+  function applyPlateNorm(el) {
+    var v = el.value, n = normPlate(v);
+    if (v === n) return n;
+    var pos = null;
+    try { if (document.activeElement === el && el.selectionStart != null) pos = normPlate(v.slice(0, el.selectionStart)).length; } catch (_) { /* ignore */ }
+    el.value = n;
+    if (pos !== null) { try { el.setSelectionRange(pos, pos); } catch (_) { /* ignore */ } }
+    return n;
+  }
 
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
@@ -61,9 +77,9 @@
       hint.style.color = ok ? '#5eead4' : '';
     }
 
-    plate.addEventListener('input', function () {
-      var n = normPlate(plate.value);
-      if (plate.value !== n) plate.value = n;
+    function onPlate(e) {
+      if (e && e.isComposing) return;           // не трогаем текст во время композиции (Android/IME)
+      var n = applyPlateNorm(plate);
       clearTimeout(timer);
       if (ctrl) ctrl.abort();
       say('');
@@ -83,7 +99,10 @@
           })
           .catch(function () { /* подсказка необязательна: ошибки сети молча игнорируем */ });
       }, 450);
-    });
+    }
+    plate.addEventListener('input', onPlate);
+    plate.addEventListener('compositionend', function () { onPlate(); });
+    onPlate();                                   // значение, подставленное браузером (автозаполнение)
   }
 
   /* ---------- модальное окно с условиями (без скачивания PDF) ---------- */
@@ -173,5 +192,5 @@
   function send(payload) { return post('/api/web-consent', payload); }
   function sendLead(payload) { return post('/api/lead', payload); }
 
-  window.EvlConsent = { API: API, TERMS_VERSION: TERMS_VERSION, normPlate: normPlate, bindPlateLookup: bindPlateLookup, openTerms: openTerms, send: send, sendLead: sendLead };
+  window.EvlConsent = { API: API, TERMS_VERSION: TERMS_VERSION, normPlate: normPlate, latinize: latinize, applyPlateNorm: applyPlateNorm, bindPlateLookup: bindPlateLookup, openTerms: openTerms, send: send, sendLead: sendLead };
 })();
