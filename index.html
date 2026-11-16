@@ -119,6 +119,7 @@
         function set(v) { try { localStorage.setItem(K, v); } catch (e) {} }
         function choose(v) {
           set(v);
+          try { document.dispatchEvent(new CustomEvent('evl-consent', { detail: v })); } catch (e) {}
           gtag('consent', 'update', { analytics_storage: v === 'granted' ? 'granted' : 'denied' });
           var b = document.getElementById('evl-consent'); if (b) b.remove();
         }
@@ -132,6 +133,14 @@
           document.body.appendChild(b);
         }
         window.evlCookieSettings = show;
+        // Состояние баннера для формы заказа: 'granted' | 'denied' | null; lang — тот же язык, что у баннера
+        window.evlBanner = {
+          lang: TXT[L] ? L : 'et',
+          get: get,
+          // отправка формы = осознанный выбор пользователя: баннер больше не показываем.
+          // Аналитику при этом НЕ включаем (это отдельное согласие): если выбора не было, фиксируем 'denied'.
+          dismissIfUnset: function () { if (!get()) { set('denied'); var b = document.getElementById('evl-consent'); if (b) b.remove(); } }
+        };
         document.addEventListener('DOMContentLoaded', function () {
           if (!get()) show();
         });
@@ -554,10 +563,6 @@
                     </div>
                 </div>
 
-                <label class="flex items-start gap-2.5 text-[11px] text-slate-300 leading-snug cursor-pointer">
-                    <input type="checkbox" required id="orderTerms" class="mt-0.5 w-4 h-4 shrink-0 accent-sky-500 cursor-pointer">
-                    <span>Olen tutvunud ja nõustun <a href="/tingimused.html" target="_blank" rel="noopener" class="text-teal-300 underline underline-offset-2 hover:text-teal-200">diagnostika tingimuste ja vastutuse piiranguga</a> (GVKFORGE OÜ / EVLAB).</span>
-                </label>
 
                 <fieldset>
                     <legend class="block text-xs font-semibold text-slate-300 mb-1">Kes juhib proovisõidul?</legend>
@@ -575,7 +580,7 @@
 
                 <label class="flex items-start gap-2.5 text-[11px] text-slate-300 leading-snug cursor-pointer">
                     <input type="checkbox" required id="orderConsent" class="mt-0.5 w-4 h-4 shrink-0 accent-sky-500 cursor-pointer">
-                    <span>Kinnitan, et sõidukil on kehtiv liikluskindlustus ja see on tehniliselt korras, ning nõustun diagnostika ja proovisõiduga. <button type="button" id="openTermsBtn" class="text-teal-300 underline underline-offset-2 hover:text-teal-200 cursor-pointer">Loe tingimusi</button></span>
+                    <span id="orderConsentText">Nõustun <a href="/tingimused.html" target="_blank" rel="noopener" class="text-teal-300 underline underline-offset-2 hover:text-teal-200">teenuse osutamise tingimustega</a> ja olen tutvunud GVKFORGE OÜ <a href="/privaatsuspoliitika.html" target="_blank" rel="noopener" class="text-teal-300 underline underline-offset-2 hover:text-teal-200">privaatsuspoliitikaga</a></span>
                 </label>
 
                 <div class="pt-2 flex flex-col gap-2">
@@ -1034,7 +1039,39 @@
             `;
         }
 
+        const ORDER_CONSENT = {
+            et: ['Nõustun ', 'teenuse osutamise tingimustega', ' ja olen tutvunud GVKFORGE OÜ ', 'privaatsuspoliitikaga', ''],
+            ru: ['Я принимаю ', 'условия оказания услуг', ' и ознакомлен с ', 'Политикой конфиденциальности', ' GVKFORGE OÜ'],
+            en: ['I accept the ', 'Terms of Service', ' and acknowledge the GVKFORGE OÜ ', 'Privacy Policy', '']
+        };
+        const TERMS_OK_KEY = 'evl_terms_ok';
+        const lsGet = (k) => { try { return localStorage.getItem(k); } catch (_) { return null; } };
+        const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (_) { /* ignore */ } };
+
+        function renderOrderConsent() {
+            const box = document.getElementById('orderConsentText');
+            if (!box) return;
+            const lang = (window.evlBanner && window.evlBanner.lang) || 'et';
+            const t = ORDER_CONSENT[lang] || ORDER_CONSENT.et;
+            const cls = 'text-teal-300 underline underline-offset-2 hover:text-teal-200';
+            box.innerHTML = '';
+            const link = (href, text) => {
+                const a = document.createElement('a');
+                a.href = href; a.target = '_blank'; a.rel = 'noopener'; a.className = cls; a.textContent = text;
+                return a;
+            };
+            box.append(t[0], link('/tingimused.html', t[1]), t[2], link('/privaatsuspoliitika.html', t[3]), t[4]);
+        }
+        // Предвыбор: баннер принят ('granted') или условия уже принимались при прошлой заявке. Ручной выбор пользователя не трогаем.
+        function syncOrderConsent() {
+            const cb = document.getElementById('orderConsent');
+            if (!cb || cb.dataset.touched) return;
+            const banner = window.evlBanner ? window.evlBanner.get() : null;
+            cb.checked = banner === 'granted' || !!lsGet(TERMS_OK_KEY);
+        }
+
         function openBookingModal(serviceName) {
+            syncOrderConsent();
             const input = document.getElementById('modalService');
             if (input) input.value = serviceName || 'Dünaamiline koormustest (135 €)';
             const modal = document.getElementById('bookingModal');
@@ -1090,16 +1127,21 @@
 
             const res = await EvlConsent.send({
                 name, contact: phone, plate, make_model: car, loc, service, consent,
-                driver: driverEl ? driverEl.value : 'client', lang: 'et', source: 'web-form', website: ''
+                driver: driverEl ? driverEl.value : 'client', lang: (window.evlBanner && window.evlBanner.lang === 'ru') ? 'ru' : 'et',
+                source: 'web-form', website: ''
             });
 
             if (res.ok && res.data && res.data.ok) {
+                lsSet(TERMS_OK_KEY, String(Date.now()));                      // условия приняты: форма предвыберет их в следующий раз
+                if (window.evlBanner) window.evlBanner.dismissIfUnset();      // баннер повторно не всплывёт
                 submitBtn.classList.remove('from-sky-500', 'to-blue-600', 'hover:from-sky-400');
                 submitBtn.classList.add('bg-emerald-500', 'text-white');
                 const ref = String(res.data.record_id || '').slice(0, 8).toUpperCase();
                 submitBtn.innerHTML = '✓ Tellimus ja nõusolek kinnitatud' + (ref ? ' · ' + ref : '');
                 setTimeout(() => {
                     e.target.reset();
+                    const oc2 = document.getElementById('orderConsent');
+                    if (oc2) delete oc2.dataset.touched;
                     localStorage.setItem('last_lead_sent', Date.now());
                     restoreBtn();
                     closeBookingModal();
@@ -1124,8 +1166,12 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const btn = document.getElementById('openTermsBtn');
-            if (btn) btn.addEventListener('click', () => EvlConsent.openTerms('et'));
+            renderOrderConsent();
+            const oc = document.getElementById('orderConsent');
+            if (oc) oc.addEventListener('change', () => { oc.dataset.touched = '1'; });
+            syncOrderConsent();
+            document.addEventListener('evl-consent', syncOrderConsent);   // баннер принят при уже открытой странице/форме
+            window.addEventListener('storage', syncOrderConsent);          // принят в другой вкладке
             const plate = document.getElementById('orderPlate');
             const car = document.getElementById('orderCar');
             if (plate && car && window.EvlConsent) {
