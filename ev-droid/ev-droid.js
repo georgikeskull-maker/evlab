@@ -1,8 +1,8 @@
-/* EV Lab AI droid widget for evlab.ee
+/* EVLAB AI droid widget for evlab.ee
  * - droid: glossy render (droid.webp, cut out of the reference) + SVG LED face with moods
  * - scene: two canvases (behind / in front of the droid) -> 3D particle vortex, thruster flames and sparks
  * - HUD terminal (built lazily): chat via n8n webhook, quick booking -> Supabase `leads`
- * No dependencies. Uses the page's global `supabaseClient` if present.
+ * No dependencies. Leads are sent through the EVLAB backend (EvlConsent.sendLead), never directly to the database.
  */
 (() => {
   "use strict";
@@ -17,7 +17,6 @@
     googleReview: "https://g.page/r/CQoEp6qkUKTHECE/review",
     trustpilot: "https://www.trustpilot.com/evaluate/evlab.ee",
     phone: "+372 5551 6666",
-    wa: "37255516666",
     leadCooldownMs: 60000,
     droidImg: ASSET("droid.webp?v=2"),
   };
@@ -35,10 +34,10 @@
   const T = {
     et: {
       badge: "⚡ EV AI-insener • Küsi aku kohta",
-      open: "Ava EV Lab AI-insener", close: "Sulge",
+      open: "Ava EVLAB AI-insener", close: "Sulge",
       status: "Online • Tallinn & Harjumaa",
       placeholder: "Nt: Hyundai Kona 2020, 110 000 km...",
-      welcome: "Tere! Olen EV Lab virtuaalne akuinsener. Kirjuta auto mudel, aasta ja läbisõit — selgitan SoH-d, elementide pingeerinevust (ΔV) ja reaalset sõiduulatust ning aitan broneerida kohalesõiduga diagnostika Tallinnas ja Harjumaal (65 € / 135 €).",
+      welcome: "Tere! Olen EVLAB virtuaalne akuinsener. Kirjuta auto mudel, aasta ja läbisõit — selgitan SoH-d, elementide pingeerinevust (ΔV) ja reaalset sõiduulatust ning aitan broneerida kohalesõiduga diagnostika Tallinnas ja Harjumaal (65 € / 135 €).",
       chips: [
         ["📅 Broneeri kontroll", "#book"],
         ["🔋 Mis on SoH?", "Mis on SoH ja kuidas seda mõõdetakse?"],
@@ -47,9 +46,9 @@
         ["💶 65 € vs 135 €", "Mis vahe on 65 € ekspresstestil ja 135 € koormusauditil?"],
       ],
       thinking: "Analüüsin...",
-      error: `⚠️ AI-insener on hetkel kättesaamatu. Helista ${CFG.phone} või kirjuta WhatsAppi (wa.me/${CFG.wa}).`,
+      error: `⚠️ AI-insener on hetkel kättesaamatu. Helista ${CFG.phone}.`,
       offline: "(võrguühenduseta vastus)",
-      reviewTitle: "Kas jäid konsultatsiooni või EV Lab teenusega rahule? Sinu 5★ tagasiside aitab meid väga!",
+      reviewTitle: "Kas jäid konsultatsiooni või EVLAB teenusega rahule? Sinu 5★ tagasiside aitab meid väga!",
       review: "Jäta tagasiside",
       voiceNa: "Teie brauser ei toeta häälsisendit.",
       mic: "Häälsisend", send: "Saada",
@@ -63,15 +62,14 @@
       bOkChat: "Aitäh! Päring on vastu võetud — insener võtab ühendust telefoni või Telegrami teel.",
       bErrCar: "Sisesta auto mudel.", bErrContact: "Sisesta telefoninumber või @telegram.",
       bWait: "Päring on juba saadetud — võtame peagi ühendust!",
-      bFail: "Ei õnnestunud saata — avame WhatsAppi.",
-      waText: (s, car, c) => `Tere! Soovin broneerida: ${s}. Auto: ${car}. Kontakt: ${c}`,
+      bFail: `Ei õnnestunud saata. Palun helista ${CFG.phone}.`,
     },
     ru: {
       badge: "⚡ EV AI-инженер • Проверка батареи",
-      open: "Открыть AI-инженера EV Lab", close: "Закрыть",
+      open: "Открыть AI-инженера EVLAB", close: "Закрыть",
       status: "Online • Таллинн и Харьюмаа",
       placeholder: "Напр.: Tesla Model 3 2020, 130 000 км...",
-      welcome: "Привет! Я виртуальный инженер-диагност EV Lab. Напиши модель, год и пробег электромобиля — объясню SoH, разбаланс ячеек (ΔV) и реальный запас хода, и запишу на выездную диагностику в Таллинне и Харьюмаа (65 € / 135 €).",
+      welcome: "Привет! Я виртуальный инженер-диагност EVLAB. Напиши модель, год и пробег электромобиля — объясню SoH, разбаланс ячеек (ΔV) и реальный запас хода, и запишу на выездную диагностику в Таллинне и Харьюмаа (65 € / 135 €).",
       chips: [
         ["📅 Записаться", "#book"],
         ["🔋 Что такое SoH?", "Что такое SoH и как его измеряют?"],
@@ -80,9 +78,9 @@
         ["💶 65 € vs 135 €", "В чём разница между экспресс-тестом за 65 € и нагрузочным аудитом за 135 €?"],
       ],
       thinking: "Анализирую...",
-      error: `⚠️ AI-инженер временно недоступен. Позвоните ${CFG.phone} или напишите в WhatsApp (wa.me/${CFG.wa}).`,
+      error: `⚠️ AI-инженер временно недоступен. Позвоните ${CFG.phone}.`,
       offline: "(ответ без подключения к серверу)",
-      reviewTitle: "Понравилась консультация или работа EV Lab? Будем благодарны за оценку 5★!",
+      reviewTitle: "Понравилась консультация или работа EVLAB? Будем благодарны за оценку 5★!",
       review: "Оставить отзыв",
       voiceNa: "Ваш браузер не поддерживает голосовой ввод.",
       mic: "Голосовой ввод", send: "Отправить",
@@ -96,15 +94,14 @@
       bOkChat: "Спасибо! Заявка принята — инженер свяжется с вами по телефону или в Telegram.",
       bErrCar: "Укажите модель авто.", bErrContact: "Укажите телефон или @telegram.",
       bWait: "Заявка уже отправлена — скоро свяжемся!",
-      bFail: "Не удалось отправить — открываю WhatsApp.",
-      waText: (s, car, c) => `Здравствуйте! Хочу записаться: ${s}. Авто: ${car}. Контакт: ${c}`,
+      bFail: `Не удалось отправить. Пожалуйста, позвоните ${CFG.phone}.`,
     },
     en: {
       badge: "⚡ EV AI-engineer • Battery check",
-      open: "Open EV Lab AI engineer", close: "Close",
+      open: "Open EVLAB AI engineer", close: "Close",
       status: "Online • Tallinn & Harjumaa",
       placeholder: "E.g.: VW ID.4 2021, 95 000 km...",
-      welcome: "Hi! I'm EV Lab's virtual battery engineer. Send me the EV model, year and mileage — I'll explain SoH, cell imbalance (ΔV) and real-world range, and book a mobile diagnostic in Tallinn & Harjumaa (65 € / 135 €).",
+      welcome: "Hi! I'm EVLAB's virtual battery engineer. Send me the EV model, year and mileage — I'll explain SoH, cell imbalance (ΔV) and real-world range, and book a mobile diagnostic in Tallinn & Harjumaa (65 € / 135 €).",
       chips: [
         ["📅 Book a check", "#book"],
         ["🔋 What is SoH?", "What is SoH and how is it measured?"],
@@ -113,9 +110,9 @@
         ["💶 65 € vs 135 €", "What is the difference between the 65 € Express Test and the 135 € Load Audit?"],
       ],
       thinking: "Analysing...",
-      error: `⚠️ The AI engineer is temporarily unavailable. Call ${CFG.phone} or WhatsApp us (wa.me/${CFG.wa}).`,
+      error: `⚠️ The AI engineer is temporarily unavailable. Call ${CFG.phone}.`,
       offline: "(offline answer)",
-      reviewTitle: "Found our advice or EV Lab service helpful? Your 5★ review means a lot to us!",
+      reviewTitle: "Found our advice or EVLAB service helpful? Your 5★ review means a lot to us!",
       review: "Leave a review",
       voiceNa: "Voice input is not supported in this browser.",
       mic: "Voice input", send: "Send",
@@ -129,17 +126,16 @@
       bOkChat: "Thank you! Your request is in — an engineer will contact you by phone or Telegram.",
       bErrCar: "Please enter the car model.", bErrContact: "Please enter a phone number or @telegram.",
       bWait: "Your request was already sent — we'll be in touch soon!",
-      bFail: "Could not send — opening WhatsApp.",
-      waText: (s, car, c) => `Hi! I'd like to book: ${s}. Car: ${car}. Contact: ${c}`,
+      bFail: `Could not send. Please call ${CFG.phone}.`,
     },
   };
 
   // Offline answers, used only if the n8n backend is unreachable.
   const FAQ = {
     soh: {
-      et: "SoH (State of Health) näitab, kui palju aku mahutavusest on alles võrreldes uuega. Usaldusväärne SoH saadakse BMS-i andmetest ja koormustestist — mitte armatuurlaua protsendist. EV Lab mõõdab seda kohapeal ja annab PDF-sertifikaadi.",
-      ru: "SoH (State of Health) — сколько ёмкости батареи осталось по сравнению с новой. Надёжный SoH получают из данных BMS и нагрузочного теста, а не по проценту на приборной панели. EV Lab измеряет его на месте и выдаёт PDF-сертификат.",
-      en: "SoH (State of Health) is how much of the battery's capacity remains compared to new. A reliable SoH comes from BMS data plus a load test — not from the dashboard percentage. EV Lab measures it on site and issues a PDF certificate.",
+      et: "SoH (State of Health) näitab, kui palju aku mahutavusest on alles võrreldes uuega. Usaldusväärne SoH saadakse BMS-i andmetest ja koormustestist — mitte armatuurlaua protsendist. EVLAB mõõdab seda kohapeal ja annab PDF-sertifikaadi.",
+      ru: "SoH (State of Health) — сколько ёмкости батареи осталось по сравнению с новой. Надёжный SoH получают из данных BMS и нагрузочного теста, а не по проценту на приборной панели. EVLAB измеряет его на месте и выдаёт PDF-сертификат.",
+      en: "SoH (State of Health) is how much of the battery's capacity remains compared to new. A reliable SoH comes from BMS data plus a load test — not from the dashboard percentage. EVLAB measures it on site and issues a PDF certificate.",
     },
     delta: {
       et: "ΔV on suurima ja väikseima elemendi pinge vahe. Orienteeruvalt: 4–15 mV — tehase tasakaal, 16–30 mV — lubatud tööhälve, üle 50 mV — viitab nõrgale elemendile. Kõige ausam pilt tekib koormuse all, seda kontrollime 135 € koormusauditis.",
@@ -814,10 +810,11 @@
     const label = btn.textContent;
     btn.textContent = t.bSending;
     try {
-      const sb = typeof supabaseClient !== "undefined" ? supabaseClient : null; // global from index.html
-      if (!sb) throw new Error("supabaseClient missing");
-      const { error } = await sb.from("leads").insert([row]);
-      if (error) throw error;
+      if (!window.EvlConsent || !window.EvlConsent.sendLead) throw new Error("EvlConsent missing");
+      const res = await window.EvlConsent.sendLead({
+        name: contact.startsWith("@") ? contact : "", contact, car, service, loc: row.loc, lang, website: "",
+      });
+      if (!res.ok || !(res.data && res.data.ok)) throw new Error("lead api " + res.status);
       store.set("last_lead_sent", String(Date.now()));
       say(t.bOk, "ok");
       if (typeof window.gtag === "function") window.gtag("event", "generate_lead", { source: "ev-droid", lang });
@@ -830,7 +827,6 @@
     } catch (err) {
       console.error("[EV Droid] lead submit failed", err);
       say(t.bFail, "err");
-      window.open("https://wa.me/" + CFG.wa + "?text=" + encodeURIComponent(t.waText(service, car, contact)), "_blank", "noopener");
     } finally {
       btn.disabled = false;
       btn.textContent = label;

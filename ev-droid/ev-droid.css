@@ -1,4 +1,4 @@
-/* EV Lab AI droid widget — scoped with .evd- prefix, no framework dependency.
+/* EVLAB AI droid widget — scoped with .evd- prefix, no framework dependency.
    Animations use transform/opacity (compositor) + canvas; paused when the tab is hidden. */
 .evd-root {
   --evd-bg: #050B14;

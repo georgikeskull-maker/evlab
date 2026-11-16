@@ -159,10 +159,10 @@
   }
 
   /* ---------- отправка согласия ---------- */
-  function send(payload) {
+  function post(path, payload) {
     var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
     var to = setTimeout(function () { if (ctrl) ctrl.abort(); }, 25000);
-    return fetch(API + '/api/web-consent', {
+    return fetch(API + path, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined
     }).then(function (r) {
@@ -170,6 +170,8 @@
     }).catch(function () { return { ok: false, status: 0, data: {} }; })
       .then(function (res) { clearTimeout(to); return res; });
   }
+  function send(payload) { return post('/api/web-consent', payload); }
+  function sendLead(payload) { return post('/api/lead', payload); }
 
-  window.EvlConsent = { API: API, TERMS_VERSION: TERMS_VERSION, normPlate: normPlate, bindPlateLookup: bindPlateLookup, openTerms: openTerms, send: send };
+  window.EvlConsent = { API: API, TERMS_VERSION: TERMS_VERSION, normPlate: normPlate, bindPlateLookup: bindPlateLookup, openTerms: openTerms, send: send, sendLead: sendLead };
 })();
