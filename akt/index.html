@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Akt-nõusolek | EVLAB</title>
+<meta name="description" content="EVLAB (GVKFORGE OÜ): diagnostika ja proovisõidu nõusolek ühe klõpsuga automüügiplatsidele ja klientidele.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://evlab.ee/akt/">
+<meta name="theme-color" content="#020617">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/favicon.png">
+<style>
+  :root { --bg:#020617; --card:#0b1220; --line:#1e293b; --text:#cbd5e1; --head:#fff; --accent:#2dd4bf; --sky:#0ea5e9; --muted:#64748b; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.55 Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 520px; margin: 0 auto; padding: 18px 16px 48px; }
+  .top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .brand { font-weight:800; font-size:20px; color:var(--head); letter-spacing:-.3px; }
+  .brand span { color:var(--accent); }
+  .langs { display:flex; gap:6px; }
+  .langs button { min-height:40px; min-width:48px; border-radius:10px; border:1px solid #334155; background:#111a2e; color:#fff; font:600 14px inherit; cursor:pointer; }
+  .langs button[aria-pressed="true"] { border-color:var(--accent); color:var(--accent); }
+  h1 { color:var(--head); font-size:22px; line-height:1.25; margin:0 0 4px; }
+  .lead { color:#94a3b8; font-size:14px; margin:0 0 16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px; }
+  label.f { display:block; margin:0 0 12px; font-size:13px; font-weight:600; color:#cbd5e1; }
+  label.f input[type=text], label.f input[type=tel] { display:block; width:100%; margin-top:5px; min-height:48px; padding:0 14px; border-radius:12px; border:1px solid #334155; background:#020617; color:#fff; font:16px inherit; }
+  input:focus-visible, button:focus-visible, .seg input:focus-visible + span { outline:2px solid var(--accent); outline-offset:2px; }
+  #plate { text-transform:uppercase; letter-spacing:.08em; font-weight:700; }
+  .hint { min-height:1.2em; margin:4px 0 0; font-size:12px; color:#94a3b8; font-weight:400; }
+  fieldset { border:0; padding:0; margin:0 0 14px; }
+  legend { padding:0; margin-bottom:6px; font-size:13px; font-weight:600; color:#cbd5e1; }
+  .seg { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .seg label { cursor:pointer; }
+  .seg input { position:absolute; opacity:0; pointer-events:none; }
+  .seg span { display:block; text-align:center; padding:12px 8px; min-height:48px; border-radius:12px; border:1px solid #334155; background:#020617; color:#cbd5e1; font-size:13px; font-weight:600; }
+  .seg input:checked + span { border-color:var(--sky); background:rgba(14,165,233,.12); color:#7dd3fc; }
+  .chk { display:flex; gap:10px; align-items:flex-start; margin:4px 0 16px; font-size:13px; line-height:1.45; cursor:pointer; }
+  .chk input { flex:0 0 22px; width:22px; height:22px; margin-top:1px; accent-color:var(--sky); cursor:pointer; }
+  .chk button { padding:0; border:0; background:none; color:var(--accent); font:inherit; text-decoration:underline; cursor:pointer; }
+  .go { width:100%; min-height:52px; border:0; border-radius:12px; background:linear-gradient(90deg,#0ea5e9,#2563eb); color:#fff; font:700 15px inherit; letter-spacing:.03em; cursor:pointer; }
+  .go[disabled] { opacity:.6; cursor:wait; }
+  .err { display:none; margin:0 0 12px; padding:10px 12px; border-radius:10px; border:1px solid #7f1d1d; background:#450a0a; color:#fecaca; font-size:13px; }
+  .err.on { display:block; }
+  .tiny { margin:12px 0 0; font-size:11px; color:var(--muted); text-align:center; line-height:1.4; }
+  .tiny a { color:var(--accent); }
+  .trap { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+  .done { display:none; text-align:center; }
+  .done.on { display:block; }
+  .done .tick { width:56px; height:56px; margin:0 auto 10px; border-radius:50%; background:rgba(16,185,129,.15); color:#34d399; font-size:30px; line-height:56px; }
+  .done h2 { color:var(--head); font-size:20px; margin:0 0 6px; }
+  .kv { margin:14px 0; text-align:left; font-size:13px; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .kv div { display:flex; justify-content:space-between; gap:12px; padding:8px 12px; border-bottom:1px solid var(--line); }
+  .kv div:last-child { border-bottom:0; }
+  .kv b { color:var(--head); font-weight:600; text-align:right; word-break:break-all; }
+  .again { margin-top:6px; min-height:44px; padding:0 18px; border-radius:10px; border:1px solid #334155; background:#111a2e; color:#fff; font:600 14px inherit; cursor:pointer; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">EV<span>LAB</span></div>
+    <div class="langs" role="group" aria-label="Keel / Язык">
+      <button type="button" data-l="et" aria-pressed="true">ET</button>
+      <button type="button" data-l="ru" aria-pressed="false">RU</button>
+    </div>
+  </div>
+
+  <div id="formView">
+    <h1 data-t="h1"></h1>
+    <p class="lead" data-t="lead"></p>
+    <form id="f" class="card" novalidate>
+      <div id="err" class="err" role="alert"></div>
+
+      <label class="f"><span data-t="plate"></span>
+        <input type="text" id="plate" required maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" placeholder="123ABC">
+        <span id="hint" class="hint" aria-live="polite"></span>
+      </label>
+      <label class="f"><span data-t="car"></span>
+        <input type="text" id="car" maxlength="80" autocomplete="off" placeholder="Nissan Leaf">
+      </label>
+      <label class="f"><span data-t="name"></span>
+        <input type="text" id="name" required maxlength="80" autocomplete="name">
+      </label>
+      <label class="f"><span data-t="contact"></span>
+        <input type="text" id="contact" required maxlength="80" autocomplete="tel" inputmode="tel" placeholder="+372 5123 4567">
+      </label>
+      <label class="f"><span data-t="loc"></span>
+        <input type="text" id="loc" maxlength="120" autocomplete="off">
+      </label>
+
+      <fieldset>
+        <legend data-t="driver"></legend>
+        <div class="seg">
+          <label><input type="radio" name="driver" value="client" checked><span data-t="drvClient"></span></label>
+          <label><input type="radio" name="driver" value="specialist"><span data-t="drvSpec"></span></label>
+        </div>
+      </fieldset>
+
+      <label class="chk"><input type="checkbox" id="consent" required>
+        <span><span data-t="consent"></span> <button type="button" id="terms" data-t="readTerms"></button></span>
+      </label>
+
+      <div class="trap" aria-hidden="true"><label>Website <input type="text" id="website" tabindex="-1" autocomplete="off"></label></div>
+      <button type="submit" class="go" id="go" data-t="submit"></button>
+      <p class="tiny" data-t="legal"></p>
+    </form>
+  </div>
+
+  <div id="doneView" class="card done" aria-live="polite">
+    <div class="tick">✓</div>
+    <h2 data-t="doneH"></h2>
+    <p data-t="doneP" style="margin:0 0 4px"></p>
+    <div class="kv">
+      <div><span data-t="kvPlate"></span><b id="kPlate"></b></div>
+      <div><span data-t="kvTime"></span><b id="kTime"></b></div>
+      <div><span data-t="kvId"></span><b id="kId"></b></div>
+    </div>
+    <button type="button" class="again" id="again" data-t="again"></button>
+  </div>
+</div>
+
+<script src="/evlab-consent.js?v=1"></script>
+<script>
+(function () {
+  var S = {
+    et: {
+      h1: 'Diagnostika ja proovisõidu nõusolek', lead: 'Täida andmed ja kinnita ühe klõpsuga. PDF-i ei pea alla laadima ega saatma.',
+      plate: 'Registreerimismärk *', car: 'Mark ja mudel', name: 'Nimi / automüügiplats *', contact: 'Telefon või e-post *', loc: 'Asukoht (nt. aadress)',
+      driver: 'Kes juhib proovisõidul?', drvClient: 'Omanik / plats', drvSpec: 'EVLAB spetsialist',
+      consent: 'Kinnitan, et sõidukil on kehtiv liikluskindlustus ja see on tehniliselt korras, ning nõustun diagnostika, proovisõidu ja tingimustega.',
+      readTerms: 'Loe tingimusi', submit: 'KINNITAN JA SAADAN', legal: 'Salvestame kinnituse aja, IP-aadressi ja brauseri andmed ning koostame PDF-akti (GVKFORGE OÜ, säilitame 7 aastat). Kinnitus on elektrooniline.',
+      found: '✓ Leitud: ', suggest: 'Registris: ',
+      doneH: 'Nõusolek kinnitatud', doneP: 'EVLAB spetsialist võtab sinuga ühendust.', kvPlate: 'Registrimärk', kvTime: 'Kinnitamise aeg', kvId: 'Kirje ID', again: 'Uus akt',
+      eFields: 'Palun kontrolli andmeid: registrimärk, nimi, telefon või e-post ja märkeruut.', eMany: 'Liiga palju päringuid. Proovi hiljem või helista +372 5551 6666.',
+      eNet: 'Ühendus ebaõnnestus. Proovi uuesti või helista +372 5551 6666.', sending: 'Saadan…'
+    },
+    ru: {
+      h1: 'Согласие на диагностику и тест-драйв', lead: 'Заполните данные и подтвердите одним нажатием. PDF скачивать и пересылать не нужно.',
+      plate: 'Госномер *', car: 'Марка и модель', name: 'Имя / автоплощадка *', contact: 'Телефон или e-mail *', loc: 'Место (напр. адрес)',
+      driver: 'Кто за рулём на тест-драйве?', drvClient: 'Владелец / площадка', drvSpec: 'Специалист EVLAB',
+      consent: 'Подтверждаю, что у автомобиля действует обязательное страхование (liikluskindlustus), он технически исправен, и соглашаюсь с диагностикой, тест-драйвом и условиями.',
+      readTerms: 'Читать условия', submit: 'ПОДТВЕРЖДАЮ И ОТПРАВЛЯЮ', legal: 'Мы сохраняем время подтверждения, IP-адрес и данные браузера и формируем PDF-акт (GVKFORGE OÜ, хранится 7 лет). Подтверждение электронное.',
+      found: '✓ Найдено: ', suggest: 'В реестре: ',
+      doneH: 'Согласие подтверждено', doneP: 'Специалист EVLAB свяжется с вами.', kvPlate: 'Госномер', kvTime: 'Время подтверждения', kvId: 'ID записи', again: 'Новый акт',
+      eFields: 'Проверьте данные: госномер, имя, телефон или e-mail и галочку согласия.', eMany: 'Слишком много запросов. Попробуйте позже или позвоните +372 5551 6666.',
+      eNet: 'Не удалось отправить. Повторите или позвоните +372 5551 6666.', sending: 'Отправляю…'
+    }
+  };
+  var lang = 'et';
+  try { lang = (location.hash === '#ru' || (!location.hash && /^ru/i.test(navigator.language || ''))) ? 'ru' : 'et'; } catch (e) {}
+
+  var $ = function (id) { return document.getElementById(id); };
+  function apply() {
+    var T = S[lang];
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-t]').forEach(function (el) { if (T[el.dataset.t] !== undefined) el.textContent = T[el.dataset.t]; });
+    document.querySelectorAll('.langs button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.l === lang ? 'true' : 'false'); });
+    document.title = lang === 'ru' ? 'Акт-согласие | EVLAB' : 'Akt-nõusolek | EVLAB';
+  }
+  document.querySelectorAll('.langs button').forEach(function (b) {
+    b.addEventListener('click', function () { lang = b.dataset.l; history.replaceState(null, '', lang === 'ru' ? '#ru' : location.pathname); apply(); });
+  });
+  apply();
+
+  $('terms').addEventListener('click', function () { EvlConsent.openTerms(lang); });
+  EvlConsent.bindPlateLookup({
+    plate: $('plate'), car: $('car'), hint: $('hint'),
+    msgs: { get found() { return S[lang].found; }, get suggest() { return S[lang].suggest; } }
+  });
+
+  function showErr(msg) { var e = $('err'); e.textContent = msg; e.classList.add('on'); e.scrollIntoView({ block: 'nearest' }); }
+
+  $('f').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var T = S[lang];
+    $('err').classList.remove('on');
+    var plate = EvlConsent.normPlate($('plate').value), name = $('name').value.trim(), contact = $('contact').value.trim();
+    if (!plate || name.length < 2 || contact.length < 5 || !$('consent').checked) { showErr(T.eFields); return; }
+    var btn = $('go'), label = btn.textContent;
+    btn.disabled = true; btn.textContent = T.sending;
+    EvlConsent.send({
+      name: name, contact: contact, plate: plate, make_model: $('car').value.trim(), loc: $('loc').value.trim(),
+      driver: (document.querySelector('input[name=driver]:checked') || {}).value || 'client', consent: true, lang: lang,
+      service: 'Akt (automüügiplats)', source: 'akt-page', website: $('website').value
+    }).then(function (res) {
+      btn.disabled = false; btn.textContent = label;
+      if (res.ok && res.data && res.data.ok) {
+        $('kPlate').textContent = res.data.plate || plate;
+        $('kTime').textContent = res.data.confirmed_at ? res.data.confirmed_at.replace('T', ' ').slice(0, 19) : '';
+        $('kId').textContent = String(res.data.record_id || '').slice(0, 8).toUpperCase();
+        $('formView').style.display = 'none';
+        $('doneView').classList.add('on');
+        window.scrollTo(0, 0);
+      } else if (res.status === 422) { showErr(T.eFields); }
+      else if (res.status === 429) { showErr(T.eMany); }
+      else { showErr(T.eNet); }
+    });
+  });
+
+  $('again').addEventListener('click', function () {
+    $('f').reset(); $('hint').textContent = '';
+    $('doneView').classList.remove('on'); $('formView').style.display = '';
+  });
+})();
+</script>
+</body>
+</html>
