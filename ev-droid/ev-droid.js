@@ -527,6 +527,7 @@
     copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
     speaker: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h4l5 4v-13l-5 4z"/><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"/></svg>',
+    spin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9"/></svg>',
     stop: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/></svg>',
     send: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg>',
   };
@@ -673,6 +674,8 @@
 
   // ------------------------------------------------------------------ message actions: copy / speak (TTS)
   const TTS = "speechSynthesis" in window && typeof window.SpeechSynthesisUtterance !== "undefined";
+  const AUDIO = typeof window.Audio === "function";
+  const CAN_SPEAK = TTS || AUDIO;
   const VOICE_LANG = { et: "et-EE", ru: "ru-RU", en: "en-US" };
   let speakToken = 0, speakBtn = null;
 
@@ -708,33 +711,57 @@
     b.title = T[lang][k];
     b.setAttribute("aria-label", T[lang][k]);
   }
-  function setSpeakState(btn, on) {
-    btn.classList.toggle("is-on", on);
-    btn.innerHTML = on ? ICON.stop : ICON.speaker;
-    btn.dataset.k = on ? "stopSpeak" : "speak";
-    btn.setAttribute("aria-pressed", String(on));
+  // Состояние кнопки озвучки: "idle" | "loading" (запрос к /api/tts) | "on" (играет)
+  function setSpeakState(btn, st) {
+    if (st === true) st = "on"; else if (st === false) st = "idle";
+    btn.classList.toggle("is-on", st === "on");
+    btn.classList.toggle("is-loading", st === "loading");
+    btn.innerHTML = st === "idle" ? ICON.speaker : (st === "loading" ? ICON.spin : ICON.stop);
+    btn.dataset.k = st === "idle" ? "speak" : "stopSpeak";
+    btn.setAttribute("aria-pressed", String(st !== "idle"));
+    btn.setAttribute("aria-busy", String(st === "loading"));
     labelAct(btn);
+  }
+  const TTS_URL = () => ((window.EvlConsent && window.EvlConsent.API) || "https://evlab-engine-254944045596.europe-north1.run.app") + "/api/tts";
+  const SILENT = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
+  let player = null, ttsCtrl = null, speakPhase = "idle";
+  const blobCache = new Map();                      // lang+text -> blob URL (повторное прослушивание без сети)
+  // iOS/Safari разрешают play() только из жеста пользователя: "прогреваем" единый плеер синхронно в клике
+  function primeAudio() {
+    if (!AUDIO) return;
+    try {
+      if (!player) player = new Audio();
+      player.src = SILENT;
+      const p = player.play();
+      if (p && p.catch) p.catch(() => { /* ignore */ });
+    } catch (_) { /* ignore */ }
   }
   function stopSpeak() {
     speakToken++;                                   // обнуляет колбэки прежних реплик
+    if (ttsCtrl) { try { ttsCtrl.abort(); } catch (_) { /* ignore */ } ttsCtrl = null; }
+    if (player) { try { player.onended = player.onerror = null; player.pause(); } catch (_) { /* ignore */ } }
     if (TTS) { try { speechSynthesis.cancel(); } catch (_) { /* ignore */ } }
-    if (speakBtn) { setSpeakState(speakBtn, false); speakBtn = null; }
+    if (speakBtn) { setSpeakState(speakBtn, "idle"); speakBtn = null; }
+    speakPhase = "idle";
   }
-  // btn может быть null (автоозвучка стартует раньше, чем появится строка действий); возвращает токен озвучки.
-  function speak(btn, text) {
-    if (!TTS) return 0;
-    const l = lang;
-    const parts = speechChunks(speechText(text, l));
-    if (!parts.length) return 0;
-    const token = ++speakToken;
-    speakBtn = btn;
-    if (btn) setSpeakState(btn, true);
-    const done = () => {
-      if (token !== speakToken) return;
-      if (speakBtn) setSpeakState(speakBtn, false);
-      speakBtn = null;
-    };
+  async function fetchAudio(text, l, signal) {
+    const key = l + "\n" + text;
+    if (blobCache.has(key)) return blobCache.get(key);
+    const r = await fetch(TTS_URL(), {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, lang: l }), signal,
+    });
+    if (!r.ok) throw new Error("tts " + r.status);
+    const url = URL.createObjectURL(await r.blob());
+    blobCache.set(key, url);
+    if (blobCache.size > 12) { const k = blobCache.keys().next().value; URL.revokeObjectURL(blobCache.get(k)); blobCache.delete(k); }
+    return url;
+  }
+  // Тихий резерв: браузерный синтезатор (без сообщений об ошибках)
+  function browserSpeak(token, text, l, done) {
     try {
+      const parts = speechChunks(speechText(text, l));
+      if (!parts.length) { done(); return; }
       const v = pickVoice(l);
       parts.forEach((p, i) => {
         const u = new SpeechSynthesisUtterance(p);
@@ -745,6 +772,40 @@
         speechSynthesis.speak(u);
       });
     } catch (_) { done(); }
+  }
+  // btn может быть null (автоозвучка стартует раньше, чем появится строка действий); возвращает токен озвучки.
+  function speak(btn, text) {
+    if (!CAN_SPEAK) return 0;
+    const l = lang;
+    const plain = plainText(text).slice(0, 1500);
+    if (!plain) return 0;
+    const token = ++speakToken;
+    speakBtn = btn;
+    const setPhase = (p) => { speakPhase = p; if (speakBtn) setSpeakState(speakBtn, p); };
+    const finish = () => {
+      if (token !== speakToken) return;
+      if (speakBtn) setSpeakState(speakBtn, "idle");
+      speakBtn = null; speakPhase = "idle";
+    };
+    const fallback = () => {
+      if (token !== speakToken) return;
+      if (!TTS) { finish(); return; }
+      setPhase("on");
+      browserSpeak(token, text, l, finish);
+    };
+    if (!AUDIO) { setPhase("on"); browserSpeak(token, text, l, finish); return token; }
+    setPhase("loading");
+    primeAudio();
+    ttsCtrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    const timer = setTimeout(() => { if (ttsCtrl) ttsCtrl.abort(); }, 12000);
+    fetchAudio(plain, l, ttsCtrl ? ttsCtrl.signal : undefined).then((url) => {
+      clearTimeout(timer);
+      if (token !== speakToken) return null;
+      player.onended = finish;
+      player.onerror = fallback;
+      player.src = url;
+      return player.play().then(() => { if (token === speakToken) setPhase("on"); });
+    }).catch(() => { clearTimeout(timer); fallback(); });
     return token;
   }
   async function copyText(btn, text) {
@@ -778,7 +839,7 @@
       return b;
     };
     row.appendChild(mk("copy", ICON.copy, "copy"));
-    if (TTS) row.appendChild(mk("speak", ICON.speaker, "speak"));
+    if (CAN_SPEAK) row.appendChild(mk("speak", ICON.speaker, "speak"));
     node.appendChild(row);
     return row;
   }
@@ -883,11 +944,11 @@
     const alarm = tl && typeof tl.delta_mv === "number" && tl.delta_mv > 50;
     setMood("talk");
     // голосовой ввод -> озвучка стартует сразу, не дожидаясь анимации набора; текстовый -> только кнопка динамика
-    const auto = fromVoice && TTS ? speak(null, reply) : 0;
+    const auto = fromVoice && CAN_SPEAK ? speak(null, reply) : 0;
     await typeInto(loader, reply);
     const row = addActions(loader, reply);
     const sb = row && row.querySelector('[data-act="speak"]');
-    if (auto && sb && auto === speakToken && !speakBtn) { speakBtn = sb; setSpeakState(sb, true); }
+    if (auto && sb && auto === speakToken && !speakBtn && speakPhase !== "idle") { speakBtn = sb; setSpeakState(sb, speakPhase); }
     setMood(alarm ? "alert" : "happy", 4000);
     if (data && data.show_review_cta) showReview();
     busy = false;
@@ -898,6 +959,7 @@
     if (!SR) { addMsg(T[lang].voiceNa, "sys"); return; }
     if (recognition) { recognition.stop(); return; }
     stopSpeak();                                   // микрофон не должен слышать синтезатор
+    primeAudio();                                  // жест пользователя: разрешаем автоозвучку ответа (iOS)
     recognition = new SR();
     recognition.lang = { et: "et-EE", ru: "ru-RU", en: "en-US" }[lang];
     recognition.interimResults = false;

@@ -256,3 +256,7 @@
 @media (hover: none) { .evd-root .evd-act { opacity: .75; } }
 @media (pointer: coarse) { .evd-root .evd-act { width: 34px; height: 34px; } }
 @media print { .evd-root .evd-acts { display: none; } }
+.evd-root .evd-act.is-loading { opacity: 1; color: var(--evd-cyan); }
+.evd-root .evd-act.is-loading svg { animation: evd-spin .8s linear infinite; }
+@keyframes evd-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .evd-root .evd-act.is-loading svg { animation: none; } }
