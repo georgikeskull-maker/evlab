@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="et" class="scroll-smooth">
 <head>
+<!-- Анти-кликджекинг: GitHub Pages не даёт ставить HTTP-заголовки, поэтому: CSP frame-ancestors в meta игнорируется браузерами (оставлено как декларация), реальную защиту даёт скрипт ниже -->
+<meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'">
+<style id="fb-guard">html{display:none!important}</style>
+<script>(function(){if(self===top){var s=document.getElementById("fb-guard");if(s)s.remove();}else{try{top.location.replace(self.location.href);}catch(e){}}})();</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>EVLAB | Elektriautode veojõuakude sertifitseeritud audit kohalesõiduga</title>
