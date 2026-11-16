@@ -244,3 +244,15 @@
   .evd-root.is-open .evd-panel { transition: opacity .2s ease, visibility 0s; }
   .evd-sheet { transition-duration: .15s; }
 }
+
+/* --- message actions: copy / speak --- */
+.evd-root .evd-acts { display: flex; gap: 4px; margin-top: 6px; white-space: normal; }
+.evd-root .evd-act { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 1px solid transparent; border-radius: 8px; background: rgba(0, 240, 255, .05); color: var(--evd-muted); opacity: .6; transition: opacity .15s, background .15s, color .15s, border-color .15s; -webkit-tap-highlight-color: transparent; }
+.evd-root .evd-act svg { width: 15px; height: 15px; display: block; }
+.evd-root .evd-act:hover { opacity: 1; background: rgba(0, 240, 255, .14); color: var(--evd-text); }
+.evd-root .evd-act:focus-visible { outline: 2px solid var(--evd-cyan); outline-offset: 1px; opacity: 1; }
+.evd-root .evd-act.is-on { opacity: 1; color: var(--evd-cyan); border-color: var(--evd-cyan-dim); }
+.evd-root .evd-act.is-ok { opacity: 1; color: var(--evd-ok); }
+@media (hover: none) { .evd-root .evd-act { opacity: .75; } }
+@media (pointer: coarse) { .evd-root .evd-act { width: 34px; height: 34px; } }
+@media print { .evd-root .evd-acts { display: none; } }

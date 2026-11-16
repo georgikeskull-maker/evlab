@@ -52,6 +52,7 @@
       review: "Jäta tagasiside",
       voiceNa: "Teie brauser ei toeta häälsisendit.",
       mic: "Häälsisend", send: "Saada",
+      copy: "Kopeeri", copied: "Kopeeritud", speak: "Kuula vastust", stopSpeak: "Peata kuulamine",
       bTitle: "Broneeri aku kontroll", bSub: "Võtame ühendust 15 minuti jooksul (E–L 9–20).",
       bCar: "Auto mudel ja aasta", bCarPh: "nt. Tesla Model 3 2020",
       bContact: "Telefon või Telegram", bContactPh: "+372 5... või @kasutaja",
@@ -84,6 +85,7 @@
       review: "Оставить отзыв",
       voiceNa: "Ваш браузер не поддерживает голосовой ввод.",
       mic: "Голосовой ввод", send: "Отправить",
+      copy: "Копировать", copied: "Скопировано", speak: "Озвучить", stopSpeak: "Остановить",
       bTitle: "Запись на проверку батареи", bSub: "Перезвоним или напишем в течение 15 минут (Пн–Сб 9–20).",
       bCar: "Модель и год авто", bCarPh: "напр. Tesla Model 3 2020",
       bContact: "Телефон или Telegram", bContactPh: "+372 5... или @username",
@@ -116,6 +118,7 @@
       review: "Leave a review",
       voiceNa: "Voice input is not supported in this browser.",
       mic: "Voice input", send: "Send",
+      copy: "Copy", copied: "Copied", speak: "Read aloud", stopSpeak: "Stop",
       bTitle: "Book a battery check", bSub: "We'll get back to you within 15 minutes (Mon–Sat 9–20).",
       bCar: "Car model and year", bCarPh: "e.g. Tesla Model 3 2020",
       bContact: "Phone or Telegram", bContactPh: "+372 5... or @username",
@@ -521,6 +524,10 @@
   let panel, msgs, chips, input, sheet;
   const ICON = {
     mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+    copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    speaker: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h4l5 4v-13l-5 4z"/><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"/></svg>',
+    stop: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/></svg>',
     send: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg>',
   };
 
@@ -574,13 +581,14 @@
       else if (b.dataset.act === "close") toggle(false);
       else if (b.dataset.act === "review") showReview();
       else if (b.dataset.act === "mic") voice(b);
+      else if (b.classList.contains("evd-act")) onAct(b);
     });
     $(".evd-input", panel).addEventListener("submit", (e) => { e.preventDefault(); send(); });
     sheet.addEventListener("submit", submitLead);
     $(".evd-cancel", sheet).addEventListener("click", () => openSheet(false));
 
     renderTexts();
-    addMsg(T[lang].welcome, "bot");
+    addMsg(T[lang].welcome, "bot", true);
   }
 
   function renderTexts() {
@@ -589,6 +597,7 @@
     panel.querySelectorAll("[data-tt]").forEach((n) => { n.title = t[n.dataset.tt]; n.setAttribute("aria-label", t[n.dataset.tt]); });
     panel.querySelectorAll(".evd-lang").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
     input.placeholder = t.placeholder;
+    panel.querySelectorAll(".evd-act").forEach(labelAct);
     $('[name="car"]', sheet).placeholder = t.bCarPh;
     $('[name="contact"]', sheet).placeholder = t.bContactPh;
     const sel = $('[name="service"]', sheet);
@@ -610,7 +619,7 @@
     store.set("evd_lang", l);
     applyLauncherText();
     renderTexts();
-    addMsg(T[lang].welcome, "bot");
+    addMsg(T[lang].welcome, "bot", true);
   }
 
   // ------------------------------------------------------------------ open / close
@@ -633,6 +642,7 @@
       setTimeout(() => input.focus({ preventScroll: true }), 350);
       if (typeof window.gtag === "function") window.gtag("event", "evd_open", { lang });
     } else {
+      stopSpeak();
       openSheet(false);
       launcher.focus({ preventScroll: true });
     }
@@ -661,11 +671,140 @@
     else toggle(false);
   });
 
+  // ------------------------------------------------------------------ message actions: copy / speak (TTS)
+  const TTS = "speechSynthesis" in window && typeof window.SpeechSynthesisUtterance !== "undefined";
+  const VOICE_LANG = { et: "et-EE", ru: "ru-RU", en: "en-US" };
+  let speakToken = 0, speakBtn = null;
+
+  const plainText = (text) => String(text || "").replace(/[ \t]+\n/g, "\n").trim();
+  // Текст для синтезатора: «ΔV» -> «дельта В» / «delta V», без эмодзи и markdown-символов.
+  function speechText(text, l) {
+    return plainText(text)
+      .replace(/Δ\s*V/gi, l === "ru" ? "дельта В" : "delta V")
+      .replace(/Δ/g, l === "ru" ? "дельта " : "delta ")
+      .replace(/[*_`#>~]+/g, " ")
+      .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u2B50]/gu, " ")
+      .replace(/\s+/g, " ").trim();
+  }
+  // Chrome обрывает длинные реплики (~15 с): режем по предложениям на куски до ~180 символов.
+  function speechChunks(text) {
+    const out = []; let cur = "";
+    (text.match(/[^.!?…]+[.!?…]*\s*/g) || [text]).forEach((s) => {
+      if (cur && (cur + s).length > 180) { out.push(cur.trim()); cur = ""; }
+      cur += s;
+    });
+    if (cur.trim()) out.push(cur.trim());
+    return out.flatMap((c) => (c.length > 260 ? c.match(/.{1,240}(?:\s|$)/g) || [c] : [c]));
+  }
+  // Голос: точное совпадение языка, затем по языку; для эстонского без голоса — близкий финский; иначе голос по умолчанию.
+  function pickVoice(l) {
+    let vs = [];
+    try { vs = speechSynthesis.getVoices() || []; } catch (_) { /* ignore */ }
+    const by = (p) => vs.find((v) => v.lang && v.lang.toLowerCase().replace("_", "-").startsWith(p));
+    return by(VOICE_LANG[l].toLowerCase()) || by(l) || (l === "et" ? by("fi") : null) || null;
+  }
+  function labelAct(b) {
+    const k = b.dataset.k;
+    b.title = T[lang][k];
+    b.setAttribute("aria-label", T[lang][k]);
+  }
+  function setSpeakState(btn, on) {
+    btn.classList.toggle("is-on", on);
+    btn.innerHTML = on ? ICON.stop : ICON.speaker;
+    btn.dataset.k = on ? "stopSpeak" : "speak";
+    btn.setAttribute("aria-pressed", String(on));
+    labelAct(btn);
+  }
+  function stopSpeak() {
+    speakToken++;                                   // обнуляет колбэки прежних реплик
+    if (TTS) { try { speechSynthesis.cancel(); } catch (_) { /* ignore */ } }
+    if (speakBtn) { setSpeakState(speakBtn, false); speakBtn = null; }
+  }
+  // btn может быть null (автоозвучка стартует раньше, чем появится строка действий); возвращает токен озвучки.
+  function speak(btn, text) {
+    if (!TTS) return 0;
+    const l = lang;
+    const parts = speechChunks(speechText(text, l));
+    if (!parts.length) return 0;
+    const token = ++speakToken;
+    speakBtn = btn;
+    if (btn) setSpeakState(btn, true);
+    const done = () => {
+      if (token !== speakToken) return;
+      if (speakBtn) setSpeakState(speakBtn, false);
+      speakBtn = null;
+    };
+    try {
+      const v = pickVoice(l);
+      parts.forEach((p, i) => {
+        const u = new SpeechSynthesisUtterance(p);
+        u.lang = (v && v.lang) || VOICE_LANG[l];
+        if (v) u.voice = v;
+        if (i === parts.length - 1) u.onend = done;
+        u.onerror = done;
+        speechSynthesis.speak(u);
+      });
+    } catch (_) { done(); }
+    return token;
+  }
+  async function copyText(btn, text) {
+    const t = plainText(text);
+    let ok = false;
+    try { await navigator.clipboard.writeText(t); ok = true; } catch (_) {
+      try {
+        const ta = el("textarea");
+        ta.value = t; ta.setAttribute("readonly", "");
+        ta.style.cssText = "position:fixed;top:0;left:0;opacity:0";
+        document.body.appendChild(ta); ta.select();
+        ok = document.execCommand("copy");
+        ta.remove();
+      } catch (__) { /* ignore */ }
+    }
+    if (!ok) return;
+    clearTimeout(btn._t);
+    btn.innerHTML = ICON.check; btn.classList.add("is-ok"); btn.dataset.k = "copied"; labelAct(btn);
+    btn._t = setTimeout(() => {
+      btn.innerHTML = ICON.copy; btn.classList.remove("is-ok"); btn.dataset.k = "copy"; labelAct(btn);
+    }, 1500);
+  }
+  function addActions(node, text) {
+    if (!node || node.querySelector(".evd-acts")) return null;
+    node._text = text;
+    const row = el("div", "evd-acts");
+    const mk = (act, icon, k) => {
+      const b = el("button", "evd-act");
+      b.type = "button"; b.dataset.act = act; b.dataset.k = k; b.innerHTML = icon;
+      labelAct(b);
+      return b;
+    };
+    row.appendChild(mk("copy", ICON.copy, "copy"));
+    if (TTS) row.appendChild(mk("speak", ICON.speaker, "speak"));
+    node.appendChild(row);
+    return row;
+  }
+  function onAct(b) {
+    const node = b.closest(".evd-msg");
+    if (!node) return;
+    if (b.dataset.act === "copy") copyText(b, node._text);
+    else if (b.dataset.act === "speak") {
+      if (speakBtn === b) stopSpeak();              // повторный клик = стоп
+      else { stopSpeak(); speak(b, node._text); }   // другое сообщение останавливает текущую озвучку
+    }
+  }
+  function clearInput(sent) {
+    const reset = () => { input.value = ""; input.style.height = ""; };
+    reset();
+    // мобильные клавиатуры/голосовой набор иногда возвращают текст следующим тиком
+    setTimeout(() => { if (sent && input.value.trim() === String(sent).trim()) reset(); }, 60);
+  }
+  window.addEventListener("pagehide", stopSpeak);
+
   // ------------------------------------------------------------------ chat
-  function addMsg(text, who) {
+  function addMsg(text, who, acts) {
     const m = el("div", "evd-msg " + who);
     m.textContent = text;
     msgs.appendChild(m);
+    if (acts) addActions(m, text);
     msgs.scrollTop = msgs.scrollHeight;
     return m;
   }
@@ -698,10 +837,11 @@
     msgs.scrollTop = msgs.scrollHeight;
   }
 
-  async function send(preset) {
+  async function send(preset, fromVoice) {
     const text = (preset || input.value).trim();
     if (!text || busy) return;
-    if (!preset) input.value = "";
+    clearInput(text);            // поле очищается всегда: и после текста, и после голоса, и после чипа
+    stopSpeak();                 // новый вопрос останавливает прежнюю озвучку
     busy = true;
     addMsg(text, "user");
     const topic = topicOf(text);
@@ -742,7 +882,12 @@
     const tl = data && data.telemetry;
     const alarm = tl && typeof tl.delta_mv === "number" && tl.delta_mv > 50;
     setMood("talk");
+    // голосовой ввод -> озвучка стартует сразу, не дожидаясь анимации набора; текстовый -> только кнопка динамика
+    const auto = fromVoice && TTS ? speak(null, reply) : 0;
     await typeInto(loader, reply);
+    const row = addActions(loader, reply);
+    const sb = row && row.querySelector('[data-act="speak"]');
+    if (auto && sb && auto === speakToken && !speakBtn) { speakBtn = sb; setSpeakState(sb, true); }
     setMood(alarm ? "alert" : "happy", 4000);
     if (data && data.show_review_cta) showReview();
     busy = false;
@@ -752,13 +897,18 @@
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { addMsg(T[lang].voiceNa, "sys"); return; }
     if (recognition) { recognition.stop(); return; }
+    stopSpeak();                                   // микрофон не должен слышать синтезатор
     recognition = new SR();
     recognition.lang = { et: "et-EE", ru: "ru-RU", en: "en-US" }[lang];
     recognition.interimResults = false;
     recognition.onstart = () => { btn.classList.add("rec"); setMood("scan"); };
     recognition.onend = () => { btn.classList.remove("rec"); recognition = null; if (!busy) setMood("happy"); };
     recognition.onerror = () => { /* onend follows */ };
-    recognition.onresult = (e) => { const tr = e.results[0][0].transcript; input.value = tr; send(tr); };
+    recognition.onresult = (e) => {
+      const tr = e.results[0][0].transcript;
+      if (busy) { input.value = tr; return; }      // ответ ещё идёт: не теряем фразу, оставляем в поле
+      send(tr, true);                              // hands-free: ответ будет озвучен
+    };
     recognition.start();
   }
 
