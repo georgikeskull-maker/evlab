@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Privaatsuspoliitika | EV LAB</title>
-<meta name="description" content="EV LAB (GVKFORGE OÜ) privaatsuspoliitika: milliseid isikuandmeid me kogume, miks, kui kaua ja millised on sinu õigused.">
+<title>Privaatsuspoliitika | EVLAB</title>
+<meta name="description" content="EVLAB (GVKFORGE OÜ) privaatsuspoliitika: milliseid isikuandmeid me kogume, miks, kui kaua ja millised on sinu õigused, sh nõusoleku kinnitamisel salvestatavad andmed (IP-aadress, brauseri andmed).">
 <link rel="canonical" href="https://evlab.ee/privaatsuspoliitika.html">
 <meta name="theme-color" content="#020617">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="EV LAB">
+<meta property="og:site_name" content="EVLAB">
 <meta property="og:url" content="https://evlab.ee/privaatsuspoliitika.html">
-<meta property="og:title" content="Privaatsuspoliitika | EV LAB">
+<meta property="og:title" content="Privaatsuspoliitika | EVLAB">
 <meta property="og:image" content="https://evlab.ee/og-image.png?v=1">
 <meta property="og:locale" content="et_EE">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,6 +33,12 @@
   th, td { text-align:left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
   th { color:#94a3b8; font-weight:600; }
   .tablewrap { overflow-x:auto; }
+  .langs { display:flex; gap:8px; margin: 0 0 22px; }
+  .langs button { min-height:44px; min-width:64px; padding:0 16px; border-radius:10px; border:1px solid #334155; background:#111a2e; color:#fff; font:600 14px Inter, system-ui, sans-serif; cursor:pointer; }
+  .langs button:hover { border-color: var(--accent); }
+  .langs button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .langs button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+  [data-lang]:not(.on) { display:none; }
   @media (max-width: 640px) {
     thead { display:none; }
     table, tbody, tr, td { display:block; width:100%; }
@@ -44,9 +50,17 @@
 </head>
 <body>
 <div class="wrap">
+  <div class="langs" role="group" aria-label="Keel / Язык / Language">
+    <button type="button" data-set="et" aria-pressed="true">ET</button>
+    <button type="button" data-set="ru" aria-pressed="false">RU</button>
+    <button type="button" data-set="en" aria-pressed="false">EN</button>
+  </div>
+
+<!-- ============================== ET ============================== -->
+<article data-lang="et" lang="et" class="on">
   <a class="back" href="/">← Tagasi avalehele</a>
   <h1>Privaatsuspoliitika</h1>
-  <div class="meta">Kehtib alates 14.11.2026</div>
+  <div class="meta">Kehtib alates 16.11.2026</div>
 
   <h2>1. Vastutav töötleja</h2>
   <div class="box">
@@ -63,8 +77,13 @@
     <tbody>
       <tr>
         <td data-label="Olukord">Broneerimisvorm ja AI-droidi kaudu esitatud päring</td>
-        <td data-label="Andmed">nimi või kasutajanimi, telefon või Telegram, auto mark/mudel, asukoht</td>
+        <td data-label="Andmed">nimi või kasutajanimi, telefon, e-post või Telegram, registreerimismärk, auto mark/mudel, asukoht</td>
         <td data-label="Eesmärk ja õiguslik alus">Päringule vastamine ja teenuse osutamine (GDPR art 6 lg 1 p b — lepingu sõlmimise samm).</td>
+      </tr>
+      <tr>
+        <td data-label="Olukord"><strong>Nõusoleku kinnitamine veebis</strong> (broneerimisvorm, evlab.ee/akt)</td>
+        <td data-label="Andmed">nimi, kontakt (telefon või e-post), registreerimismärk, auto mark/mudel, valik kes juhib proovisõidul, kinnitused (liikluskindlustus, sõiduki korrasolek, tingimustega nõustumine), <strong>kinnitamise aeg, IP-aadress, brauseri ja seadme andmed (User-Agent)</strong>, kirje ID ning nendest koostatud PDF-akt</td>
+        <td data-label="Eesmärk ja õiguslik alus">Diagnostika ja proovisõidu tingimuste kinnitamine ning kinnituse tõendamine võimalikes vaidlustes (art 6 lg 1 p b ja p f — õigustatud huvi tõendada kinnitust ja kaitsta õigusnõudeid). IP-aadressi ja User-Agenti ei kasuta me jälgimiseks, profileerimiseks ega reklaamiks.</td>
       </tr>
       <tr>
         <td data-label="Olukord">Vestlus AI-droidiga</td>
@@ -93,26 +112,206 @@
   <h2>3. Kellele andmeid edastatakse</h2>
   <p>Kasutame andmete töötlemiseks usaldusväärseid teenusepakkujaid (volitatud töötlejaid):</p>
   <ul>
-    <li><strong>Supabase</strong> — päringute, sertifikaatide ja diagnostikalogide hoidmine;</li>
+    <li><strong>Supabase</strong> — päringute, sertifikaatide, diagnostikalogide ja nõusolekuaktide (andmebaas ning privaatne failihoidla) hoidmine;</li>
+    <li><strong>Google Cloud</strong> (Cloud Run) — nõusoleku kinnituse vastuvõtmine ja PDF-akti koostamine;</li>
     <li><strong>n8n</strong> ja <strong>Google (Gemini)</strong> — vestluse töötlemine ja vastuste koostamine AI-droidis;</li>
-    <li><strong>Telegram</strong> ja <strong>WhatsApp</strong> — suhtlus sinuga ja sisemised teavitused päringute kohta;</li>
+    <li><strong>Telegram</strong> ja <strong>WhatsApp</strong> — suhtlus sinuga ja sisemised teavitused päringute ning nõusolekuaktide kohta (teavitus sisaldab nime, kontakti, registreerimismärki ja IP-aadressi);</li>
     <li><strong>Google Analytics</strong> — kasutusstatistika;</li>
     <li><strong>GitHub Pages</strong> — veebilehe majutus.</li>
   </ul>
   <p>Osa neist teenustest võib töödelda andmeid väljaspool EL/EMP-d; sellisel juhul toetume Euroopa Komisjoni standardsetele lepingutingimustele või andmete kaitse raamistikule (EU–US Data Privacy Framework). Andmeid ei müüda kolmandatele isikutele.</p>
 
   <h2>4. Säilitamise aeg</h2>
-  <p>Päringu andmeid hoiame nii kaua, kuni see on vajalik päringu lahendamiseks ja järgnevaks suhtlemiseks, ning seejärel kustutame need mõistliku aja jooksul. Sertifikaatide andmeid (sh VIN ja sertifikaadi kontrollkirje) hoiame sertifikaadi ehtsuse tõendamiseks. Raamatupidamisdokumente säilitame seadusega ette nähtud aja (7 aastat).</p>
+  <p>Päringu andmeid hoiame nii kaua, kuni see on vajalik päringu lahendamiseks ja järgnevaks suhtlemiseks, ning seejärel kustutame need mõistliku aja jooksul. Sertifikaatide andmeid (sh VIN ja sertifikaadi kontrollkirje) hoiame sertifikaadi ehtsuse tõendamiseks. <strong>Nõusolekuakte (sh kinnitamise aeg, IP-aadress, User-Agent ja PDF-akt) säilitame 7 aastat</strong>, et saaksime tõendada kinnitust võimalikes vaidlustes; aktid on kaitstud juhusliku muutmise ja kustutamise eest. Raamatupidamisdokumente säilitame seadusega ette nähtud aja (7 aastat).</p>
 
   <h2>5. Sinu õigused</h2>
-  <p>Sul on õigus tutvuda oma andmetega, nõuda nende parandamist või kustutamist, piirata töötlemist, esitada vastuväide, taotleda andmete ülekandmist ning võtta nõusolek igal ajal tagasi. Küsimuste korral kirjuta <a href="mailto:info@evlab.ee">info@evlab.ee</a>; vastame mõistliku aja jooksul.</p>
+  <p>Sul on õigus tutvuda oma andmetega, nõuda nende parandamist või kustutamist, piirata töötlemist, esitada vastuväide, taotleda andmete ülekandmist ning võtta nõusolek igal ajal tagasi. Küsimuste korral kirjuta <a href="mailto:info@evlab.ee">info@evlab.ee</a>; vastame mõistliku aja jooksul. Pane tähele, et kustutamisnõuet ei saa täita ulatuses, milles andmeid peame hoidma õigusnõuete kaitseks või seadusest tuleneva kohustuse tõttu (nt 7 aasta säilitusaeg).</p>
   <p>Kui leiad, et sinu õigusi on rikutud, võid pöörduda Andmekaitse Inspektsiooni poole: <a href="https://www.aki.ee" rel="noopener">www.aki.ee</a>, <a href="mailto:info@aki.ee">info@aki.ee</a>.</p>
 
   <h2>6. Küpsised ja kohalik salvestus</h2>
   <p>Veebileht kasutab brauseri kohalikku salvestust (näiteks AI-droidi keele valik, korduvate päringute piirang ja sinu küpsisevalik). Google Analytics 4 küpsised (statistika) kasutusele võetakse <strong>ainult siis, kui oled esimesel külastusel kuvatud bänneril nõustunud</strong>. Valiku saad igal ajal muuta avalehe jaluses lingi „Küpsiste seaded“ kaudu; küpsiseid saad ka brauseri seadetes keelata või kustutada. Keeldumine ei takista veebilehe põhifunktsioonide kasutamist.</p>
 
   <h2>7. Muudatused</h2>
-  <p>Võime seda poliitikat uuendada. Kehtiv versioon on alati avaldatud sellel lehel.</p>
+  <p>Võime seda poliitikat uuendada. Kehtiv versioon on alati avaldatud sellel lehel. Viimane muudatus (16.11.2026): lisatud nõusoleku veebis kinnitamisel salvestatavad andmed (IP-aadress, User-Agent) ja nõusolekuaktide 7-aastane säilitamine.</p>
+</article>
+
+<!-- ============================== RU ============================== -->
+<article data-lang="ru" lang="ru">
+  <a class="back" href="/">← На главную</a>
+  <h1>Политика конфиденциальности</h1>
+  <div class="meta">Действует с 16.11.2026</div>
+
+  <h2>1. Ответственный за обработку данных</h2>
+  <div class="box">
+    <strong>GVKFORGE OÜ</strong> (торговая марка EVLAB)<br>
+    Регистрационный код: 17623024<br>
+    Таллин, Эстония<br>
+    E-mail: <a href="mailto:info@evlab.ee">info@evlab.ee</a> · Телефон: <a href="tel:+37255516666">+372 5551 6666</a>
+  </div>
+
+  <h2>2. Какие данные мы обрабатываем и зачем</h2>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Ситуация</th><th>Данные</th><th>Цель и правовое основание</th></tr></thead>
+    <tbody>
+      <tr>
+        <td data-label="Ситуация">Форма заказа и запрос через AI-дроида</td>
+        <td data-label="Данные">имя или никнейм, телефон, e-mail или Telegram, госномер, марка/модель авто, место</td>
+        <td data-label="Цель и правовое основание">Ответ на запрос и оказание услуги (GDPR ст. 6 п. 1 б — шаг к заключению договора).</td>
+      </tr>
+      <tr>
+        <td data-label="Ситуация"><strong>Подтверждение согласия на сайте</strong> (форма заказа, evlab.ee/akt)</td>
+        <td data-label="Данные">имя, контакт (телефон или e-mail), госномер, марка/модель авто, выбор «кто за рулём на тест-драйве», подтверждения (страхование liikluskindlustus, исправность авто, согласие с условиями), <strong>время подтверждения, IP-адрес, данные браузера и устройства (User-Agent)</strong>, ID записи и сформированный из них PDF-акт</td>
+        <td data-label="Цель и правовое основание">Подтверждение условий диагностики и тест-драйва и доказательство этого подтверждения в возможных спорах (ст. 6 п. 1 б и ф — законный интерес в подтверждении согласия и защите правовых требований). IP-адрес и User-Agent не используются для слежения, профилирования или рекламы.</td>
+      </tr>
+      <tr>
+        <td data-label="Ситуация">Диалог с AI-дроидом</td>
+        <td data-label="Данные">ваши сообщения и язык диалога (последние сообщения передаются для формирования ответа)</td>
+        <td data-label="Цель и правовое основание">Ответ на вопросы и выявление запроса (ст. 6 п. 1 ф — законный интерес; если вы оставляете контакт, также п. б). Не вводите в чат чувствительные данные.</td>
+      </tr>
+      <tr>
+        <td data-label="Ситуация">Диагностика и сертификат SoH</td>
+        <td data-label="Данные">VIN, госномер, пробег, диагностический лог батареи и результаты</td>
+        <td data-label="Цель и правовое основание">Оказание услуги, выдача сертификата и проверка его подлинности на сайте (ст. 6 п. 1 б).</td>
+      </tr>
+      <tr>
+        <td data-label="Ситуация">Посещение сайта</td>
+        <td data-label="Данные">обезличенная статистика использования (Google Analytics 4: просмотры страниц, тип устройства, события)</td>
+        <td data-label="Цель и правовое основание">Улучшение удобства сайта. Аналитика по умолчанию выключена и включается только с вашего согласия (ст. 6 п. 1 а).</td>
+      </tr>
+      <tr>
+        <td data-label="Ситуация">Бухгалтерия</td>
+        <td data-label="Данные">данные счетов</td>
+        <td data-label="Цель и правовое основание">Исполнение юридической обязанности (ст. 6 п. 1 в).</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>3. Кому передаются данные</h2>
+  <p>Для обработки данных мы используем надёжных поставщиков услуг (обработчиков):</p>
+  <ul>
+    <li><strong>Supabase</strong> — хранение запросов, сертификатов, диагностических логов и актов согласия (база данных и закрытое файловое хранилище);</li>
+    <li><strong>Google Cloud</strong> (Cloud Run) — приём подтверждения согласия и формирование PDF-акта;</li>
+    <li><strong>n8n</strong> и <strong>Google (Gemini)</strong> — обработка диалога и формирование ответов AI-дроида;</li>
+    <li><strong>Telegram</strong> и <strong>WhatsApp</strong> — общение с вами и внутренние уведомления о запросах и актах согласия (уведомление содержит имя, контакт, госномер и IP-адрес);</li>
+    <li><strong>Google Analytics</strong> — статистика использования;</li>
+    <li><strong>GitHub Pages</strong> — хостинг сайта.</li>
+  </ul>
+  <p>Часть этих сервисов может обрабатывать данные за пределами ЕС/ЕЭЗ; в таком случае мы опираемся на стандартные договорные условия Европейской комиссии или рамочную программу защиты данных (EU–US Data Privacy Framework). Данные не продаются третьим лицам.</p>
+
+  <h2>4. Сроки хранения</h2>
+  <p>Данные запроса мы храним столько, сколько нужно для его решения и последующего общения, а затем удаляем в разумный срок. Данные сертификатов (включая VIN и запись для проверки сертификата) хранятся для подтверждения подлинности сертификата. <strong>Акты согласия (включая время подтверждения, IP-адрес, User-Agent и PDF-акт) мы храним 7 лет</strong>, чтобы иметь возможность подтвердить согласие в возможных спорах; акты защищены от случайного изменения и удаления. Бухгалтерские документы хранятся в течение срока, установленного законом (7 лет).</p>
+
+  <h2>5. Ваши права</h2>
+  <p>Вы вправе получить доступ к своим данным, требовать их исправления или удаления, ограничить обработку, возразить против неё, запросить переносимость данных и в любое время отозвать согласие. По вопросам пишите на <a href="mailto:info@evlab.ee">info@evlab.ee</a>; мы ответим в разумный срок. Обратите внимание: требование об удалении не может быть выполнено в той части, в какой мы обязаны хранить данные для защиты правовых требований или в силу закона (например, 7 лет хранения).</p>
+  <p>Если вы считаете, что ваши права нарушены, вы можете обратиться в Инспекцию по защите данных Эстонии (Andmekaitse Inspektsioon): <a href="https://www.aki.ee" rel="noopener">www.aki.ee</a>, <a href="mailto:info@aki.ee">info@aki.ee</a>.</p>
+
+  <h2>6. Cookies и локальное хранилище</h2>
+  <p>Сайт использует локальное хранилище браузера (например, выбор языка AI-дроида, ограничение повторных запросов и ваш выбор по cookies). Cookies Google Analytics 4 (статистика) включаются <strong>только если вы согласились на баннере при первом посещении</strong>. Выбор можно изменить в любой момент по ссылке «Настройки cookies» в нижней части главной страницы; cookies можно также отключить или удалить в настройках браузера. Отказ не мешает использовать основные функции сайта.</p>
+
+  <h2>7. Изменения</h2>
+  <p>Мы можем обновлять эту политику. Действующая версия всегда опубликована на этой странице. Последнее изменение (16.11.2026): добавлены данные, сохраняемые при подтверждении согласия на сайте (IP-адрес, User-Agent), и 7-летнее хранение актов согласия.</p>
+</article>
+
+<!-- ============================== EN ============================== -->
+<article data-lang="en" lang="en">
+  <a class="back" href="/">← Back to home</a>
+  <h1>Privacy Policy</h1>
+  <div class="meta">Effective from 16.11.2026 · Courtesy translation; the Estonian version prevails.</div>
+
+  <h2>1. Data controller</h2>
+  <div class="box">
+    <strong>GVKFORGE OÜ</strong> (brand EVLAB)<br>
+    Commercial register code: 17623024<br>
+    Tallinn, Estonia<br>
+    E-mail: <a href="mailto:info@evlab.ee">info@evlab.ee</a> · Phone: <a href="tel:+37255516666">+372 5551 6666</a>
+  </div>
+
+  <h2>2. What data we process and why</h2>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Situation</th><th>Data</th><th>Purpose and legal basis</th></tr></thead>
+    <tbody>
+      <tr>
+        <td data-label="Situation">Booking form and enquiry through the AI droid</td>
+        <td data-label="Data">name or username, phone, e-mail or Telegram, registration plate, car make/model, location</td>
+        <td data-label="Purpose and legal basis">Replying to your enquiry and providing the service (GDPR Art. 6(1)(b) — steps prior to entering into a contract).</td>
+      </tr>
+      <tr>
+        <td data-label="Situation"><strong>Online confirmation of consent</strong> (booking form, evlab.ee/akt)</td>
+        <td data-label="Data">name, contact (phone or e-mail), registration plate, car make/model, who drives during the test drive, confirmations (liikluskindlustus insurance, technical condition of the car, acceptance of the terms), <strong>time of confirmation, IP address, browser and device data (User-Agent)</strong>, record ID and the PDF act generated from them</td>
+        <td data-label="Purpose and legal basis">Confirming the diagnostics and test-drive terms and evidencing that confirmation in possible disputes (Art. 6(1)(b) and (f) — legitimate interest in proving the confirmation and defending legal claims). We do not use the IP address or User-Agent for tracking, profiling or advertising.</td>
+      </tr>
+      <tr>
+        <td data-label="Situation">Chat with the AI droid</td>
+        <td data-label="Data">your messages and chat language (the latest messages are sent to compose a reply)</td>
+        <td data-label="Purpose and legal basis">Answering questions and identifying an enquiry (Art. 6(1)(f) — legitimate interest; if you leave a contact, also (b)). Do not enter sensitive data in the chat.</td>
+      </tr>
+      <tr>
+        <td data-label="Situation">Diagnostics and SoH certificate</td>
+        <td data-label="Data">VIN, registration plate, mileage, battery diagnostic log and results</td>
+        <td data-label="Purpose and legal basis">Providing the service, issuing the certificate and verifying its authenticity online (Art. 6(1)(b)).</td>
+      </tr>
+      <tr>
+        <td data-label="Situation">Website visit</td>
+        <td data-label="Data">anonymised usage statistics (Google Analytics 4: page views, device type, events)</td>
+        <td data-label="Purpose and legal basis">Improving the usability of the website. Analytics is off by default and starts only with your consent (Art. 6(1)(a)).</td>
+      </tr>
+      <tr>
+        <td data-label="Situation">Accounting</td>
+        <td data-label="Data">invoice data</td>
+        <td data-label="Purpose and legal basis">Compliance with a legal obligation (Art. 6(1)(c)).</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>3. Who receives the data</h2>
+  <p>We use trusted service providers (processors) to process data:</p>
+  <ul>
+    <li><strong>Supabase</strong> — storage of enquiries, certificates, diagnostic logs and consent acts (database and private file storage);</li>
+    <li><strong>Google Cloud</strong> (Cloud Run) — receiving the consent confirmation and generating the PDF act;</li>
+    <li><strong>n8n</strong> and <strong>Google (Gemini)</strong> — processing chats and composing replies in the AI droid;</li>
+    <li><strong>Telegram</strong> and <strong>WhatsApp</strong> — communication with you and internal notifications about enquiries and consent acts (the notification contains name, contact, registration plate and IP address);</li>
+    <li><strong>Google Analytics</strong> — usage statistics;</li>
+    <li><strong>GitHub Pages</strong> — website hosting.</li>
+  </ul>
+  <p>Some of these services may process data outside the EU/EEA; in that case we rely on the European Commission's standard contractual clauses or the EU–US Data Privacy Framework. We do not sell data to third parties.</p>
+
+  <h2>4. Retention</h2>
+  <p>We keep enquiry data for as long as needed to resolve the enquiry and for follow-up communication, and then delete it within a reasonable time. Certificate data (including VIN and the certificate verification record) is kept to prove the authenticity of the certificate. <strong>Consent acts (including time of confirmation, IP address, User-Agent and the PDF act) are kept for 7 years</strong> so that we can prove the confirmation in possible disputes; acts are protected against accidental alteration and deletion. Accounting documents are kept for the period required by law (7 years).</p>
+
+  <h2>5. Your rights</h2>
+  <p>You have the right to access your data, request its correction or erasure, restrict processing, object to it, request data portability and withdraw consent at any time. Write to <a href="mailto:info@evlab.ee">info@evlab.ee</a>; we will reply within a reasonable time. Please note that an erasure request cannot be fulfilled to the extent we must keep data to defend legal claims or because of a legal obligation (for example the 7-year retention period).</p>
+  <p>If you believe your rights have been violated, you may contact the Estonian Data Protection Inspectorate (Andmekaitse Inspektsioon): <a href="https://www.aki.ee" rel="noopener">www.aki.ee</a>, <a href="mailto:info@aki.ee">info@aki.ee</a>.</p>
+
+  <h2>6. Cookies and local storage</h2>
+  <p>The website uses the browser's local storage (for example the AI droid language choice, the repeat-request limit and your cookie choice). Google Analytics 4 cookies (statistics) are used <strong>only if you have agreed in the banner shown on your first visit</strong>. You can change your choice at any time via the "Cookie settings" link in the footer of the home page; you can also block or delete cookies in your browser settings. Declining does not prevent you from using the core functions of the website.</p>
+
+  <h2>7. Changes</h2>
+  <p>We may update this policy. The current version is always published on this page. Latest change (16.11.2026): added the data stored when consent is confirmed online (IP address, User-Agent) and the 7-year retention of consent acts.</p>
+</article>
 </div>
+
+<script>
+(function () {
+  var langs = ['et', 'ru', 'en'];
+  var titles = { et: 'Privaatsuspoliitika | EVLAB', ru: 'Политика конфиденциальности | EVLAB', en: 'Privacy Policy | EVLAB' };
+  function set(l) {
+    if (langs.indexOf(l) < 0) l = 'et';
+    document.documentElement.lang = l;
+    langs.forEach(function (x) {
+      document.querySelectorAll('article[data-lang="' + x + '"]').forEach(function (a) { a.classList.toggle('on', x === l); });
+    });
+    document.querySelectorAll('.langs button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.set === l ? 'true' : 'false'); });
+    document.title = titles[l];
+  }
+  document.querySelectorAll('.langs button').forEach(function (b) {
+    b.addEventListener('click', function () { set(b.dataset.set); history.replaceState(null, '', b.dataset.set === 'et' ? location.pathname : '#' + b.dataset.set); });
+  });
+  set(location.hash.replace('#', ''));
+})();
+</script>
 </body>
 </html>

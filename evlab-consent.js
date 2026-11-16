@@ -51,7 +51,7 @@
   /* ---------- подсказка марки/модели по госномеру ---------- */
   function bindPlateLookup(opts) {
     var plate = opts.plate, car = opts.car, hint = opts.hint, msgs = opts.msgs || {};
-    var timer = null, ctrl = null, autoValue = null;
+    var timer = null, ctrl = null, autoValue = null, disabled = false;
 
     car.addEventListener('input', function () { if (car.value !== autoValue) autoValue = null; });
 
@@ -67,12 +67,13 @@
       clearTimeout(timer);
       if (ctrl) ctrl.abort();
       say('');
-      if (n.length < 4) return;
+      if (n.length < 4 || disabled) return;
       timer = setTimeout(function () {
         ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
         fetch(API + '/api/vehicle-lookup?plate=' + encodeURIComponent(n), ctrl ? { signal: ctrl.signal } : {})
           .then(function (r) { return r.ok ? r.json() : null; })
           .then(function (d) {
+            if (d && d.configured === false) { disabled = true; return; } // источник авто не подключён: дальше не спрашиваем
             if (!d || normPlate(plate.value) !== n) return;
             if (d.found) {
               var text = [d.make, d.model].filter(Boolean).join(' ') + (d.year ? ' (' + d.year + ')' : '');
