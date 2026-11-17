@@ -22,6 +22,7 @@
     supabaseUrl: "https://iemzkpzzbvamjajrmegn.supabase.co",
     supabaseKey: "sb_publishable_BD1k64hsHdJHgsuakY8P7A_auAb7yOT",
     trustpilot: "https://www.trustpilot.com/evaluate/evlab.ee",
+    api: "https://evlab-engine-254944045596.europe-north1.run.app",   // тот же бэкенд, что в evlab-consent.js (/api/vehicle-lookup, /api/lead)
     phone: "+372 5551 6666",
     leadCooldownMs: 60000,
     droidImg: ASSET("droid.webp?v=2"),
@@ -42,7 +43,7 @@
       bubble: "EVA · Assistent",
       open: "Ava EVLAB AI-insener", close: "Sulge",
       status: "Online • Tallinn & Harjumaa",
-      title: "EVA · Digitaalne insener",
+      title: "EVA · Assistent",
       placeholder: "Nt: Hyundai Kona 2020, 110 000 km...",
       welcome: "Tere! Mina olen EVA, sinu digitaalne insener. Räägin hea meelega, kuidas me elektriautode akusid kontrollime ja mis kuulub aruandesse, või aitan valida sobiva kontrolli. Küsi häälega või kirjuta!",
       chips: [
@@ -70,6 +71,7 @@
       bOk: "✓ Päring saadetud! Võtame peagi ühendust.",
       certOk: "Sertifikaat on leitud ja kehtiv ✅\n{model} · {plate}\nAku tervis (SoH): {soh}% · kontrollitud {date}", certNoPdf: "PDF-faili selle sertifikaadi juures veel ei ole.", certPdf: "📄 Laadi alla PDF-sertifikaat",
       bOkChat: "Aitäh! Päring on vastu võetud — insener võtab peagi ühendust. Kui suhtlus minuga ja meie teenus meeldis, oleme väga tänulikud hinnangu ja paari sõna eest Google’is või Tripadvisoris!",
+      carFound: "Tuvastatud: ",
       bErrCar: "Sisesta auto reg-number või mark ja mudel.", bErrContact: "Sisesta telefon, Telegram (@kasutaja) või e-post.",
       bWait: "Päring on juba saadetud — võtame peagi ühendust!",
       bFail: `Ei õnnestunud saata. Palun helista ${CFG.phone}.`,
@@ -78,7 +80,7 @@
       bubble: "EVA · Ассистент",
       open: "Открыть AI-инженера EVLAB", close: "Закрыть",
       status: "Online • Таллинн и Харьюмаа",
-      title: "EVA · Цифровой инженер",
+      title: "EVA · Ассистент",
       placeholder: "Напр.: Tesla Model 3 2020, 130 000 км...",
       welcome: "Привет! Я Ева, ваш цифровой инженер. Могу рассказать, как мы проверяем батареи электромобилей, что входит в отчёт, или помочь выбрать подходящую проверку. Спрашивайте голосом или текстом!",
       chips: [
@@ -106,6 +108,7 @@
       bOk: "✓ Заявка отправлена! Скоро свяжемся.",
       certOk: "Сертификат найден и действителен ✅\n{model} · {plate}\nSoH батареи: {soh}% · проверка от {date}", certNoPdf: "PDF-файл для этого сертификата пока не прикреплён.", certPdf: "📄 Скачать PDF-сертификат",
       bOkChat: "Спасибо! Заявка принята — инженер скоро свяжется с вами. Если вам понравилось общаться со мной и наш сервис, будем очень рады вашей оценке и паре слов в Google или Tripadvisor!",
+      carFound: "Определено: ",
       bErrCar: "Укажите госномер авто или марку и модель.", bErrContact: "Укажите телефон, Telegram (@ник) или e-mail.",
       bWait: "Заявка уже отправлена — скоро свяжемся!",
       bFail: `Не удалось отправить. Пожалуйста, позвоните ${CFG.phone}.`,
@@ -114,7 +117,7 @@
       bubble: "EVA · Assistant",
       open: "Open EVLAB AI engineer", close: "Close",
       status: "Online • Tallinn & Harjumaa",
-      title: "EVA · Digital Engineer",
+      title: "EVA · Assistant",
       placeholder: "E.g.: VW ID.4 2021, 95 000 km...",
       welcome: "Hi! I’m EVA, your digital engineer. I’ll gladly explain how we test EV batteries, what’s included in the report, or help you pick the right inspection. Ask by voice or text!",
       chips: [
@@ -142,6 +145,7 @@
       bOk: "✓ Request sent! We'll contact you shortly.",
       certOk: "Certificate found and valid ✅\n{model} · {plate}\nBattery SoH: {soh}% · checked {date}", certNoPdf: "The PDF file for this certificate is not attached yet.", certPdf: "📄 Download PDF Certificate",
       bOkChat: "Thank you! Your request is confirmed — an engineer will contact you shortly. If you enjoyed chatting with me and our service, we’d really appreciate a quick rating and review on Google or Tripadvisor!",
+      carFound: "Detected: ",
       bErrCar: "Please enter the license plate or car make & model.", bErrContact: "Please enter a phone, Telegram (@username) or e-mail.",
       bWait: "Your request was already sent — we'll be in touch soon!",
       bFail: `Could not send. Please call ${CFG.phone}.`,
@@ -659,7 +663,8 @@
 </form>
 <form class="evd-sheet" novalidate>
   <h3 data-t="bTitle"></h3><p data-t="bSub"></p>
-  <label class="evd-field"><span data-t="bCar"></span><input name="car" maxlength="80" autocomplete="off"></label>
+  <label class="evd-field"><span data-t="bCar"></span><input name="car" maxlength="80" autocomplete="off" autocapitalize="characters" spellcheck="false"></label>
+  <div class="evd-carhint" aria-live="polite" hidden></div>
   <label class="evd-field"><span data-t="bContact"></span><input name="contact" maxlength="80" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
   <p class="evd-legal"><span data-t="legalPre"></span><a class="evd-legal-link" data-t="legalLink" href="https://evlab.ee/privaatsuspoliitika.html" target="_blank" rel="noopener"></a><span data-t="legalPost"></span></p>
   <label class="evd-field"><span data-t="bService"></span><select name="service"></select></label>
@@ -685,6 +690,7 @@
     });
     $(".evd-input", panel).addEventListener("submit", (e) => { e.preventDefault(); send(); });
     sheet.addEventListener("submit", submitLead);
+    initCarLookup();
     $(".evd-cancel", sheet).addEventListener("click", () => openSheet(false));
 
     renderTexts();
@@ -699,6 +705,7 @@
     input.placeholder = t.placeholder;
     panel.querySelectorAll(".evd-act").forEach(labelAct);
     $('[name="car"]', sheet).placeholder = t.bCarPh;
+    { const h = $(".evd-carhint", sheet); if (h && carFound) h.textContent = t.carFound + carFound.text; }
     $('[name="contact"]', sheet).placeholder = t.bContactPh;
     $(".evd-legal-link", sheet).href = "https://evlab.ee/privaatsuspoliitika.html" + (lang === "et" ? "" : "#" + lang);   // политика на языке чата
     const sel = $('[name="service"]', sheet);
@@ -1275,6 +1282,40 @@
     if (/^\+?[0-9(][0-9\s\-()]{5,}$/.test(v) && v.replace(/\D/g, "").length >= 7) return { kind: "phone", contact: v, phone: v };
     return null;
   }
+  // Автоопределение авто по госномеру (тот же /api/vehicle-lookup, что в основной форме сайта; марка/модель — EV, PHEV и ДВС).
+  // Госномер = 3 цифры + 3 буквы или 3 буквы + 3 цифры (после замены кириллических двойников); «Tesla Model 3» под него не попадает.
+  const CYR = { "А": "A", "В": "B", "Е": "E", "К": "K", "М": "M", "Н": "H", "О": "O", "Р": "P", "С": "C", "Т": "T", "У": "Y", "Х": "X" };
+  const plateOf = (v) => {
+    const n = String(v || "").toUpperCase().replace(/[АВЕКМНОРСТУХ]/g, (c) => CYR[c]).replace(/[\s\-]/g, "");
+    return /^(\d{3}[A-Z]{3}|[A-Z]{3}\d{3})$/.test(n) ? n : "";
+  };
+  let carFound = null, carTimer = 0, carCtrl = null, lookupOff = false;     // carFound = { plate, text }
+  function initCarLookup() {
+    const carIn = $('[name="car"]', sheet), hint = $(".evd-carhint", sheet);
+    const show = (text) => { hint.hidden = !text; hint.textContent = text ? T[lang].carFound + text : ""; };
+    carIn.addEventListener("input", () => {
+      clearTimeout(carTimer); if (carCtrl) carCtrl.abort();
+      const p = plateOf(carIn.value);
+      if (!p) { carFound = null; show(""); return; }
+      if (carIn.value !== p) carIn.value = p;                      // 275jpn / 275 jpn -> 275JPN
+      if (carFound && carFound.plate !== p) { carFound = null; show(""); }
+      if (lookupOff || (carFound && carFound.plate === p)) return;
+      carTimer = setTimeout(async () => {
+        try {
+          carCtrl = new AbortController(); const to = setTimeout(() => carCtrl.abort(), 6000);
+          const r = await fetch(CFG.api + "/api/vehicle-lookup?plate=" + encodeURIComponent(p), { signal: carCtrl.signal });
+          clearTimeout(to);
+          const d = r.ok ? await r.json() : null;
+          if (d && d.configured === false) { lookupOff = true; return; }   // источник авто не подключён — тихо работаем вручную
+          if (!d || !d.found || plateOf(carIn.value) !== p) return;
+          const text = [d.make, d.model].filter(Boolean).join(" ").trim();
+          if (!text) return;
+          carFound = { plate: p, text }; show(text + (d.year ? " (" + d.year + ")" : ""));
+        } catch (_) { /* подсказка необязательна */ }
+      }, 450);
+    });
+  }
+
   async function submitLead(e) {
     e.preventDefault();
     const t = T[lang];
@@ -1285,7 +1326,9 @@
     carIn.removeAttribute("aria-invalid"); conIn.removeAttribute("aria-invalid");
 
     if ($('[name="website"]', sheet).value) { openSheet(false); return; }   // honeypot
-    const car = carIn.value.trim();
+    const plate = plateOf(carIn.value);
+    // «275JPN · Audi A6»: нормализованный номер + распознанное авто (идёт в карточку чата, leads.car и Telegram-уведомление)
+    const car = plate ? (carFound && carFound.plate === plate ? plate + " · " + carFound.text : plate) : carIn.value.trim();
     const parsed = parseContact(conIn.value);
     const contact = parsed && parsed.contact;
     if (car.length < 2) { carIn.setAttribute("aria-invalid", "true"); say(t.bErrCar, "err"); carIn.focus(); return; }
