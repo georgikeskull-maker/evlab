@@ -15,13 +15,10 @@
     webhook: "https://n8n.evlab.ee/webhook/evlab-chat",
     timeoutMs: 45000,
     googleReview: "https://g.page/r/CQoEp6qkUKTHECE/review",       // Google Business Profile EVLAB (то же в schema.org sameAs на evlab.ee)
-    // Страница отзывов EVLAB на Tripadvisor. В коде сайта ссылки пока нет: впишите URL (https://www.tripadvisor.com/UserReviewEdit-… или страница компании) —
-    // пока строка пустая, кнопка «Tripadvisor» в финальном сообщении не показывается (чтобы не вести клиента на чужую страницу).
-    tripadvisorReview: "",
     // Публичные параметры Supabase (publishable-ключ, тот же, что в index.html): только RPC get_certificate_pdf — без контактов
     supabaseUrl: "https://iemzkpzzbvamjajrmegn.supabase.co",
     supabaseKey: "sb_publishable_BD1k64hsHdJHgsuakY8P7A_auAb7yOT",
-    trustpilot: "https://www.trustpilot.com/evaluate/evlab.ee",
+    trustpilot: "https://www.trustpilot.com/review/evlab.ee",       // ссылка из schema.org sameAs на evlab.ee
     api: "https://evlab-engine-254944045596.europe-north1.run.app",   // тот же бэкенд, что в evlab-consent.js (/api/vehicle-lookup, /api/lead)
     phone: "+372 5551 6666",
     leadCooldownMs: 60000,
@@ -70,7 +67,7 @@
       bSubmit: "SAADA PÄRING", bCancel: "Tagasi", bSending: "Saadan...",
       bOk: "✓ Päring saadetud! Võtame peagi ühendust.",
       certOk: "Sertifikaat on leitud ja kehtiv ✅\n{model} · {plate}\nAku tervis (SoH): {soh}% · kontrollitud {date}", certNoPdf: "PDF-faili selle sertifikaadi juures veel ei ole.", certPdf: "📄 Laadi alla PDF-sertifikaat",
-      bOkChat: "Aitäh! Päring on vastu võetud — insener võtab peagi ühendust. Kui suhtlus minuga ja meie teenus meeldis, oleme väga tänulikud hinnangu ja paari sõna eest Google’is või Tripadvisoris!",
+      bOkChat: "Aitäh! Päring on vastu võetud — insener võtab peagi ühendust. Kui suhtlus minuga ja meie teenus meeldis, oleme väga tänulikud hinnangu ja paari sõna eest Google’is või Trustpilotis!",
       carFound: "Tuvastatud: ",
       bErrCar: "Sisesta auto reg-number või mark ja mudel.", bErrContact: "Sisesta telefon, Telegram (@kasutaja) või e-post.",
       bWait: "Päring on juba saadetud — võtame peagi ühendust!",
@@ -107,7 +104,7 @@
       bSubmit: "ОТПРАВИТЬ ЗАЯВКУ", bCancel: "Назад", bSending: "Отправляю...",
       bOk: "✓ Заявка отправлена! Скоро свяжемся.",
       certOk: "Сертификат найден и действителен ✅\n{model} · {plate}\nSoH батареи: {soh}% · проверка от {date}", certNoPdf: "PDF-файл для этого сертификата пока не прикреплён.", certPdf: "📄 Скачать PDF-сертификат",
-      bOkChat: "Спасибо! Заявка принята — инженер скоро свяжется с вами. Если вам понравилось общаться со мной и наш сервис, будем очень рады вашей оценке и паре слов в Google или Tripadvisor!",
+      bOkChat: "Спасибо! Заявка принята — инженер скоро свяжется с вами. Если вам понравилось общаться со мной и наш сервис, будем очень рады вашей оценке и паре слов в Google или Trustpilot!",
       carFound: "Определено: ",
       bErrCar: "Укажите госномер авто или марку и модель.", bErrContact: "Укажите телефон, Telegram (@ник) или e-mail.",
       bWait: "Заявка уже отправлена — скоро свяжемся!",
@@ -144,7 +141,7 @@
       bSubmit: "SEND REQUEST", bCancel: "Back", bSending: "Sending...",
       bOk: "✓ Request sent! We'll contact you shortly.",
       certOk: "Certificate found and valid ✅\n{model} · {plate}\nBattery SoH: {soh}% · checked {date}", certNoPdf: "The PDF file for this certificate is not attached yet.", certPdf: "📄 Download PDF Certificate",
-      bOkChat: "Thank you! Your request is confirmed — an engineer will contact you shortly. If you enjoyed chatting with me and our service, we’d really appreciate a quick rating and review on Google or Tripadvisor!",
+      bOkChat: "Thank you! Your request is confirmed — an engineer will contact you shortly. If you enjoyed chatting with me and our service, we’d really appreciate a quick rating and review on Google or Trustpilot!",
       carFound: "Detected: ",
       bErrCar: "Please enter the license plate or car make & model.", bErrContact: "Please enter a phone, Telegram (@username) or e-mail.",
       bWait: "Your request was already sent — we'll be in touch soon!",
@@ -1098,10 +1095,10 @@
       requestAnimationFrame(tick);
     });
   }
-  // Компактные кнопки-пилюли отзывов внутри пузыря (перед строкой действий): Google всегда, Tripadvisor — когда задан CFG.tripadvisorReview
+  // Компактные кнопки-пилюли отзывов внутри пузыря (перед строкой действий): Google и Trustpilot
   function addReviewLinks(m) {
     const row = el("div", "evd-review evd-review-pills");
-    [["⭐ Google (5★)", CFG.googleReview], ["🦉 Tripadvisor", CFG.tripadvisorReview]].forEach(([label, href]) => {
+    [["⭐ Google (5★)", CFG.googleReview], ["💚 Trustpilot", CFG.trustpilot]].forEach(([label, href]) => {
       if (!href) return;
       const a = el("a");
       a.href = href; a.target = "_blank"; a.rel = "noopener"; a.textContent = label;
