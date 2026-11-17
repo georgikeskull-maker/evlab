@@ -37,7 +37,7 @@
       open: "Ava EVLAB AI-insener", close: "Sulge",
       status: "Online • Tallinn & Harjumaa",
       placeholder: "Nt: Hyundai Kona 2020, 110 000 km...",
-      welcome: "Tere! Olen EVLAB virtuaalne akuinsener. Kirjuta auto mudel, aasta ja läbisõit — selgitan SoH-d, elementide pingeerinevust (ΔV) ja reaalset sõiduulatust ning aitan broneerida kohalesõiduga diagnostika Tallinnas ja Harjumaal (65 € / 135 €).",
+      welcome: "Tere! Olen EVLAB digitaalne insener. Räägin hea meelega, kuidas me elektriautode akusid kontrollime ja mis kuulub aruandesse, või aitan valida sobiva kontrolli. Küsi häälega või kirjuta!",
       chips: [
         ["📅 Broneeri kontroll", "#book"],
         ["🔋 Mis on SoH?", "Mis on SoH ja kuidas seda mõõdetakse?"],
@@ -51,7 +51,7 @@
       reviewTitle: "Kas jäid konsultatsiooni või EVLAB teenusega rahule? Sinu 5★ tagasiside aitab meid väga!",
       review: "Jäta tagasiside",
       voiceNa: "Teie brauser ei toeta häälsisendit.",
-      mic: "Häälsisend", send: "Saada",
+      mic: "Häälsisend", send: "Saada", micBig: "Räägi", orType: "või kirjuta allpool",
       copy: "Kopeeri", copied: "Kopeeritud", speak: "Kuula vastust", stopSpeak: "Peata kuulamine",
       bTitle: "Broneeri aku kontroll", bSub: "Võtame ühendust 15 minuti jooksul (E–L 9–20).",
       bCar: "Auto mudel ja aasta", bCarPh: "nt. Tesla Model 3 2020",
@@ -70,7 +70,7 @@
       open: "Открыть AI-инженера EVLAB", close: "Закрыть",
       status: "Online • Таллинн и Харьюмаа",
       placeholder: "Напр.: Tesla Model 3 2020, 130 000 км...",
-      welcome: "Привет! Я виртуальный инженер-диагност EVLAB. Напиши модель, год и пробег электромобиля — объясню SoH, разбаланс ячеек (ΔV) и реальный запас хода, и запишу на выездную диагностику в Таллинне и Харьюмаа (65 € / 135 €).",
+      welcome: "Привет! Я цифровой инженер EVLAB. Могу рассказать, как мы проверяем батареи электромобилей, что входит в отчёт или помочь выбрать подходящую проверку. Спрашивайте голосом или текстом!",
       chips: [
         ["📅 Записаться", "#book"],
         ["🔋 Что такое SoH?", "Что такое SoH и как его измеряют?"],
@@ -84,7 +84,7 @@
       reviewTitle: "Понравилась консультация или работа EVLAB? Будем благодарны за оценку 5★!",
       review: "Оставить отзыв",
       voiceNa: "Ваш браузер не поддерживает голосовой ввод.",
-      mic: "Голосовой ввод", send: "Отправить",
+      mic: "Голосовой ввод", send: "Отправить", micBig: "Говорить", orType: "или напишите ниже",
       copy: "Копировать", copied: "Скопировано", speak: "Озвучить", stopSpeak: "Остановить",
       bTitle: "Запись на проверку батареи", bSub: "Перезвоним или напишем в течение 15 минут (Пн–Сб 9–20).",
       bCar: "Модель и год авто", bCarPh: "напр. Tesla Model 3 2020",
@@ -103,7 +103,7 @@
       open: "Open EVLAB AI engineer", close: "Close",
       status: "Online • Tallinn & Harjumaa",
       placeholder: "E.g.: VW ID.4 2021, 95 000 km...",
-      welcome: "Hi! I'm EVLAB's virtual battery engineer. Send me the EV model, year and mileage — I'll explain SoH, cell imbalance (ΔV) and real-world range, and book a mobile diagnostic in Tallinn & Harjumaa (65 € / 135 €).",
+      welcome: "Hi! I'm EVLAB's digital engineer. I can explain how we check EV batteries, what goes into the report, or help you pick the right check. Ask me by voice or text!",
       chips: [
         ["📅 Book a check", "#book"],
         ["🔋 What is SoH?", "What is SoH and how is it measured?"],
@@ -117,7 +117,7 @@
       reviewTitle: "Found our advice or EVLAB service helpful? Your 5★ review means a lot to us!",
       review: "Leave a review",
       voiceNa: "Voice input is not supported in this browser.",
-      mic: "Voice input", send: "Send",
+      mic: "Voice input", send: "Send", micBig: "Tap to speak", orType: "or just type below",
       copy: "Copy", copied: "Copied", speak: "Read aloud", stopSpeak: "Stop",
       bTitle: "Book a battery check", bSub: "We'll get back to you within 15 minutes (Mon–Sat 9–20).",
       bCar: "Car model and year", bCarPh: "e.g. Tesla Model 3 2020",
@@ -226,12 +226,8 @@
   const SPR = [sprite(0, 240, 255), sprite(40, 130, 255), sprite(170, 250, 255), sprite(120, 90, 255)];
 
   // ------------------------------------------------------------------ droid scene
-  // Rings: particles orbit on tilted circles (3D); back half drawn behind the droid, front half in front.
-  const RINGS = [
-    { r: 0.43, incl: 1.16, roll: -0.38, n: 170, sp: 0.62, spread: 0.035, alpha: 1 },   // saturn-like swirl
-    { r: 0.47, incl: 1.28, roll: 0.52, n: 110, sp: -0.45, spread: 0.05, alpha: 0.75 },  // counter swirl
-    { r: 0.485, incl: 0.22, roll: 0, n: 120, sp: 0.18, spread: 0.06, alpha: 0.45 },     // wide halo
-  ];
+  // One clean holographic halo: a single ring of fine light particles around the droid, breathing softly.
+  const RING = { r: 0.455, n: 190, sp: 0.1, spread: 0.014 };
   const NOZ = [
     { a: A.nozL, dir: Math.PI / 2 + 0.38, len: 0.34, w: 0.075 },
     { a: A.nozR, dir: Math.PI / 2 - 0.22, len: 0.34, w: 0.085 },
@@ -252,21 +248,18 @@
       this.body = $(".evd-body", host); this.par = $(".evd-parallax", host);
       this.boost = 0; this.target = 0; this.flash = 0; this.last = 0;
       this.parts = [];
-      RINGS.forEach((ring, ri) => {
-        const n = Math.round(ring.n * this.o.density);
+      {
+        const n = Math.round(RING.n * this.o.density);
         for (let i = 0; i < n; i++) {
           const g = (Math.random() + Math.random() + Math.random() - 1.5) / 1.5;
           const c = Math.random();
           this.parts.push({
-            ri, a: Math.random() * Math.PI * 2,
-            r: 1 + g * ring.spread, sp: ring.sp * (0.7 + Math.random() * 0.6),
-            sz: 0.45 + Math.pow(Math.random(), 2.2) * 1.6, ph: Math.random() * 6.28,
-            spr: c < 0.58 ? 0 : c < 0.82 ? 1 : c < 0.95 ? 2 : 3,
-            comet: ri === 0 && Math.random() < 0.05,
+            a: (i / n) * Math.PI * 2 + Math.random() * 0.02, off: g * RING.spread,
+            sp: RING.sp * (0.85 + Math.random() * 0.3), sz: 0.38 + Math.pow(Math.random(), 2.6) * 0.75, ph: Math.random() * 6.28,
+            spr: c < 0.7 ? 0 : c < 0.9 ? 2 : 1,
           });
         }
-      });
-      this.sparks = Array.from({ length: this.o.sparks }, () => ({ life: 0 }));
+      }
       this.resize();
     }
     resize() {
@@ -302,7 +295,7 @@
       xb.clearRect(-o, -o, S, S); xf.clearRect(-o, -o, S, S);
       xb.globalCompositeOperation = xf.globalCompositeOperation = "lighter";
 
-      // soft core glow behind the droid (flares up on hover / press)
+      // soft core glow behind the droid
       const glow = xb.createRadialGradient(cx, cy, s * 0.05, cx, cy, s * (0.5 + 0.12 * B));
       glow.addColorStop(0, `rgba(0,240,255,${Math.min(0.75, 0.16 + 0.24 * B + 0.4 * F)})`);
       glow.addColorStop(1, "rgba(0,240,255,0)");
@@ -311,84 +304,29 @@
       // thruster flames (behind the body, so the nozzles cover the roots)
       NOZ.forEach((nz, i) => this.flame(xb, nz, t, i));
 
-      // vortex particles
-      const spd = 1 + B * 2.4 + F * 2.5;
-      const grow = 0.11 * B + 0.12 * F;
+      // halo: a soft glow band + fine particles on one circle behind the droid; hover/press only brightens and quickens it
+      const pulse = 0.5 + 0.5 * Math.sin(t * 1.15);                         // slow breathing 0..1
+      const spd = 1 + B * 1.6 + F * 2;
+      const R0 = s * RING.r * (1 + 0.018 * pulse + 0.05 * B + 0.07 * F);
+      const band = Math.min(1, 0.07 + 0.06 * pulse + 0.1 * B + 0.25 * F);
+      xb.globalAlpha = band;
+      xb.strokeStyle = "rgba(0,240,255,1)"; xb.lineWidth = Math.max(1, s * 0.035);
+      xb.beginPath(); xb.arc(cx, cy, R0, 0, Math.PI * 2); xb.stroke();
+      xb.globalAlpha = Math.min(1, band * 1.6);
+      xb.lineWidth = Math.max(0.6, s * 0.006); xb.strokeStyle = "rgba(160,250,255,1)";
+      xb.beginPath(); xb.arc(cx, cy, R0, 0, Math.PI * 2); xb.stroke();
       for (const p of this.parts) {
-        const ring = RINGS[p.ri];
-        const R = s * ring.r * (1 + 0.03 * Math.sin(t * 1.3 + p.ri) + grow) * p.r;
-        const n = p.comet ? 5 : 1;
-        for (let j = 0; j < n; j++) {
-          const ang = p.a + (t - j * 0.035) * p.sp * spd;
-          const ca = Math.cos(ang), sa = Math.sin(ang);
-          const y3 = sa * Math.cos(ring.incl), z3 = sa * Math.sin(ring.incl);
-          const cr = Math.cos(ring.roll), sr = Math.sin(ring.roll);
-          const x = cx + R * (ca * cr - y3 * sr);
-          const y = cy + R * (ca * sr + y3 * cr);
-          const depth = 0.5 + 0.5 * z3;                       // 0 back .. 1 front
-          const tw = 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(t * 2.6 + p.ph));
-          let a = ring.alpha * tw * (0.35 + 0.65 * depth) * (1 - j / n);
-          a = Math.min(1, a + 0.35 * B + 0.45 * F);
-          const z = p.sz * (0.6 + 0.8 * depth) * k * 2.3 * (j ? 0.75 : 1) * (1 + 0.35 * B + 0.35 * F);
-          const ctx = z3 >= 0 ? xf : xb;
-          ctx.globalAlpha = a;
-          ctx.drawImage(SPR[p.spr], x - z, y - z, z * 2, z * 2);
-        }
-      }
-
-      // electric arcs: hull -> vortex, flicker every frame; strong on hover/press, rare at idle
-      const nArcs = Math.round(3.2 * B + 4 * F + (Math.random() < 0.012 ? 1 : 0));
-      for (let i = 0; i < nArcs; i++) this.arc(xf, cx, cy, s, k, 0.45 + 0.4 * B + 0.4 * F);
-
-      // press shockwave
-      if (F > 0) {
-        xf.globalAlpha = F;
-        xf.strokeStyle = "rgba(160,250,255,.9)";
-        xf.lineWidth = (1 + 2.5 * F) * k;
-        xf.beginPath();
-        xf.ellipse(cx, cy, s * (0.24 + (1 - F) * 0.28), s * (0.24 + (1 - F) * 0.28) * 0.94, 0, 0, Math.PI * 2);
-        xf.stroke();
-      }
-
-      // exhaust sparks (in front)
-      if (dt > 0) this.spawn(dt, t);
-      for (const sp of this.sparks) {
-        if (sp.life <= 0) continue;
-        sp.age += dt;
-        if (sp.age >= sp.life) { sp.life = 0; continue; }
-        sp.x += sp.vx * dt; sp.y += sp.vy * dt; sp.vy += 40 * k * dt;
-        const f = 1 - sp.age / sp.life;
-        xf.globalAlpha = f;
-        const z = (0.8 + f) * k * 2;
-        xf.drawImage(SPR[sp.spr], sp.x - z, sp.y - z, z * 2, z * 2);
+        const ang = p.a + t * p.sp * spd;
+        const R = R0 * (1 + p.off + 0.006 * Math.sin(t * 1.4 + p.ph));
+        const x = cx + R * Math.cos(ang), y = cy + R * Math.sin(ang);
+        const tw = 0.55 + 0.45 * Math.sin(t * 1.9 + p.ph);
+        const a = Math.min(1, (0.42 + 0.4 * pulse) * tw + 0.25 * B + 0.3 * F);
+        const z = p.sz * k * 2.2 * (1 + 0.25 * B + 0.3 * F);
+        xb.globalAlpha = a;
+        xb.drawImage(SPR[p.spr], x - z, y - z, z * 2, z * 2);
       }
       xb.globalAlpha = xf.globalAlpha = 1;
       xb.globalCompositeOperation = xf.globalCompositeOperation = "source-over";
-    }
-    arc(ctx, cx, cy, s, k, alpha) {
-      const a0 = Math.random() * Math.PI * 2;
-      const a1 = a0 + (Math.random() - 0.5) * 0.9;
-      const r0 = s * 0.25, r1 = s * (0.41 + Math.random() * 0.08);
-      let x = cx + Math.cos(a0) * r0, y = cy + Math.sin(a0) * r0 * 0.94;
-      const x1 = cx + Math.cos(a1) * r1, y1 = cy + Math.sin(a1) * r1 * 0.94;
-      const seg = 7, dx = (x1 - x) / seg, dy = (y1 - y) / seg, len = Math.hypot(dx, dy);
-      const nx = -dy / (len || 1), ny = dx / (len || 1);
-      const pts = [[x, y]];
-      for (let i = 1; i < seg; i++) {
-        const j = (Math.random() - 0.5) * s * 0.06;
-        pts.push([x + dx * i + nx * j, y + dy * i + ny * j]);
-      }
-      pts.push([x1, y1]);
-      for (const [w, col] of [[3.2, "rgba(0,240,255,.28)"], [1.1, "rgba(225,255,255,.95)"]]) {
-        ctx.globalAlpha = Math.min(1, alpha * (0.6 + 0.4 * Math.random()));
-        ctx.strokeStyle = col; ctx.lineWidth = w * k; ctx.lineJoin = "round";
-        ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
-        for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
-        ctx.stroke();
-      }
-      ctx.globalAlpha = Math.min(1, alpha);
-      const z = 3.2 * k;
-      ctx.drawImage(SPR[2], x1 - z, y1 - z, z * 2, z * 2);            // hot spot where the arc hits the vortex
     }
     flame(ctx, nz, t, i) {
       const [x, y] = this.pt(nz.a);
@@ -416,20 +354,6 @@
       ctx.bezierCurveTo(w * 0.14, L * 0.78, w / 2, L * 0.35, w / 2, 0);
       ctx.closePath(); ctx.fill();
       ctx.restore();
-    }
-    spawn(dt, t) {
-      this._acc = (this._acc || 0) + dt * (18 + 70 * this.boost + 120 * this.flash);
-      while (this._acc >= 1) {
-        this._acc -= 1;
-        const sp = this.sparks.find((q) => q.life <= 0);
-        if (!sp) break;
-        const nz = NOZ[Math.random() < 0.45 ? 0 : Math.random() < 0.8 ? 1 : 2];
-        const [x, y] = this.pt(nz.a);
-        const ang = nz.dir + (Math.random() - 0.5) * 0.5;
-        const v = this.D * (0.9 + Math.random() * 0.9);
-        Object.assign(sp, { x, y: y + this.D * 0.04, vx: Math.cos(ang) * v, vy: Math.sin(ang) * v,
-          age: 0, life: 0.25 + Math.random() * 0.45, spr: Math.random() < 0.6 ? 2 : 0 });
-      }
     }
   }
 
@@ -461,10 +385,18 @@
 
   // ------------------------------------------------------------------ mood
   let root;
+  let speakingNow = false;                          // пока играет озвучка, «happy» подменяется анимацией речи
   function setMood(m, revertMs) {
-    root.dataset.mood = m;
+    root.dataset.mood = speakingNow && m === "happy" ? "talk" : m;
     clearTimeout(moodTimer);
-    if (revertMs) moodTimer = setTimeout(() => { root.dataset.mood = "happy"; }, revertMs);
+    if (revertMs) moodTimer = setTimeout(() => { root.dataset.mood = speakingNow ? "talk" : "happy"; }, revertMs);
+  }
+  function setSpeaking(on) {
+    if (speakingNow === on) return;
+    speakingNow = on;
+    if (!root) return;
+    if (on) { if (root.dataset.mood !== "alert") root.dataset.mood = "talk"; }
+    else if (root.dataset.mood === "talk") root.dataset.mood = "happy";
   }
 
   // ------------------------------------------------------------------ launcher
@@ -481,28 +413,128 @@
     document.body.appendChild(root);
     const stage = $(".evd-stage", launcher);
     stage.style.cssText = "position:absolute;inset:0";
-    launchScene = new Scene(stage, { density: 1, sparks: 28, size: 168 });
+    launchScene = new Scene(stage, { density: 1, size: 168 });
     Loop.set(launchScene, true);
 
     // Same "power-up" for mouse hover (desktop) and finger hold (touch); press/click adds a burst.
     const boost = (on) => { launchScene.boostOn(on); launcher.classList.toggle("is-boost", on); };
-    launcher.addEventListener("pointerenter", () => { boost(true); ensureBuilt(); });
+    launcher.addEventListener("pointerenter", () => { boost(true); ensureBuilt(); if (lang === "et") loadEtManifest(); });
     launcher.addEventListener("pointerdown", () => { boost(true); launchScene.press(); ensureBuilt(); });
-    launcher.addEventListener("pointerleave", () => { boost(false); launchScene.hover(0, 0); });
+    launcher.addEventListener("pointerleave", () => { if (!drag && !flyRaf) { boost(false); launchScene.hover(0, 0); } });
     launcher.addEventListener("pointercancel", () => boost(false));
     launcher.addEventListener("focus", () => { ensureBuilt(); boost(true); });
     launcher.addEventListener("blur", () => boost(false));
-    let opening = 0;
-    launcher.addEventListener("click", (e) => {
-      if (opening) return;
-      if (e.detail === 0) launchScene.press();                       // keyboard activation: same burst
-      opening = setTimeout(() => { opening = 0; toggle(true); }, REDUCED ? 120 : 260);  // let the burst show
+    // ---- перетаскивание и «пинок»: смещение > порога = полёт с инерцией и отскоком от краёв; короткий тап = открыть чат
+    let pos = null, drag = null, flyRaf = 0, suppressClick = 0;
+    const clampN = (v, a, b) => Math.min(b, Math.max(a, v));
+    const bounds = () => {
+      const sz = launcher.offsetWidth || 168;
+      return { minX: -sz * 0.12, maxX: document.documentElement.clientWidth - sz * 0.88, minY: -sz * 0.12, maxY: document.documentElement.clientHeight - sz * 0.88 };
+    };
+    const place = (x, y) => {
+      pos = { x, y };
+      launcher.classList.add("is-free");
+      launcher.style.left = x.toFixed(1) + "px"; launcher.style.top = y.toFixed(1) + "px";
+    };
+    const savePos = () => {
+      if (!pos) return;
+      const b = bounds();
+      store.sset("evd_pos", JSON.stringify({ fx: (pos.x - b.minX) / (b.maxX - b.minX), fy: (pos.y - b.minY) / (b.maxY - b.minY) }));
+    };
+    const stopFly = () => { if (flyRaf) { cancelAnimationFrame(flyRaf); flyRaf = 0; } };
+    const settle = () => {
+      stopFly(); drag = null;
+      launcher.classList.remove("is-dragging");
+      boost(false); launchScene.hover(0, 0);
+      savePos();
+    };
+    const fling = (vx, vy) => {
+      let last = performance.now();
+      const step = (now) => {
+        const dt = Math.min(0.035, (now - last) / 1000); last = now;
+        const b = bounds();
+        let x = pos.x + vx * dt, y = pos.y + vy * dt;
+        if (x < b.minX) { x = b.minX; vx = Math.abs(vx) * 0.62; } else if (x > b.maxX) { x = b.maxX; vx = -Math.abs(vx) * 0.62; }
+        if (y < b.minY) { y = b.minY; vy = Math.abs(vy) * 0.62; } else if (y > b.maxY) { y = b.maxY; vy = -Math.abs(vy) * 0.62; }
+        const f = Math.exp(-dt * 2.7); vx *= f; vy *= f;                  // мягкое затухание
+        place(x, y);
+        launchScene.hover(clampN(vx / 1500, -0.5, 0.5), clampN(vy / 1500, -0.5, 0.5));
+        if (Math.hypot(vx, vy) > 22) flyRaf = requestAnimationFrame(step); else { flyRaf = 0; settle(); }
+      };
+      flyRaf = requestAnimationFrame(step);
+    };
+    // над баннером cookies: пока дроид «в доке», поднимаем его выше плашки (на телефоне баннер на всю ширину)
+    const updateLift = () => {
+      let lift = 0;
+      const b = pos ? null : document.getElementById("evl-consent");
+      if (b) {
+        const r = b.getBoundingClientRect(), vw = document.documentElement.clientWidth, sz = launcher.offsetWidth || 168;
+        if (r.width > 0 && r.right > vw - 10 - sz - 4) lift = Math.max(0, document.documentElement.clientHeight - r.top);   // зазор над плашкой = базовый отступ (2–10px)
+      }
+      launcher.style.setProperty("--evd-lift", lift.toFixed(0) + "px");
+    };
+    new MutationObserver(updateLift).observe(document.body, { childList: true });
+    launcher.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      stopFly();
+      const r = launcher.getBoundingClientRect();
+      drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, ox: r.left, oy: r.top, moved: false, s: [{ t: e.timeStamp, x: e.clientX, y: e.clientY }] };
+      primeAudio();
     });
     launcher.addEventListener("pointermove", (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+      if (!drag.moved) {
+        if (Math.hypot(dx, dy) < (e.pointerType === "mouse" ? 5 : 9)) return;
+        drag.moved = true;
+        try { launcher.setPointerCapture(e.pointerId); } catch (_) { /* ignore */ }
+        launcher.classList.add("is-dragging"); boost(true);
+      }
+      const b = bounds();
+      place(clampN(drag.ox + dx, b.minX, b.maxX), clampN(drag.oy + dy, b.minY, b.maxY));
+      drag.s.push({ t: e.timeStamp, x: e.clientX, y: e.clientY });
+      while (drag.s.length > 2 && e.timeStamp - drag.s[0].t > 90) drag.s.shift();
+    });
+    const endDrag = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const d = drag;
+      if (!d.moved) { drag = null; return; }
+      drag = null;
+      clearTimeout(suppressClick);
+      suppressClick = setTimeout(() => { suppressClick = 0; }, 450);          // клик после броска не должен открывать чат
+      const a = d.s[0], z = d.s[d.s.length - 1];
+      let vx = 0, vy = 0;
+      if (e.type === "pointerup" && e.timeStamp - z.t <= 90) {
+        const dt = Math.max(0.016, (z.t - a.t) / 1000);
+        vx = (z.x - a.x) / dt; vy = (z.y - a.y) / dt;
+      }
+      const sp = Math.hypot(vx, vy);
+      if (sp > 2800) { vx *= 2800 / sp; vy *= 2800 / sp; }
+      if (REDUCED || Math.hypot(vx, vy) < 160) settle(); else fling(vx, vy);
+    };
+    launcher.addEventListener("pointerup", endDrag);
+    launcher.addEventListener("pointercancel", endDrag);
+    try { const p = JSON.parse(store.sget("evd_pos") || "null"); if (p && isFinite(p.fx) && isFinite(p.fy)) { const b = bounds(); place(b.minX + clampN(p.fx, 0, 1) * (b.maxX - b.minX), b.minY + clampN(p.fy, 0, 1) * (b.maxY - b.minY)); } } catch (_) { /* ignore */ }
+    updateLift();
+
+    let opening = 0;
+    launcher.addEventListener("click", (e) => {
+      if (suppressClick) { e.preventDefault(); e.stopImmediatePropagation(); return; }
+      if (opening) return;
+      primeAudio();                                                    // жест пользователя: разрешаем озвучку приветствия (iOS)
+      if (e.detail === 0) launchScene.press();                         // keyboard activation: same burst
+      opening = setTimeout(() => { opening = 0; toggle(true); greet(); }, REDUCED ? 120 : 260);  // let the burst show
+    });
+    launcher.addEventListener("pointermove", (e) => {
+      if (drag && drag.moved) return;
       const b = launcher.getBoundingClientRect();
       launchScene.hover((e.clientX - b.left) / b.width - 0.5, (e.clientY - b.top) / b.height - 0.5);
     });
-    window.addEventListener("resize", () => { launchScene.resize(); if (headScene) headScene.resize(); }, { passive: true });
+    window.addEventListener("resize", () => {
+      launchScene.resize(); if (headScene) headScene.resize();
+      if (pos) { const b = bounds(); place(clampN(pos.x, b.minX, b.maxX), clampN(pos.y, b.minY, b.maxY)); }
+      updateLift();
+    }, { passive: true });
 
     applyLauncherText();
     if (!store.sget("evd_badge")) {
@@ -573,7 +605,7 @@
     chips = $(".evd-chips", panel);
     input = $(".evd-input input", panel);
     sheet = $(".evd-sheet", panel);
-    headScene = new Scene($(".evd-avatar", panel), { density: 0.45, sparks: 10, size: 64 });
+    headScene = new Scene($(".evd-avatar", panel), { density: 0.45, size: 64 });
 
     panel.addEventListener("click", (e) => {
       const b = e.target.closest("button");
@@ -589,7 +621,7 @@
     $(".evd-cancel", sheet).addEventListener("click", () => openSheet(false));
 
     renderTexts();
-    addMsg(T[lang].welcome, "bot", true);
+    addWelcome();
   }
 
   function renderTexts() {
@@ -620,7 +652,8 @@
     store.set("evd_lang", l);
     applyLauncherText();
     renderTexts();
-    addMsg(T[lang].welcome, "bot", true);
+    addWelcome();
+    if (l === "et") loadEtManifest();
   }
 
   // ------------------------------------------------------------------ open / close
@@ -640,6 +673,7 @@
       headScene.press();
       setTimeout(() => headScene.boostOn(false), 300);
       setMood("scan", 900);
+      if (lang === "et") loadEtManifest();
       setTimeout(() => input.focus({ preventScroll: true }), 350);
       if (typeof window.gtag === "function") window.gtag("event", "evd_open", { lang });
     } else {
@@ -743,6 +777,30 @@
     if (TTS) { try { speechSynthesis.cancel(); } catch (_) { /* ignore */ } }
     if (speakBtn) { setSpeakState(speakBtn, "idle"); speakBtn = null; }
     speakPhase = "idle";
+    setSpeaking(false);
+  }
+  // Готовые нейросетевые (TartuNLP) реплики для эстонского: audio/manifest.json, ключ = FNV-1a(32) нормализованного текста
+  // (тот же алгоритм в tools/gen_et_audio.py). Нет файла для текста — запрос к /api/tts, затем speechSynthesis.
+  function fnv1a(str) {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < str.length; i++) h = Math.imul(h ^ str.charCodeAt(i), 0x01000193) >>> 0;
+    return ("00000000" + h.toString(16)).slice(-8);
+  }
+  let etItems = null, etItemsP = null, etVer = "";
+  function loadEtManifest() {
+    if (!etItemsP) {
+      etItemsP = fetch(ASSET("audio/manifest.json?v=3"))
+        .then((r) => (r.ok ? r.json() : null))
+        .then((j) => { etItems = (j && j.items) || {}; etVer = (j && j.v) || ""; return etItems; })
+        .catch(() => { etItems = {}; return etItems; });
+    }
+    return etItemsP;
+  }
+  async function staticAudioUrl(text, l) {
+    if (l !== "et") return null;
+    const items = etItems || (await loadEtManifest());
+    const it = items[fnv1a(plainText(text).replace(/\s+/g, " "))];
+    return it && it.file ? ASSET("audio/" + it.file + (etVer ? "?v=" + etVer : "")) : null;
   }
   async function fetchAudio(text, l, signal) {
     const key = l + "\n" + text;
@@ -786,26 +844,36 @@
       if (token !== speakToken) return;
       if (speakBtn) setSpeakState(speakBtn, "idle");
       speakBtn = null; speakPhase = "idle";
+      setSpeaking(false);
     };
     const fallback = () => {
       if (token !== speakToken) return;
       if (!TTS) { finish(); return; }
-      setPhase("on");
+      setPhase("on"); setSpeaking(true);
       browserSpeak(token, text, l, finish);
     };
-    if (!AUDIO) { setPhase("on"); browserSpeak(token, text, l, finish); return token; }
+    if (!AUDIO) { setPhase("on"); setSpeaking(true); browserSpeak(token, text, l, finish); return token; }
     setPhase("loading");
     primeAudio();
     ttsCtrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    const signal = ttsCtrl ? ttsCtrl.signal : undefined;
     const timer = setTimeout(() => { if (ttsCtrl) ttsCtrl.abort(); }, 12000);
-    fetchAudio(plain, l, ttsCtrl ? ttsCtrl.signal : undefined).then((url) => {
-      clearTimeout(timer);
+    // воспроизвести url; onFail вызывается при ошибке загрузки/декодирования или отказе play() (автоплей)
+    const playUrl = (url, onFail) => {
       if (token !== speakToken) return null;
       player.onended = finish;
-      player.onerror = fallback;
+      player.onerror = onFail;
       player.src = url;
-      return player.play().then(() => { if (token === speakToken) setPhase("on"); });
-    }).catch(() => { clearTimeout(timer); fallback(); });
+      return player.play().then(() => { if (token === speakToken) { setPhase("on"); setSpeaking(true); } });
+    };
+    const dynamic = () => fetchAudio(plain, l, signal).then((url) => { clearTimeout(timer); return playUrl(url, fallback); })
+      .catch(() => { clearTimeout(timer); fallback(); });
+    staticAudioUrl(text, l).catch(() => null).then((url) => {
+      if (token !== speakToken) return null;
+      if (!url) return dynamic();
+      clearTimeout(timer);
+      return Promise.resolve(playUrl(url, dynamic)).catch(() => { if (token === speakToken) dynamic(); });
+    });
     return token;
   }
   async function copyText(btn, text) {
@@ -861,6 +929,33 @@
   window.addEventListener("pagehide", stopSpeak);
 
   // ------------------------------------------------------------------ chat
+  const SR_OK = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  // Крупная кнопка «говорить» под приветствием (на телефоне удобнее мелкой иконки у поля ввода); исчезает после первого вопроса.
+  function makeCta() {
+    const box = el("div", "evd-cta");
+    const b = el("button", "evd-micbig");
+    b.type = "button"; b.dataset.act = "mic"; b.dataset.tt = "mic";
+    b.innerHTML = ICON.mic + '<span data-t="micBig"></span>';
+    const hint = el("span", "evd-ctahint"); hint.dataset.t = "orType";
+    box.append(b, hint);
+    return box;
+  }
+  function addWelcome() {
+    msgs.querySelectorAll(".evd-cta").forEach((n) => n.remove());
+    const m = addMsg(T[lang].welcome, "bot", true);
+    if (SR_OK) { msgs.appendChild(makeCta()); renderTexts(); msgs.scrollTop = msgs.scrollHeight; }
+    return m;
+  }
+  // Тап по дроиду = жест пользователя: чат открывается и сразу озвучивает приветствие (один раз за сессию, пока нет вопросов).
+  let greeted = false;
+  function greet() {
+    if (greeted || !CAN_SPEAK || !msgs || msgs.querySelector(".evd-msg.user")) return;
+    const m = msgs.querySelector(".evd-msg.bot");
+    if (!m || !m._text) return;
+    greeted = true;
+    stopSpeak();
+    speak(m.querySelector('[data-act="speak"]'), m._text);
+  }
   function addMsg(text, who, acts) {
     const m = el("div", "evd-msg " + who);
     m.textContent = text;
@@ -901,6 +996,7 @@
   async function send(preset, fromVoice) {
     const text = (preset || input.value).trim();
     if (!text || busy) return;
+    msgs.querySelectorAll(".evd-cta").forEach((n) => n.remove());
     clearInput(text);            // поле очищается всегда: и после текста, и после голоса, и после чипа
     stopSpeak();                 // новый вопрос останавливает прежнюю озвучку
     busy = true;
@@ -963,8 +1059,9 @@
     recognition = new SR();
     recognition.lang = { et: "et-EE", ru: "ru-RU", en: "en-US" }[lang];
     recognition.interimResults = false;
-    recognition.onstart = () => { btn.classList.add("rec"); setMood("scan"); };
-    recognition.onend = () => { btn.classList.remove("rec"); recognition = null; if (!busy) setMood("happy"); };
+    const mics = () => panel.querySelectorAll('[data-act="mic"]');
+    recognition.onstart = () => { mics().forEach((m) => m.classList.add("rec")); setMood("scan"); };
+    recognition.onend = () => { mics().forEach((m) => m.classList.remove("rec")); recognition = null; if (!busy) setMood("happy"); };
     recognition.onerror = () => { /* onend follows */ };
     recognition.onresult = (e) => {
       const tr = e.results[0][0].transcript;
