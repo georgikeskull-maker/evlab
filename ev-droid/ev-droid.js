@@ -14,7 +14,10 @@
   const CFG = {
     webhook: "https://n8n.evlab.ee/webhook/evlab-chat",
     timeoutMs: 45000,
-    googleReview: "https://g.page/r/CQoEp6qkUKTHECE/review",
+    googleReview: "https://g.page/r/CQoEp6qkUKTHECE/review",       // Google Business Profile EVLAB (то же в schema.org sameAs на evlab.ee)
+    // Страница отзывов EVLAB на Tripadvisor. В коде сайта ссылки пока нет: впишите URL (https://www.tripadvisor.com/UserReviewEdit-… или страница компании) —
+    // пока строка пустая, кнопка «Tripadvisor» в финальном сообщении не показывается (чтобы не вести клиента на чужую страницу).
+    tripadvisorReview: "",
     trustpilot: "https://www.trustpilot.com/evaluate/evlab.ee",
     phone: "+372 5551 6666",
     leadCooldownMs: 60000,
@@ -61,7 +64,7 @@
       services: ["Ekspresstest (65 €)", "Dünaamiline koormusaudit (135 €)", "Ei tea veel — nõu"],
       bSubmit: "SAADA PÄRING", bCancel: "Tagasi", bSending: "Saadan...",
       bOk: "✓ Päring saadetud! Võtame peagi ühendust.",
-      bOkChat: "Aitäh! Päring on vastu võetud — insener võtab ühendust telefoni või Telegrami teel.",
+      bOkChat: "Aitäh! Päring on vastu võetud — insener võtab peagi ühendust. Kui suhtlus minuga ja meie teenus meeldis, oleme väga tänulikud hinnangu ja paari sõna eest Google’is või Tripadvisoris!",
       bErrCar: "Sisesta auto reg-number või mark ja mudel.", bErrContact: "Sisesta telefoninumber või @telegram.",
       bWait: "Päring on juba saadetud — võtame peagi ühendust!",
       bFail: `Ei õnnestunud saata. Palun helista ${CFG.phone}.`,
@@ -95,7 +98,7 @@
       services: ["Экспресс-тест (65 €)", "Динамический нагрузочный аудит (135 €)", "Пока не знаю — нужна консультация"],
       bSubmit: "ОТПРАВИТЬ ЗАЯВКУ", bCancel: "Назад", bSending: "Отправляю...",
       bOk: "✓ Заявка отправлена! Скоро свяжемся.",
-      bOkChat: "Спасибо! Заявка принята — инженер свяжется с вами по телефону или в Telegram.",
+      bOkChat: "Спасибо! Заявка принята — инженер скоро свяжется с вами. Если вам понравилось общаться со мной и наш сервис, будем очень рады вашей оценке и паре слов в Google или Tripadvisor!",
       bErrCar: "Укажите госномер авто или марку и модель.", bErrContact: "Укажите телефон или @telegram.",
       bWait: "Заявка уже отправлена — скоро свяжемся!",
       bFail: `Не удалось отправить. Пожалуйста, позвоните ${CFG.phone}.`,
@@ -129,7 +132,7 @@
       services: ["Express test (65 €)", "Dynamic load audit (135 €)", "Not sure yet — advise me"],
       bSubmit: "SEND REQUEST", bCancel: "Back", bSending: "Sending...",
       bOk: "✓ Request sent! We'll contact you shortly.",
-      bOkChat: "Thank you! Your request is in — an engineer will contact you by phone or Telegram.",
+      bOkChat: "Thank you! Your request is confirmed — an engineer will contact you shortly. If you enjoyed chatting with me and our service, we’d really appreciate a quick rating and review on Google or Tripadvisor!",
       bErrCar: "Please enter the license plate or car make & model.", bErrContact: "Please enter a phone number or @telegram.",
       bWait: "Your request was already sent — we'll be in touch soon!",
       bFail: `Could not send. Please call ${CFG.phone}.`,
@@ -872,6 +875,15 @@
   // Предзагрузка приветствия, чтобы тап по дроиду начинал звук мгновенно:
   //  ET — готовый MP3 грузится сразу после загрузки страницы (blob в памяти);
   //  RU/EN — живой /api/tts, поэтому грузим только по намерению (наведение/касание дроида), а не у каждого посетителя.
+  function preloadStatic(text) {
+    try {
+      return staticAudioUrl(text, "et").then((url) => {
+        if (!url || url.indexOf("blob:") === 0) return null;
+        const key = "static\n" + url;
+        return fetch(url).then((r) => (r.ok ? r.blob() : null)).then((b) => { if (b) blobCache.set(key, URL.createObjectURL(b)); }).catch(() => { /* ignore */ });
+      }).catch(() => { /* ignore */ });
+    } catch (_) { return null; }
+  }
   function preloadWelcome(l, intent) {
     try {
       if (l === "et") {
@@ -1068,6 +1080,20 @@
       requestAnimationFrame(tick);
     });
   }
+  // Компактные кнопки-пилюли отзывов внутри пузыря (перед строкой действий): Google всегда, Tripadvisor — когда задан CFG.tripadvisorReview
+  function addReviewLinks(m) {
+    const row = el("div", "evd-review evd-review-pills");
+    [["⭐ Google (5★)", CFG.googleReview], ["🦉 Tripadvisor", CFG.tripadvisorReview]].forEach(([label, href]) => {
+      if (!href) return;
+      const a = el("a");
+      a.href = href; a.target = "_blank"; a.rel = "noopener"; a.textContent = label;
+      row.appendChild(a);
+    });
+    if (!row.children.length) return;
+    const acts = m.querySelector(".evd-acts");
+    if (acts) m.insertBefore(row, acts); else m.appendChild(row);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
   function showReview() {
     const box = el("div", "evd-msg bot");
     box.textContent = "⭐ " + T[lang].reviewTitle;
@@ -1168,6 +1194,7 @@
     msg.textContent = ""; msg.className = "evd-formmsg";
     if (open) {
       setMood("happy");
+      if (lang === "et") preloadStatic(T.et.bOkChat);      // финальное «Aitäh!» готово к мгновенному старту
       setTimeout(() => $('[name="car"]', sheet).focus({ preventScroll: true }), 300);
     }
   }
@@ -1204,6 +1231,7 @@
       car,
       loc: "— (AI-droid, " + lang.toUpperCase() + ")",
     };
+    primeAudio();                                   // жест пользователя: разрешаем озвучку финального сообщения (iOS)
     btn.disabled = true;
     const label = btn.textContent;
     btn.textContent = t.bSending;
@@ -1219,8 +1247,11 @@
       setTimeout(() => {
         openSheet(false);
         sheet.reset();
-        addMsg(t.bOkChat, "bot");
+        const m = addMsg(t.bOkChat, "bot", true);
+        addReviewLinks(m);
         setMood("happy");
+        // финал: сразу озвучиваем тем же голосом EVA (плеер «прогрет» кликом по кнопке отправки)
+        if (CAN_SPEAK && isOpen) { stopSpeak(); speak(m.querySelector('[data-act="speak"]'), t.bOkChat); }
       }, 1400);
     } catch (err) {
       console.error("[EV Droid] lead submit failed", err);

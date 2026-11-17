@@ -172,7 +172,16 @@
 .evd-msg a { color: var(--evd-teal); }
 @keyframes evd-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .evd-review { display: flex; gap: 6px; margin-top: 8px; }
+.evd-review-pills { flex-wrap: wrap; gap: 6px; margin: 10px 0 2px; }
 .evd-review a { flex: 1; text-align: center; padding: 6px; border-radius: 8px; border: 1px solid var(--evd-cyan-dim); text-decoration: none; font-size: 12px; font-weight: 600; }
+.evd-review-pills a {
+  flex: none; display: inline-flex; align-items: center; gap: 4px; min-height: 34px; padding: 0 14px; border-radius: 999px;
+  background: rgba(56, 189, 248, .10); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid var(--evd-line); color: #fff; font-size: 12.5px; white-space: nowrap;
+  transition: background .2s, border-color .2s, box-shadow .2s;
+}
+.evd-review-pills a:hover { background: rgba(45, 212, 191, .18); border-color: var(--evd-teal); box-shadow: 0 0 14px -2px rgba(45, 212, 191, .45); }
+.evd-review-pills a:focus-visible { outline: 2px solid var(--evd-teal); outline-offset: 2px; }
 .evd-chips { display: flex; gap: 6px; overflow-x: auto; padding: 0 14px 8px; scrollbar-width: none; }
 .evd-chips::-webkit-scrollbar { display: none; }
 .evd-chip { flex: none; border: 1px solid var(--evd-cyan-dim); background: rgba(56, 189, 248, .07); border-radius: 999px; padding: 6px 12px; font-size: 12px; white-space: nowrap; transition: background .2s, border-color .2s; }

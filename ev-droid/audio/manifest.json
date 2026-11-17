@@ -19,6 +19,13 @@
    "spoken": "AI-insener on hetkel kättesaamatu. Helista plussi kolm seitse kaks, viis viis viis üks, kuus kuus kuus kuus.",
    "bytes": 64156
   },
+  "48927126": {
+   "file": "et-48927126.mp3",
+   "name": "booked",
+   "text": "Aitäh! Päring on vastu võetud — insener võtab peagi ühendust. Kui suhtlus minuga ja meie teenus meeldis, oleme väga tänulikud hinnangu ja paari sõna eest Google’is või Tripadvisoris!",
+   "spoken": "Aitäh! Päring on vastu võetud — insener võtab peagi ühendust. Kui suhtlus minuga ja meie teenus meeldis, oleme väga tänulikud hinnangu ja paari sõna eest Guuglis või Tripadvaisoris!",
+   "bytes": 99892
+  },
   "145dc768": {
    "file": "et-145dc768.mp3",
    "name": "faq-soh",
