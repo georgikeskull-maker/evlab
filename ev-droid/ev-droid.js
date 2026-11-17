@@ -18,6 +18,9 @@
     // Страница отзывов EVLAB на Tripadvisor. В коде сайта ссылки пока нет: впишите URL (https://www.tripadvisor.com/UserReviewEdit-… или страница компании) —
     // пока строка пустая, кнопка «Tripadvisor» в финальном сообщении не показывается (чтобы не вести клиента на чужую страницу).
     tripadvisorReview: "",
+    // Публичные параметры Supabase (publishable-ключ, тот же, что в index.html): только RPC get_certificate_pdf — без контактов
+    supabaseUrl: "https://iemzkpzzbvamjajrmegn.supabase.co",
+    supabaseKey: "sb_publishable_BD1k64hsHdJHgsuakY8P7A_auAb7yOT",
     trustpilot: "https://www.trustpilot.com/evaluate/evlab.ee",
     phone: "+372 5551 6666",
     leadCooldownMs: 60000,
@@ -65,6 +68,7 @@
       services: ["Ekspresstest (65 €)", "Dünaamiline koormusaudit (135 €)", "Ei tea veel — nõu"],
       bSubmit: "SAADA PÄRING", bCancel: "Tagasi", bSending: "Saadan...",
       bOk: "✓ Päring saadetud! Võtame peagi ühendust.",
+      certOk: "Sertifikaat on leitud ja kehtiv ✅\n{model} · {plate}\nAku tervis (SoH): {soh}% · kontrollitud {date}", certNoPdf: "PDF-faili selle sertifikaadi juures veel ei ole.", certPdf: "📄 Laadi alla PDF-sertifikaat",
       bOkChat: "Aitäh! Päring on vastu võetud — insener võtab peagi ühendust. Kui suhtlus minuga ja meie teenus meeldis, oleme väga tänulikud hinnangu ja paari sõna eest Google’is või Tripadvisoris!",
       bErrCar: "Sisesta auto reg-number või mark ja mudel.", bErrContact: "Sisesta telefon, Telegram (@kasutaja) või e-post.",
       bWait: "Päring on juba saadetud — võtame peagi ühendust!",
@@ -100,6 +104,7 @@
       services: ["Экспресс-тест (65 €)", "Динамический нагрузочный аудит (135 €)", "Пока не знаю — нужна консультация"],
       bSubmit: "ОТПРАВИТЬ ЗАЯВКУ", bCancel: "Назад", bSending: "Отправляю...",
       bOk: "✓ Заявка отправлена! Скоро свяжемся.",
+      certOk: "Сертификат найден и действителен ✅\n{model} · {plate}\nSoH батареи: {soh}% · проверка от {date}", certNoPdf: "PDF-файл для этого сертификата пока не прикреплён.", certPdf: "📄 Скачать PDF-сертификат",
       bOkChat: "Спасибо! Заявка принята — инженер скоро свяжется с вами. Если вам понравилось общаться со мной и наш сервис, будем очень рады вашей оценке и паре слов в Google или Tripadvisor!",
       bErrCar: "Укажите госномер авто или марку и модель.", bErrContact: "Укажите телефон, Telegram (@ник) или e-mail.",
       bWait: "Заявка уже отправлена — скоро свяжемся!",
@@ -135,6 +140,7 @@
       services: ["Express test (65 €)", "Dynamic load audit (135 €)", "Not sure yet — advise me"],
       bSubmit: "SEND REQUEST", bCancel: "Back", bSending: "Sending...",
       bOk: "✓ Request sent! We'll contact you shortly.",
+      certOk: "Certificate found and valid ✅\n{model} · {plate}\nBattery SoH: {soh}% · checked {date}", certNoPdf: "The PDF file for this certificate is not attached yet.", certPdf: "📄 Download PDF Certificate",
       bOkChat: "Thank you! Your request is confirmed — an engineer will contact you shortly. If you enjoyed chatting with me and our service, we’d really appreciate a quick rating and review on Google or Tripadvisor!",
       bErrCar: "Please enter the license plate or car make & model.", bErrContact: "Please enter a phone, Telegram (@username) or e-mail.",
       bWait: "Your request was already sent — we'll be in touch soon!",
@@ -1113,6 +1119,43 @@
     msgs.scrollTop = msgs.scrollHeight;
   }
 
+  // Проверка сертификата: госномер (123 ABC, 12 ABC, ABC123 …) или номер EV-ГГГГММДД-ЧЧММСС в тексте -> RPC get_certificate_pdf.
+  // Не найден / сеть недоступна -> null, и сообщение идёт ассистенту как обычно.
+  const PLATE_RE = /(?:^|[^A-Za-z0-9])((?:\d{3}\s?[A-Z]{3})|(?:[A-Z]{3}\s?\d{3})|(?:EV-\d{8}-\d{6}))(?![A-Za-z0-9])/i;
+  const CY = { "А": "A", "В": "B", "Е": "E", "К": "K", "М": "M", "Н": "H", "О": "O", "Р": "P", "С": "C", "Т": "T", "Х": "X" };
+  async function lookupCert(text) {
+    const lat = String(text).toUpperCase().replace(/[АВЕКМНОРСТХ]/g, (c) => CY[c]);   // кириллица-двойники -> латиница
+    const m = lat.match(PLATE_RE);
+    if (!m) return null;
+    const q = m[1].replace(/\s+/g, "");
+    try {
+      const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 6000);
+      const r = await fetch(CFG.supabaseUrl + "/rest/v1/rpc/get_certificate_pdf", {
+        method: "POST", signal: ctrl.signal,
+        headers: { "Content-Type": "application/json", apikey: CFG.supabaseKey, Authorization: "Bearer " + CFG.supabaseKey },
+        body: JSON.stringify({ search_query: q }),
+      });
+      clearTimeout(to);
+      if (!r.ok) return null;
+      const rows = await r.json();
+      return Array.isArray(rows) && rows[0] ? rows[0] : null;
+    } catch (_) { return null; }
+  }
+  // Кнопка-пилюля «Скачать PDF» в сообщении; нет PDF -> короткая заметка вместо битой ссылки
+  function addCertPdf(m, url, before) {
+    const ok = typeof url === "string" && url.indexOf(CFG.supabaseUrl + "/storage/") === 0;
+    const row = el("div", "evd-review evd-review-pills");
+    if (ok) {
+      const a = el("a", "evd-pdf");
+      a.href = url; a.target = "_blank"; a.rel = "noopener"; a.setAttribute("download", ""); a.textContent = T[lang].certPdf;
+      row.appendChild(a);
+    } else {
+      const s = el("span", "evd-note"); s.textContent = T[lang].certNoPdf; row.appendChild(s);
+    }
+    if (before) m.insertBefore(row, before); else m.appendChild(row);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
   async function send(preset, fromVoice) {
     const text = (preset || input.value).trim();
     if (!text || busy) return;
@@ -1126,6 +1169,23 @@
     setMood("scan");
     if (headScene) headScene.boostOn(true);
     const loader = addMsg("⏳ " + T[lang].thinking, "bot");
+    const cert = await lookupCert(text);
+    if (cert) {                                        // номер найден в реестре: отвечаем сами, без обращения к ассистенту
+      const t = T[lang], d = new Date(cert.created_at);
+      const reply = t.certOk.replace("{model}", cert.vehicle_model || "").replace("{plate}", cert.plate_display || "")
+        .replace("{soh}", cert.soh != null ? Number(cert.soh).toFixed(1) : "—")
+        .replace("{date}", isNaN(d) ? "" : d.toLocaleDateString({ et: "et-EE", ru: "ru-RU", en: "en-GB" }[lang]));
+      setMood("talk");
+      const auto = fromVoice && CAN_SPEAK ? speak(null, reply) : 0;
+      await typeInto(loader, reply);
+      const row = addActions(loader, reply);
+      addCertPdf(loader, cert.pdf_url, row);
+      const sb = row && row.querySelector('[data-act="speak"]');
+      if (auto && sb && auto === speakToken && !speakBtn && speakPhase !== "idle") { speakBtn = sb; setSpeakState(sb, speakPhase); }
+      setMood("happy", 4000);
+      busy = false;
+      return;
+    }
     const thinkTimer = setTimeout(() => setMood("think"), 1200);
 
     const ctrl = new AbortController();

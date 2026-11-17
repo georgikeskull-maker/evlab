@@ -1002,11 +1002,33 @@
                             <div class="text-slate-500 text-[11px] mt-0.5">Standard: ${data.standard}</div>
                         </div>
                         <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
-                            Sertifikaat Kinnitatud
+                            Sertifikaat Kinnitatud · ✓ ${certText().valid}
                         </div>
                     </div>
+                    <div id="certPdfSlot" class="mt-5 empty:hidden"></div>
                 </div>
             `;
+            loadCertPdf(data.cert_id);
+        }
+
+        // Кнопка «Скачать PDF»: ссылка берётся отдельным узким RPC (без контактов). Нет PDF / нет ответа — кнопки нет, ссылок-пустышек не бывает.
+        function certText() {
+            const l = (window.evlBanner && window.evlBanner.lang) || document.documentElement.lang || 'et';
+            return ({ ru: { valid: 'Действителен', pdf: '📄 Скачать PDF-сертификат' }, en: { valid: 'Valid', pdf: '📄 Download PDF Certificate' } })[l]
+                || { valid: 'Kehtiv', pdf: '📄 Laadi alla PDF-sertifikaat' };
+        }
+        async function loadCertPdf(certId) {
+            try {
+                const { data: rows } = await supabaseClient.rpc('get_certificate_pdf', { search_query: String(certId) });
+                const url = rows && rows[0] && rows[0].pdf_url;
+                const slot = document.getElementById('certPdfSlot');
+                if (!slot || !url || !/^https:\/\/iemzkpzzbvamjajrmegn\.supabase\.co\/storage\//.test(url)) return;
+                const a = document.createElement('a');
+                a.href = url; a.target = '_blank'; a.rel = 'noopener'; a.setAttribute('download', '');
+                a.className = 'flex w-full sm:w-auto sm:inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-sky-400 to-teal-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-sky-500/20 hover:brightness-110 transition';
+                a.textContent = certText().pdf;
+                slot.appendChild(a);
+            } catch (e) { console.warn('pdf link:', e); }
         }
 
         function renderTamperedCard() {
@@ -1186,8 +1208,8 @@
             }
         });
     </script>
-<link rel="stylesheet" href="ev-droid/ev-droid.css?v=15">
+<link rel="stylesheet" href="ev-droid/ev-droid.css?v=16">
 <script src="evlab-consent.js?v=1" defer></script>
-<script src="ev-droid/ev-droid.js?v=15" defer></script>
+<script src="ev-droid/ev-droid.js?v=16" defer></script>
 </body>
 </html>
