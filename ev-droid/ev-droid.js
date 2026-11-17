@@ -223,11 +223,13 @@
     x.fillRect(0, 0, 32, 32);
     return c;
   };
-  const SPR = [sprite(0, 240, 255), sprite(40, 130, 255), sprite(170, 250, 255), sprite(120, 90, 255)];
+  const SPR = [sprite(34, 211, 238), sprite(56, 189, 248), sprite(45, 212, 191), sprite(200, 250, 255)];   // #22d3ee #38bdf8 #2dd4bf + светлая искра
 
   // ------------------------------------------------------------------ droid scene
-  // One clean holographic halo: a single ring of fine light particles around the droid, breathing softly.
-  const RING = { r: 0.455, n: 190, sp: 0.1, spread: 0.014 };
+  // Energy halo: three layers of fine particles flowing on a wavy ring (two crossing "DNA" strands + a diffuse haze).
+  // A bright arc with a fading, scattering tail rotates slowly; hover / speech widen the wave and quicken the flow.
+  const RING = { r: 0.5, n: 440, layers: [0.34, 0.34, 0.32] };
+  const TAU = Math.PI * 2;
   const NOZ = [
     { a: A.nozL, dir: Math.PI / 2 + 0.38, len: 0.34, w: 0.075 },
     { a: A.nozR, dir: Math.PI / 2 - 0.22, len: 0.34, w: 0.085 },
@@ -251,15 +253,17 @@
       {
         const n = Math.round(RING.n * this.o.density);
         for (let i = 0; i < n; i++) {
-          const g = (Math.random() + Math.random() + Math.random() - 1.5) / 1.5;
+          const q = i / n, l = q < RING.layers[0] ? 0 : q < RING.layers[0] + RING.layers[1] ? 1 : 2;
           const c = Math.random();
           this.parts.push({
-            a: (i / n) * Math.PI * 2 + Math.random() * 0.02, off: g * RING.spread,
-            sp: RING.sp * (0.85 + Math.random() * 0.3), sz: 0.38 + Math.pow(Math.random(), 2.6) * 0.75, ph: Math.random() * 6.28,
-            spr: c < 0.7 ? 0 : c < 0.9 ? 2 : 1,
+            l, a: Math.random() * TAU, sp: 0.8 + Math.random() * 0.4, ph: Math.random() * TAU,
+            j: (Math.random() + Math.random() - 1), sc: Math.random(),
+            sz: 0.4 + Math.pow(Math.random(), 2.4) * 0.9,
+            spr: c < 0.07 ? 3 : l === 0 ? 0 : l === 1 ? 2 : 1,
           });
         }
       }
+      this.talk = 0; this.talkT = 0;
       this.resize();
     }
     resize() {
@@ -272,15 +276,16 @@
       this.pad = s * PAD; this.S = S;
       [this.cb, this.cf].forEach((c) => { c.width = Math.round(S * dpr); c.height = Math.round(S * dpr); });
       [this.xb, this.xf].forEach((x) => x.setTransform(dpr, 0, 0, dpr, dpr * this.pad, dpr * this.pad));
-      // droid image box inside the scene (matches .evd-body: left 18%, top 14%, size 64%)
-      this.D = s * 0.64; this.bx = s * 0.18; this.by = s * 0.14;
+      // droid image box inside the scene (matches .evd-body: left 21%, top 16%, size 58%)
+      this.D = s * 0.58; this.bx = s * 0.21; this.by = s * 0.16;
       this.draw(0.9, 0);
     }
     pt(p) { return [this.bx + (p[0] / 100) * this.D, this.by + (p[1] / 100) * this.D]; }
     /** hover / finger down: accelerate; press(): additional burst (shockwave + arcs) */
     boostOn(on) { this.target = on ? 1 : 0; Loop.kick(); }
     press() { this.flash = 1; this.target = 1; Loop.kick(); }
-    active() { return this.target > 0 || this.boost > 0.02 || this.flash > 0; }
+    talkOn(on) { this.talkT = on ? 1 : 0; Loop.kick(); }
+    active() { return this.target > 0 || this.boost > 0.02 || this.flash > 0 || this.talkT > 0 || this.talk > 0.02; }
     hover(dx, dy) {
       this.body.style.setProperty("--evd-rx", (-dy * 10).toFixed(1) + "deg");
       this.body.style.setProperty("--evd-ry", (dx * 14).toFixed(1) + "deg");
@@ -290,40 +295,76 @@
       const { xb, xf, s } = this;
       this.boost += (this.target - this.boost) * Math.min(1, dt * 6 || 0.1);
       this.flash = Math.max(0, this.flash - dt * 1.4);
-      const cx = s / 2, cy = s * 0.47, k = s / 160, B = this.boost, F = this.flash;
+      this.talk += (this.talkT - this.talk) * Math.min(1, dt * 4 || 0.1);
+      const cx = s / 2, cy = s * 0.45, k = s / 208, B = this.boost, F = this.flash, E = Math.min(1, Math.max(B, this.talk * 0.9) + F * 0.5);
       const o = this.pad, S = this.S;
       xb.clearRect(-o, -o, S, S); xf.clearRect(-o, -o, S, S);
       xb.globalCompositeOperation = xf.globalCompositeOperation = "lighter";
 
       // soft core glow behind the droid
-      const glow = xb.createRadialGradient(cx, cy, s * 0.05, cx, cy, s * (0.5 + 0.12 * B));
-      glow.addColorStop(0, `rgba(0,240,255,${Math.min(0.75, 0.16 + 0.24 * B + 0.4 * F)})`);
-      glow.addColorStop(1, "rgba(0,240,255,0)");
+      const glow = xb.createRadialGradient(cx, cy, s * 0.05, cx, cy, s * (0.52 + 0.1 * E));
+      glow.addColorStop(0, `rgba(34,211,238,${Math.min(0.7, 0.13 + 0.2 * E + 0.35 * F)})`);
+      glow.addColorStop(1, "rgba(34,211,238,0)");
       xb.fillStyle = glow; xb.fillRect(-o, -o, S, S);
 
       // thruster flames (behind the body, so the nozzles cover the roots)
       NOZ.forEach((nz, i) => this.flame(xb, nz, t, i));
 
-      // halo: a soft glow band + fine particles on one circle behind the droid; hover/press only brightens and quickens it
-      const pulse = 0.5 + 0.5 * Math.sin(t * 1.15);                         // slow breathing 0..1
-      const spd = 1 + B * 1.6 + F * 2;
-      const R0 = s * RING.r * (1 + 0.018 * pulse + 0.05 * B + 0.07 * F);
-      const band = Math.min(1, 0.07 + 0.06 * pulse + 0.1 * B + 0.25 * F);
-      xb.globalAlpha = band;
-      xb.strokeStyle = "rgba(0,240,255,1)"; xb.lineWidth = Math.max(1, s * 0.035);
-      xb.beginPath(); xb.arc(cx, cy, R0, 0, Math.PI * 2); xb.stroke();
-      xb.globalAlpha = Math.min(1, band * 1.6);
-      xb.lineWidth = Math.max(0.6, s * 0.006); xb.strokeStyle = "rgba(160,250,255,1)";
-      xb.beginPath(); xb.arc(cx, cy, R0, 0, Math.PI * 2); xb.stroke();
+      // halo ------------------------------------------------------------------
+      const pulse = 0.5 + 0.5 * Math.sin(t * 1.0);
+      const R0 = s * RING.r * (1 + 0.015 * pulse + 0.035 * E);
+      const amp = s * (0.022 + 0.016 * E);                       // wave depth (px), grows when hovered / speaking
+      const flow = 0.11 * (1 + 1.3 * E), wt = t * 1.15 * (1 + 0.9 * E);
+      const thead = t * 0.34 * (1 + 1.0 * E);                    // angle of the bright arc head
+      const mod = (v) => ((v % TAU) + TAU) % TAU;
+      const tailAt = (ang) => {                                  // 1 at the head, fading behind it, short soft ramp ahead
+        let u = mod(thead - ang); if (u > Math.PI) u -= TAU;
+        return u >= 0 ? Math.exp(-u * 0.85) : Math.max(0, 1 + u / 0.45);
+      };
+      const wave = (ang, layer) => {                             // radial offset in px; strand B is in antiphase (crossing ribbons)
+        const ph = layer === 1 ? Math.PI : 0;
+        return amp * (Math.sin(3 * ang - wt + ph) + 0.45 * Math.sin(5 * ang + wt * 0.7 + layer));
+      };
+      // soft ribbons (two strands) drawn as short segments so brightness follows the arc
+      const SEG = this.o.density < 0.6 ? 36 : 72;
+      xb.lineCap = "round";
+      for (let l = 0; l < 2; l++) {
+        xb.strokeStyle = l === 0 ? "rgb(34,211,238)" : "rgb(45,212,191)";
+        xb.lineWidth = Math.max(0.8, s * (0.013 + 0.005 * E));
+        let px = 0, py = 0;
+        for (let i = 0; i <= SEG; i++) {
+          const ang = (i / SEG) * TAU, r = R0 + wave(ang, l);
+          const x = cx + r * Math.cos(ang), y = cy + r * Math.sin(ang);
+          if (i) {
+            xb.globalAlpha = Math.min(1, (0.07 + 0.3 * tailAt(ang)) * (1 + 0.6 * E));
+            xb.beginPath(); xb.moveTo(px, py); xb.lineTo(x, y); xb.stroke();
+          }
+          px = x; py = y;
+        }
+      }
+      // particles
       for (const p of this.parts) {
-        const ang = p.a + t * p.sp * spd;
-        const R = R0 * (1 + p.off + 0.006 * Math.sin(t * 1.4 + p.ph));
-        const x = cx + R * Math.cos(ang), y = cy + R * Math.sin(ang);
-        const tw = 0.55 + 0.45 * Math.sin(t * 1.9 + p.ph);
-        const a = Math.min(1, (0.42 + 0.4 * pulse) * tw + 0.25 * B + 0.3 * F);
-        const z = p.sz * k * 2.2 * (1 + 0.25 * B + 0.3 * F);
+        const ang = p.a + t * flow * p.sp;
+        const tl = tailAt(ang), dim = 1 - tl;
+        let r = R0 + wave(ang, p.l === 2 ? 0 : p.l);
+        const spread = p.l === 2 ? 0.05 : 0.012;               // the haze layer is wide; strands are tight near the head
+        r += p.j * s * spread * (1 + 2.6 * dim * p.sc);
+        if (p.l === 2) r += s * 0.03 * Math.sin(t * 0.8 + p.ph);
+        if (p.sc > 0.82 && tl < 0.5) r += s * 0.07 * (p.sc - 0.82) * 5 * dim;   // stray sparks drifting out of the tail
+        const x = cx + r * Math.cos(ang), y = cy + r * Math.sin(ang);
+        const tw = 0.7 + 0.3 * Math.sin(t * 1.7 + p.ph);
+        const a = Math.min(1, (0.3 + 0.7 * tl) * tw * (0.95 + 0.25 * E) * (p.l === 2 ? 0.6 : 1));
+        const z = p.sz * k * 3.9 * (0.75 + 0.8 * tl) * (1 + 0.2 * E);
         xb.globalAlpha = a;
         xb.drawImage(SPR[p.spr], x - z, y - z, z * 2, z * 2);
+      }
+      // glowing head of the arc
+      {
+        const hr = R0 + wave(thead, 0);
+        const hx = cx + hr * Math.cos(thead), hy = cy + hr * Math.sin(thead), hs = s * (0.13 + 0.04 * E);
+        const g = xb.createRadialGradient(hx, hy, 0, hx, hy, hs);
+        g.addColorStop(0, `rgba(190,250,255,${0.32 + 0.22 * E})`); g.addColorStop(0.4, `rgba(45,212,191,${0.16 + 0.12 * E})`); g.addColorStop(1, "rgba(34,211,238,0)");
+        xb.globalAlpha = 1; xb.fillStyle = g; xb.fillRect(hx - hs, hy - hs, hs * 2, hs * 2);
       }
       xb.globalAlpha = xf.globalAlpha = 1;
       xb.globalCompositeOperation = xf.globalCompositeOperation = "source-over";
@@ -394,6 +435,7 @@
   function setSpeaking(on) {
     if (speakingNow === on) return;
     speakingNow = on;
+    if (launchScene) launchScene.talkOn(on);
     if (!root) return;
     if (on) { if (root.dataset.mood !== "alert") root.dataset.mood = "talk"; }
     else if (root.dataset.mood === "talk") root.dataset.mood = "happy";
@@ -413,7 +455,7 @@
     document.body.appendChild(root);
     const stage = $(".evd-stage", launcher);
     stage.style.cssText = "position:absolute;inset:0";
-    launchScene = new Scene(stage, { density: 1, size: 168 });
+    launchScene = new Scene(stage, { density: 1, size: 208 });
     Loop.set(launchScene, true);
 
     // Same "power-up" for mouse hover (desktop) and finger hold (touch); press/click adds a burst.
@@ -428,7 +470,7 @@
     let pos = null, drag = null, flyRaf = 0, suppressClick = 0;
     const clampN = (v, a, b) => Math.min(b, Math.max(a, v));
     const bounds = () => {
-      const sz = launcher.offsetWidth || 168;
+      const sz = launcher.offsetWidth || 208;
       return { minX: -sz * 0.12, maxX: document.documentElement.clientWidth - sz * 0.88, minY: -sz * 0.12, maxY: document.documentElement.clientHeight - sz * 0.88 };
     };
     const place = (x, y) => {
@@ -468,7 +510,7 @@
       let lift = 0;
       const b = pos ? null : document.getElementById("evl-consent");
       if (b) {
-        const r = b.getBoundingClientRect(), vw = document.documentElement.clientWidth, sz = launcher.offsetWidth || 168;
+        const r = b.getBoundingClientRect(), vw = document.documentElement.clientWidth, sz = launcher.offsetWidth || 208;
         if (r.width > 0 && r.right > vw - 10 - sz - 4) lift = Math.max(0, document.documentElement.clientHeight - r.top);   // зазор над плашкой = базовый отступ (2–10px)
       }
       launcher.style.setProperty("--evd-lift", lift.toFixed(0) + "px");
