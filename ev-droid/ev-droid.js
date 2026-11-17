@@ -59,13 +59,14 @@
       copy: "Kopeeri", copied: "Kopeeritud", speak: "Kuula vastust", stopSpeak: "Peata kuulamine",
       bTitle: "Broneeri aku kontroll", bSub: "Võtame ühendust 15 minuti jooksul (E–L 9–20).",
       bCar: "Sisesta auto reg-number või mark ja mudel", bCarPh: "Nt: 123 ABC või Hyundai Kona 2020",
-      bContact: "Telefon või Telegram", bContactPh: "+372 5... või @kasutaja",
+      bContact: "Sisesta telefon, Telegram (@kasutaja) või e-post", bContactPh: "+372 5… · @kasutaja · e-post",
+      legalPre: "Päringu saatmisega nõustud EVLABi ", legalLink: "andmekaitsetingimustega", legalPost: ".",
       bService: "Teenus",
       services: ["Ekspresstest (65 €)", "Dünaamiline koormusaudit (135 €)", "Ei tea veel — nõu"],
       bSubmit: "SAADA PÄRING", bCancel: "Tagasi", bSending: "Saadan...",
       bOk: "✓ Päring saadetud! Võtame peagi ühendust.",
       bOkChat: "Aitäh! Päring on vastu võetud — insener võtab peagi ühendust. Kui suhtlus minuga ja meie teenus meeldis, oleme väga tänulikud hinnangu ja paari sõna eest Google’is või Tripadvisoris!",
-      bErrCar: "Sisesta auto reg-number või mark ja mudel.", bErrContact: "Sisesta telefoninumber või @telegram.",
+      bErrCar: "Sisesta auto reg-number või mark ja mudel.", bErrContact: "Sisesta telefon, Telegram (@kasutaja) või e-post.",
       bWait: "Päring on juba saadetud — võtame peagi ühendust!",
       bFail: `Ei õnnestunud saata. Palun helista ${CFG.phone}.`,
     },
@@ -93,13 +94,14 @@
       copy: "Копировать", copied: "Скопировано", speak: "Озвучить", stopSpeak: "Остановить",
       bTitle: "Запись на проверку батареи", bSub: "Перезвоним или напишем в течение 15 минут (Пн–Сб 9–20).",
       bCar: "Укажите госномер авто или марку и модель", bCarPh: "Напр.: 123 ABC или Tesla Model 3 2020",
-      bContact: "Телефон или Telegram", bContactPh: "+372 5... или @username",
+      bContact: "Укажите телефон, Telegram (@ник) или e-mail", bContactPh: "+372 5… · @ник · e-mail",
+      legalPre: "Отправляя заявку, вы соглашаетесь с ", legalLink: "политикой конфиденциальности", legalPost: " EVLAB.",
       bService: "Услуга",
       services: ["Экспресс-тест (65 €)", "Динамический нагрузочный аудит (135 €)", "Пока не знаю — нужна консультация"],
       bSubmit: "ОТПРАВИТЬ ЗАЯВКУ", bCancel: "Назад", bSending: "Отправляю...",
       bOk: "✓ Заявка отправлена! Скоро свяжемся.",
       bOkChat: "Спасибо! Заявка принята — инженер скоро свяжется с вами. Если вам понравилось общаться со мной и наш сервис, будем очень рады вашей оценке и паре слов в Google или Tripadvisor!",
-      bErrCar: "Укажите госномер авто или марку и модель.", bErrContact: "Укажите телефон или @telegram.",
+      bErrCar: "Укажите госномер авто или марку и модель.", bErrContact: "Укажите телефон, Telegram (@ник) или e-mail.",
       bWait: "Заявка уже отправлена — скоро свяжемся!",
       bFail: `Не удалось отправить. Пожалуйста, позвоните ${CFG.phone}.`,
     },
@@ -127,13 +129,14 @@
       copy: "Copy", copied: "Copied", speak: "Read aloud", stopSpeak: "Stop",
       bTitle: "Book a battery check", bSub: "We'll get back to you within 15 minutes (Mon–Sat 9–20).",
       bCar: "Enter license plate or car make & model", bCarPh: "e.g. 123 ABC or Tesla Model 3 2020",
-      bContact: "Phone or Telegram", bContactPh: "+372 5... or @username",
+      bContact: "Enter phone, Telegram (@username) or e-mail", bContactPh: "+372 5… · @username · e-mail",
+      legalPre: "By submitting, you agree to EVLAB’s ", legalLink: "Privacy Policy", legalPost: ".",
       bService: "Service",
       services: ["Express test (65 €)", "Dynamic load audit (135 €)", "Not sure yet — advise me"],
       bSubmit: "SEND REQUEST", bCancel: "Back", bSending: "Sending...",
       bOk: "✓ Request sent! We'll contact you shortly.",
       bOkChat: "Thank you! Your request is confirmed — an engineer will contact you shortly. If you enjoyed chatting with me and our service, we’d really appreciate a quick rating and review on Google or Tripadvisor!",
-      bErrCar: "Please enter the license plate or car make & model.", bErrContact: "Please enter a phone number or @telegram.",
+      bErrCar: "Please enter the license plate or car make & model.", bErrContact: "Please enter a phone, Telegram (@username) or e-mail.",
       bWait: "Your request was already sent — we'll be in touch soon!",
       bFail: `Could not send. Please call ${CFG.phone}.`,
     },
@@ -651,7 +654,8 @@
 <form class="evd-sheet" novalidate>
   <h3 data-t="bTitle"></h3><p data-t="bSub"></p>
   <label class="evd-field"><span data-t="bCar"></span><input name="car" maxlength="80" autocomplete="off"></label>
-  <label class="evd-field"><span data-t="bContact"></span><input name="contact" maxlength="60" inputmode="text" autocomplete="tel"></label>
+  <label class="evd-field"><span data-t="bContact"></span><input name="contact" maxlength="80" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+  <p class="evd-legal"><span data-t="legalPre"></span><a class="evd-legal-link" data-t="legalLink" href="https://evlab.ee/privaatsuspoliitika.html" target="_blank" rel="noopener"></a><span data-t="legalPost"></span></p>
   <label class="evd-field"><span data-t="bService"></span><select name="service"></select></label>
   <input class="evd-hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
   <div class="evd-row"><button type="button" class="evd-cancel" data-t="bCancel"></button><button type="submit" class="evd-submit" data-t="bSubmit"></button></div>
@@ -690,6 +694,7 @@
     panel.querySelectorAll(".evd-act").forEach(labelAct);
     $('[name="car"]', sheet).placeholder = t.bCarPh;
     $('[name="contact"]', sheet).placeholder = t.bContactPh;
+    $(".evd-legal-link", sheet).href = "https://evlab.ee/privaatsuspoliitika.html" + (lang === "et" ? "" : "#" + lang);   // политика на языке чата
     const sel = $('[name="service"]', sheet);
     const idx = sel.selectedIndex > 0 ? sel.selectedIndex : 1;
     sel.innerHTML = t.services.map((s) => `<option>${s}</option>`).join("");
@@ -1198,12 +1203,16 @@
       setTimeout(() => $('[name="car"]', sheet).focus({ preventScroll: true }), 300);
     }
   }
-  function normContact(v) {
-    v = v.trim();
-    const tme = v.match(/^(?:https?:\/\/)?t\.me\/([A-Za-z0-9_]{4,32})$/i);
-    if (tme) return "@" + tme[1];
-    if (/^@[A-Za-z0-9_]{4,32}$/.test(v)) return v;
-    if (/^\+?[0-9][0-9\s\-()]{6,18}$/.test(v)) return v.replace(/\s+/g, " ");
+  // Контакт: e-mail -> email; @ник или t.me/ник -> telegram_username (без «@», нижний регистр); иначе телефон -> phone.
+  // contact — нормализованная строка целиком (обратная совместимость). Сервер классифицирует заново и не доверяет этим полям.
+  function parseContact(raw) {
+    const v = String(raw || "").replace(/\s+/g, " ").trim();
+    const tme = v.match(/^(?:https?:\/\/)?(?:www\.)?t\.me\/([A-Za-z0-9_]{4,32})\/?$/i);
+    if (tme) return { kind: "telegram", contact: "@" + tme[1].toLowerCase(), telegram_username: tme[1].toLowerCase() };
+    if (/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(v)) return { kind: "email", contact: v.toLowerCase(), email: v.toLowerCase() };
+    const tg = v.match(/^@([A-Za-z0-9_]{4,32})$/);
+    if (tg) return { kind: "telegram", contact: "@" + tg[1].toLowerCase(), telegram_username: tg[1].toLowerCase() };
+    if (/^\+?[0-9(][0-9\s\-()]{5,}$/.test(v) && v.replace(/\D/g, "").length >= 7) return { kind: "phone", contact: v, phone: v };
     return null;
   }
   async function submitLead(e) {
@@ -1217,7 +1226,8 @@
 
     if ($('[name="website"]', sheet).value) { openSheet(false); return; }   // honeypot
     const car = carIn.value.trim();
-    const contact = normContact(conIn.value);
+    const parsed = parseContact(conIn.value);
+    const contact = parsed && parsed.contact;
     if (car.length < 2) { carIn.setAttribute("aria-invalid", "true"); say(t.bErrCar, "err"); carIn.focus(); return; }
     if (!contact) { conIn.setAttribute("aria-invalid", "true"); say(t.bErrContact, "err"); conIn.focus(); return; }
     const last = parseInt(store.get("last_lead_sent") || "0", 10);
@@ -1226,8 +1236,7 @@
     const service = $('[name="service"]', sheet).value + " · AI-droid";
     const row = {
       service,
-      name: contact.startsWith("@") ? contact : "AI-droid (" + lang.toUpperCase() + ")",
-      phone: contact,
+      name: parsed.kind === "telegram" ? contact : "AI-droid (" + lang.toUpperCase() + ")",
       car,
       loc: "— (AI-droid, " + lang.toUpperCase() + ")",
     };
@@ -1238,7 +1247,9 @@
     try {
       if (!window.EvlConsent || !window.EvlConsent.sendLead) throw new Error("EvlConsent missing");
       const res = await window.EvlConsent.sendLead({
-        name: contact.startsWith("@") ? contact : "", contact, car, service, loc: row.loc, lang, website: "",
+        name: parsed.kind === "telegram" ? contact : "", contact, phone: parsed.phone || null, email: parsed.email || null,
+        telegram_username: parsed.telegram_username || null, car, service, loc: row.loc, lang, website: "",
+        source: "eva_chat", consent_given: true, consent_timestamp: new Date().toISOString(),
       });
       if (!res.ok || !(res.data && res.data.ok)) throw new Error("lead api " + res.status);
       store.set("last_lead_sent", String(Date.now()));
