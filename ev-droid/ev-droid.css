@@ -145,22 +145,43 @@
   background: linear-gradient(180deg, rgba(45, 212, 191, .10), rgba(15, 23, 42, 0));
 }
 .evd-avatar { position: relative; width: 64px; height: 64px; flex: none; margin: -6px -4px -6px 0; }
-.evd-title { min-width: 0; flex: 1; }
-.evd-title b {
-  display: block; font-size: 15px; letter-spacing: .02em; line-height: 1.2; text-transform: none;
-  color: #fff; text-shadow: none; font-weight: 800;
-  white-space: nowrap; overflow: visible;      /* всегда одна строка, без многоточия */
+.evd-head { position: relative; z-index: 5; }
+.evd-title { min-width: 0; flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1px; }
+.evd-name {
+  display: block; font-size: 17px; font-weight: 800; letter-spacing: .06em; line-height: 1.1; text-transform: none; white-space: nowrap;
+  background: linear-gradient(90deg, #e0f7ff 0%, #38bdf8 55%, #2dd4bf 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, .45));
 }
-.evd-status { display: block; font-size: 11px; color: var(--evd-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.evd-status i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--evd-ok); box-shadow: 0 0 6px var(--evd-ok); margin-right: 5px; vertical-align: 1px; }
-.evd-ctrls { display: flex; gap: 4px; align-items: center; flex: none; }
-.evd-lang, .evd-icon {
+.evd-role { display: block; font-size: 11px; font-weight: 500; opacity: .72; color: var(--evd-text); line-height: 1.2; white-space: nowrap; }
+.evd-ctrls { display: flex; gap: 6px; align-items: center; flex: none; }
+.evd-langbtn, .evd-lang, .evd-icon {
   border: 1px solid var(--evd-cyan-faint); background: rgba(148, 163, 184, .06);
   border-radius: 9px; height: 28px; min-width: 30px; padding: 0 7px;
   font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--evd-muted);
-  transition: color .2s, border-color .2s, background .2s;
+  transition: color .2s, border-color .2s, background .2s, box-shadow .2s;
 }
-.evd-lang:hover, .evd-icon:hover { color: var(--evd-text); border-color: var(--evd-cyan-dim); }
+.evd-langbtn, .evd-lang { cursor: pointer; }
+.evd-langbtn { display: inline-flex; align-items: center; justify-content: center; gap: 5px; border-radius: 999px; padding: 0 10px; color: var(--evd-text); }
+.evd-langbtn svg { transition: transform .2s; }
+.evd-langbox.open .evd-langbtn svg { transform: rotate(180deg); }
+.evd-langbtn:hover, .evd-lang:hover, .evd-icon:hover { color: var(--evd-text); border-color: var(--evd-cyan-dim); }
+/* отзывы: тёплое золото */
+.evd-icon.evd-star { color: #FFD700; border-color: rgba(255, 215, 0, .45); background: rgba(255, 215, 0, .08); box-shadow: 0 0 10px -2px rgba(255, 215, 0, .35); }
+.evd-icon.evd-star:hover { color: #FFD700; border-color: rgba(255, 215, 0, .8); box-shadow: 0 0 14px -1px rgba(255, 215, 0, .55); }
+.evd-icon.evd-close { margin-left: 6px; }
+/* выпадающее стеклянное меню языка */
+.evd-langbox { position: relative; }
+.evd-langmenu {
+  position: absolute; top: 100%; right: 0; padding-top: 6px; display: none; flex-direction: column; gap: 3px; min-width: 100%;
+}
+.evd-langmenu::before { content: ""; position: absolute; inset: 6px 0 0 0; border-radius: 12px; background: rgba(15, 23, 42, .82);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid var(--evd-cyan-dim); box-shadow: 0 10px 28px rgba(0, 0, 0, .5); }
+.evd-langmenu .evd-lang { position: relative; margin: 0 4px; border-color: transparent; background: transparent; }
+.evd-langmenu .evd-lang:first-child { margin-top: 4px; } .evd-langmenu .evd-lang:last-child { margin-bottom: 4px; }
+.evd-langbox.open .evd-langmenu { display: flex; }
+.evd-langbox.shut .evd-langmenu { display: none !important; }
+@media (hover: hover) { .evd-langbox:hover .evd-langmenu { display: flex; } .evd-langbox:hover .evd-langbtn svg { transform: rotate(180deg); } }
 .evd-lang[aria-pressed="true"] { color: #04161c; background: linear-gradient(135deg, var(--evd-cyan), var(--evd-teal)); border-color: transparent; box-shadow: 0 0 12px rgba(45, 212, 191, .45); }
 
 /* ------------------------------------------------------------ chat */
@@ -251,7 +272,6 @@
   .evd-panel { right: 0; bottom: 0; width: 100%; height: 100vh; height: 100dvh; border-radius: 0; border-left: 0; border-right: 0; background: radial-gradient(110% 30% at 50% 0%, rgba(45, 212, 191, .13), transparent 70%), linear-gradient(165deg, rgba(15, 23, 42, .95), rgba(7, 13, 28, .97)); }
   /* JS (visualViewport) sets --evd-vh / --evd-vt while the panel is open, so the keyboard never covers the input */
   .evd-root.evd-vv .evd-panel { top: var(--evd-vt, 0px); bottom: auto; height: var(--evd-vh); }
-  .evd-title b { font-size: 13.5px; letter-spacing: .01em; }
   .evd-avatar { width: 56px; height: 56px; }
   /* iOS Safari zooms the page on focus when the font is < 16px */
   .evd-input input, .evd-field input, .evd-field select { font-size: 16px; }
@@ -259,12 +279,11 @@
 @media (max-width: 420px) {
   .evd-avatar { width: 38px; height: 38px; margin: -2px 0 -2px 0; }  /* mini-avatar stays; shrinks so the assistant name fits */
   .evd-head { gap: 6px; padding-left: 10px; padding-right: 8px; }
-  .evd-title b { font-size: 13px; }
 }
 /* touch targets >= 40px on phones / touch screens */
 @media (max-width: 640px), (pointer: coarse) {
-  .evd-lang, .evd-icon { height: 40px; min-width: 40px; font-size: 12px; }
-  .evd-ctrls { gap: 3px; }
+  .evd-langbtn, .evd-lang, .evd-icon { height: 40px; min-width: 40px; font-size: 12px; }
+  .evd-ctrls { gap: 4px; }
   .evd-btn { width: 44px; height: 44px; }
   .evd-input input, .evd-field input, .evd-field select { height: 44px; }
   .evd-chip { min-height: 40px; padding: 0 14px; font-size: 13px; display: inline-flex; align-items: center; }
@@ -273,8 +292,9 @@
 }
 /* narrow phones: slightly tighter header controls so the assistant name "EVA · …" stays readable */
 @media (max-width: 420px) {
-  .evd-lang, .evd-icon { min-width: 35px; height: 38px; padding: 0 4px; }
-  .evd-ctrls { gap: 2px; }
+  .evd-langbtn, .evd-lang, .evd-icon { min-width: 36px; height: 38px; padding: 0 4px; }
+  .evd-langbtn { padding: 0 8px; }
+  .evd-ctrls { gap: 3px; }
 }
 @media (max-width: 370px) { .evd-avatar { display: none; } }   /* very small phones: name first */
 /* Reduced motion (e.g. Windows "Animation effects" off): no idle looping animation (float, blink, LED loops)
@@ -326,4 +346,3 @@
 @keyframes evd-micbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.14); } }
 @media (prefers-reduced-motion: reduce) { .evd-micbig, .evd-micbig.rec, .evd-micbig.rec svg, .evd-btn.rec { animation: none; } }
 
-@media (max-width: 340px) { .evd-title b { font-size: 11.5px; letter-spacing: 0; } }

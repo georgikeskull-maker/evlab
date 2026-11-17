@@ -39,8 +39,7 @@
     et: {
       bubble: "EVA · Assistent",
       open: "Ava EVLAB AI-insener", close: "Sulge",
-      status: "Online • Tallinn & Harjumaa",
-      title: "EVA · Assistent",
+      role: "Assistent",
       placeholder: "Nt: Hyundai Kona 2020, 110 000 km...",
       welcome: "Tere! Mina olen EVA, sinu digitaalne insener. Räägin hea meelega, kuidas me elektriautode akusid kontrollime ja mis kuulub aruandesse, või aitan valida sobiva kontrolli. Küsi häälega või kirjuta!",
       chips: [
@@ -76,8 +75,7 @@
     ru: {
       bubble: "EVA · Ассистент",
       open: "Открыть AI-инженера EVLAB", close: "Закрыть",
-      status: "Online • Таллинн и Харьюмаа",
-      title: "EVA · Ассистент",
+      role: "Ассистент",
       placeholder: "Напр.: Tesla Model 3 2020, 130 000 км...",
       welcome: "Привет! Я Ева, ваш цифровой инженер. Могу рассказать, как мы проверяем батареи электромобилей, что входит в отчёт, или помочь выбрать подходящую проверку. Спрашивайте голосом или текстом!",
       chips: [
@@ -113,8 +111,7 @@
     en: {
       bubble: "EVA · Assistant",
       open: "Open EVLAB AI engineer", close: "Close",
-      status: "Online • Tallinn & Harjumaa",
-      title: "EVA · Assistant",
+      role: "Assistant",
       placeholder: "E.g.: VW ID.4 2021, 95 000 km...",
       welcome: "Hi! I’m EVA, your digital engineer. I’ll gladly explain how we test EV batteries, what’s included in the report, or help you pick the right inspection. Ask by voice or text!",
       chips: [
@@ -638,17 +635,22 @@
     panel.id = "evd-panel";
     panel.setAttribute("role", "dialog");
     panel.setAttribute("aria-modal", "false");
-    panel.setAttribute("aria-labelledby", "evd-title");
+    panel.setAttribute("aria-labelledby", "evd-title evd-role");
     panel.innerHTML = `
 <div class="evd-head">
   <div class="evd-avatar"></div>
-  <div class="evd-title"><b id="evd-title" data-t="title"></b><span class="evd-status"><i></i><span data-t="status"></span></span></div>
+  <div class="evd-title"><b id="evd-title" class="evd-name">EVA</b><span id="evd-role" class="evd-role" data-t="role"></span></div>
   <div class="evd-ctrls">
-    <button type="button" class="evd-lang" data-lang="et">ET</button>
-    <button type="button" class="evd-lang" data-lang="ru">RU</button>
-    <button type="button" class="evd-lang" data-lang="en">EN</button>
-    <button type="button" class="evd-icon" data-act="review" data-tt="review">★</button>
-    <button type="button" class="evd-icon" data-act="close" data-tt="close">✕</button>
+    <button type="button" class="evd-icon evd-star" data-act="review" data-tt="review">★</button>
+    <div class="evd-langbox">
+      <button type="button" class="evd-langbtn" data-act="langmenu" aria-haspopup="true" aria-expanded="false"><span class="evd-langcur">ET</span><svg viewBox="0 0 10 6" width="9" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="evd-langmenu" role="group">
+        <button type="button" class="evd-lang" data-lang="et">ET</button>
+        <button type="button" class="evd-lang" data-lang="ru">RU</button>
+        <button type="button" class="evd-lang" data-lang="en">EN</button>
+      </div>
+    </div>
+    <button type="button" class="evd-icon evd-close" data-act="close" data-tt="close">✕</button>
   </div>
 </div>
 <div class="evd-msgs" aria-live="polite"></div>
@@ -679,12 +681,21 @@
     panel.addEventListener("click", (e) => {
       const b = e.target.closest("button");
       if (!b) return;
-      if (b.dataset.lang) setLang(b.dataset.lang);
+      if (b.dataset.lang) { setLang(b.dataset.lang); langMenu(false); }
+      else if (b.dataset.act === "langmenu") langMenu(!$(".evd-langbox", panel).classList.contains("open"));
       else if (b.dataset.act === "close") toggle(false);
       else if (b.dataset.act === "review") showReview();
       else if (b.dataset.act === "mic") voice(b);
       else if (b.classList.contains("evd-act")) onAct(b);
     });
+    // меню языка: клик (мобильные и десктоп) и наведение (десктоп, через CSS :hover); Esc / клик снаружи закрывают
+    document.addEventListener("keydown", (e) => {        // capture: Esc сначала закрывает открытое меню языка, и только потом чат
+      const box = $(".evd-langbox", panel);
+      if (e.key !== "Escape" || !isOpen || !(box.classList.contains("open") || (!box.classList.contains("shut") && box.matches(":hover")))) return;
+      e.stopImmediatePropagation(); langMenu(false); $(".evd-langbtn", panel).focus();
+    }, true);
+    ["pointerenter", "pointerleave"].forEach((ev) => $(".evd-langbox", panel).addEventListener(ev, (e) => { if (e.pointerType === "mouse") $(".evd-langbox", panel).classList.remove("shut"); }));
+    panel.addEventListener("pointerdown", (e) => { if (!e.target.closest(".evd-langbox")) langMenu(false); });
     $(".evd-input", panel).addEventListener("submit", (e) => { e.preventDefault(); send(); });
     sheet.addEventListener("submit", submitLead);
     initCarLookup();
@@ -694,11 +705,19 @@
     addWelcome();
   }
 
+  function langMenu(open) {
+    const box = $(".evd-langbox", panel); if (!box) return;
+    box.classList.toggle("open", open);
+    box.classList.toggle("shut", !open);     // явное закрытие перебивает :hover, пока курсор не уйдёт с кнопки
+    $(".evd-langbtn", panel).setAttribute("aria-expanded", String(open));
+  }
+
   function renderTexts() {
     const t = T[lang];
     panel.querySelectorAll("[data-t]").forEach((n) => { n.textContent = t[n.dataset.t]; });
     panel.querySelectorAll("[data-tt]").forEach((n) => { n.title = t[n.dataset.tt]; n.setAttribute("aria-label", t[n.dataset.tt]); });
     panel.querySelectorAll(".evd-lang").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+    $(".evd-langcur", panel).textContent = lang.toUpperCase();
     input.placeholder = t.placeholder;
     panel.querySelectorAll(".evd-act").forEach(labelAct);
     $('[name="car"]', sheet).placeholder = t.bCarPh;
