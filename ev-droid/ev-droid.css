@@ -25,9 +25,10 @@
 
 /* ------------------------------------------------------------ droid scene (launcher + header avatar) */
 .evd-scene { position: absolute; inset: 0; }
-.evd-scene canvas { position: absolute; inset: -18%; width: 136%; height: 136%; pointer-events: none; }  /* overhang: room for boosted vortex */
+.evd-orb-wrap { position: relative; width: 100%; height: 100%; }   /* halo canvas, flames and body share this one box and centre */
+.evd-scene canvas { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); pointer-events: none; }  /* size set in JS (overhang 18%, device-pixel exact) */
 .evd-body {
-  position: absolute; left: 21%; top: 16%; width: 58%; height: 58%;
+  position: absolute; inset: 0; margin: auto; width: 58%; height: 58%;   /* centred */
   transform: perspective(600px) rotateX(var(--evd-rx, 0deg)) rotateY(var(--evd-ry, 0deg)) scale(var(--evd-sc, 1));
   transition: transform .3s ease-out;
 }
@@ -72,8 +73,8 @@
 /* ------------------------------------------------------------ launcher */
 .evd-launcher {
   position: fixed;
-  right: calc(10px + env(safe-area-inset-right, 0px));
-  bottom: calc(10px + env(safe-area-inset-bottom, 0px) + var(--evd-lift, 0px));   /* --evd-lift: выше баннера cookies */
+  right: calc(20px + env(safe-area-inset-right, 0px));
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px) + var(--evd-lift, 0px));   /* --evd-lift: выше баннера cookies */
   z-index: 9996;                                                                   /* баннер cookies: 9995 */
   width: 208px; height: 208px;
   padding: 0; border: 0; background: none;
@@ -86,20 +87,23 @@
 .evd-launcher.is-dragging { cursor: grabbing; }
 .evd-launcher:focus-visible { outline: 2px solid var(--evd-cyan); outline-offset: -8px; border-radius: 50%; }
 .evd-root.is-open .evd-launcher { opacity: 0; transform: scale(.6) translateY(20px); pointer-events: none; }
-.evd-badge {
-  position: absolute; right: 150px; top: 46%;
-  transform: translateY(-50%);
-  white-space: nowrap;
-  padding: 8px 14px; border-radius: 10px;
-  background: rgba(5, 11, 20, .92);
-  border: 1px solid var(--evd-cyan-dim);
-  box-shadow: 0 0 18px rgba(0, 240, 255, .18);
-  font-size: 12.5px; font-weight: 600; letter-spacing: .02em;
-  opacity: 0; translate: 8px 0;
-  transition: opacity .3s ease, translate .3s ease;
-  pointer-events: none;
+/* bubble "EVA · Assistant": always visible, beside the droid and outside the particle halo; clickable (bubbles up to the launcher) */
+.evd-bubble {
+  position: absolute; top: 28%; right: calc(100% + 14px);
+  white-space: nowrap; padding: 8px 14px; border-radius: 16px 16px 4px 16px;
+  background: rgba(15, 23, 42, .68); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border: 1px solid var(--evd-line); color: #fff;
+  font-size: 13px; font-weight: 700; letter-spacing: .01em; line-height: 1.2;
+  box-shadow: 0 0 18px -4px rgba(45, 212, 191, .35), 0 6px 18px rgba(0, 0, 0, .35);
+  cursor: pointer; animation: evd-bubble 4.4s ease-in-out infinite;
 }
-.evd-badge.is-visible, .evd-launcher:hover .evd-badge { opacity: 1; translate: 0 0; }
+.evd-bubble.is-right { right: auto; left: calc(100% + 14px); border-radius: 16px 16px 16px 4px; }
+@keyframes evd-bubble {
+  0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 0 14px -4px rgba(45, 212, 191, .3), 0 6px 18px rgba(0, 0, 0, .35); }
+  50% { transform: translateY(-4px) scale(1.035); box-shadow: 0 0 26px -2px rgba(45, 212, 191, .6), 0 8px 20px rgba(0, 0, 0, .35); }
+}
+.evd-launcher:hover .evd-bubble { border-color: var(--evd-teal); }
+@media (max-width: 640px) { .evd-bubble { font-size: 12.5px; padding: 7px 12px; } }
 
 /* ------------------------------------------------------------ panel */
 .evd-panel {
@@ -221,8 +225,7 @@
 
 /* ------------------------------------------------------------ responsive */
 @media (max-width: 640px) {
-  .evd-launcher { width: 124px; height: 124px; right: calc(2px + env(safe-area-inset-right, 0px)); bottom: calc(2px + env(safe-area-inset-bottom, 0px) + var(--evd-lift, 0px)); }
-  .evd-badge { display: none; }
+  .evd-launcher { width: 124px; height: 124px; right: calc(14px + env(safe-area-inset-right, 0px)); bottom: calc(12px + env(safe-area-inset-bottom, 0px) + var(--evd-lift, 0px)); }
   .evd-panel { right: 0; bottom: 0; width: 100%; height: 100vh; height: 100dvh; border-radius: 0; border-left: 0; border-right: 0; background: radial-gradient(110% 30% at 50% 0%, rgba(45, 212, 191, .13), transparent 70%), linear-gradient(165deg, rgba(15, 23, 42, .95), rgba(7, 13, 28, .97)); }
   /* JS (visualViewport) sets --evd-vh / --evd-vt while the panel is open, so the keyboard never covers the input */
   .evd-root.evd-vv .evd-panel { top: var(--evd-vt, 0px); bottom: auto; height: var(--evd-vh); }
@@ -256,7 +259,8 @@
    and no panel scale/slide; hover/press glow still responds (short transitions), canvas animates only
    while the user interacts — see Loop in ev-droid.js. */
 @media (prefers-reduced-motion: reduce) {
-  .evd-root *, .evd-root *::before, .evd-root *::after { animation: none !important; }
+  /* the droid, its halo and the "EVA" bubble stay alive by design; only the chat window motion is reduced */
+  .evd-panel *, .evd-panel *::before, .evd-panel *::after { animation: none !important; }
   .evd-panel, .evd-root.is-open .evd-panel { transform: none; transition: opacity .2s ease, visibility 0s linear .2s; }
   .evd-root.is-open .evd-panel { transition: opacity .2s ease, visibility 0s; }
   .evd-sheet { transition-duration: .15s; }

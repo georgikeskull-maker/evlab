@@ -33,7 +33,7 @@
   // ------------------------------------------------------------------ i18n
   const T = {
     et: {
-      badge: "⚡ EV AI-insener • Küsi aku kohta",
+      bubble: "EVA · Assistent",
       open: "Ava EVLAB AI-insener", close: "Sulge",
       status: "Online • Tallinn & Harjumaa",
       title: "EVA · Digitaalne insener",
@@ -67,7 +67,7 @@
       bFail: `Ei õnnestunud saata. Palun helista ${CFG.phone}.`,
     },
     ru: {
-      badge: "⚡ EV AI-инженер • Проверка батареи",
+      bubble: "EVA · Ассистент",
       open: "Открыть AI-инженера EVLAB", close: "Закрыть",
       status: "Online • Таллинн и Харьюмаа",
       title: "EVA · Цифровой инженер",
@@ -101,7 +101,7 @@
       bFail: `Не удалось отправить. Пожалуйста, позвоните ${CFG.phone}.`,
     },
     en: {
-      badge: "⚡ EV AI-engineer • Battery check",
+      bubble: "EVA · Assistant",
       open: "Open EVLAB AI engineer", close: "Close",
       status: "Online • Tallinn & Harjumaa",
       title: "EVA · Digital Engineer",
@@ -244,10 +244,11 @@
       this.o = Object.assign({ density: 1, sparks: 26 }, opts);
       this.host = host;
       host.classList.add("evd-scene");
-      host.innerHTML =
+      // One positioned container: canvas halo + flames, droid body and front canvas all share the same centre (50% / 50%).
+      host.innerHTML = `<div class="evd-orb-wrap">` +
         `<canvas class="evd-cv-back" aria-hidden="true"></canvas>` +
         `<div class="evd-float"><div class="evd-body"><img alt="" src="${CFG.droidImg}" decoding="async" draggable="false">${faceSVG()}</div></div>` +
-        `<canvas class="evd-cv-front" aria-hidden="true"></canvas>`;
+        `<canvas class="evd-cv-front" aria-hidden="true"></canvas></div>`;
       this.cb = $(".evd-cv-back", host); this.cf = $(".evd-cv-front", host);
       this.xb = this.cb.getContext("2d"); this.xf = this.cf.getContext("2d");
       this.body = $(".evd-body", host); this.par = $(".evd-parallax", host);
@@ -266,21 +267,22 @@
           });
         }
       }
-      this.talk = 0; this.talkT = 0;
+      this.talk = 0; this.talkT = 0; this.hx = 0; this.hy = 0;
       this.resize();
     }
     resize() {
       const s = this.host.clientWidth || this.o.size || 160;
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const dpr = Math.min(3, window.devicePixelRatio || 1);
       this.s = s;
-      // canvases overhang the stage by PAD on every side (CSS inset:-18%), so the boosted vortex,
-      // arcs and shockwave are never clipped; drawing stays in stage coordinates via the translate.
-      const PAD = 0.18, S = s * (1 + 2 * PAD);
-      this.pad = s * PAD; this.S = S;
-      [this.cb, this.cf].forEach((c) => { c.width = Math.round(S * dpr); c.height = Math.round(S * dpr); });
+      // Canvases overhang the stage by PAD on every side so the wave halo is never clipped. They are centred with
+      // left/top 50% + translate(-50%,-50%) (CSS); the backing store is a whole number of device pixels and the CSS
+      // size is exactly backing/dpr, so the halo, flames and body keep one common centre on any screen / zoom.
+      const px = Math.round(s * 1.36 * dpr), S = px / dpr;
+      this.S = S; this.pad = (S - s) / 2;
+      [this.cb, this.cf].forEach((c) => { c.width = px; c.height = px; c.style.width = S + "px"; c.style.height = S + "px"; });
       [this.xb, this.xf].forEach((x) => x.setTransform(dpr, 0, 0, dpr, dpr * this.pad, dpr * this.pad));
-      // droid image box inside the scene (matches .evd-body: left 21%, top 16%, size 58%)
-      this.D = s * 0.58; this.bx = s * 0.21; this.by = s * 0.16;
+      // droid image box inside the scene (matches .evd-body: centred, 58% square)
+      this.D = s * 0.58; this.bx = s * 0.21; this.by = s * 0.21;
       this.draw(0.9, 0);
     }
     pt(p) { return [this.bx + (p[0] / 100) * this.D, this.by + (p[1] / 100) * this.D]; }
@@ -290,6 +292,7 @@
     talkOn(on) { this.talkT = on ? 1 : 0; Loop.kick(); }
     active() { return this.target > 0 || this.boost > 0.02 || this.flash > 0 || this.talkT > 0 || this.talk > 0.02; }
     hover(dx, dy) {
+      this.hx = dx; this.hy = dy;
       this.body.style.setProperty("--evd-rx", (-dy * 10).toFixed(1) + "deg");
       this.body.style.setProperty("--evd-ry", (dx * 14).toFixed(1) + "deg");
       this.par.setAttribute("transform", `translate(${(dx * 3).toFixed(2)} ${(dy * 2.4).toFixed(2)})`);
@@ -299,7 +302,11 @@
       this.boost += (this.target - this.boost) * Math.min(1, dt * 6 || 0.1);
       this.flash = Math.max(0, this.flash - dt * 1.4);
       this.talk += (this.talkT - this.talk) * Math.min(1, dt * 4 || 0.1);
-      const cx = s / 2, cy = s * 0.45, k = s / 208, B = this.boost, F = this.flash, E = Math.min(1, Math.max(B, this.talk * 0.9) + F * 0.5);
+      if (dt) {                                                   // gentle idle sway of the body (adds to pointer tilt)
+        this.body.style.setProperty("--evd-ry", (this.hx * 14 + 6 * Math.sin(t * 0.55)).toFixed(1) + "deg");
+        this.body.style.setProperty("--evd-rx", (-this.hy * 10 + 3 * Math.sin(t * 0.43 + 1)).toFixed(1) + "deg");
+      }
+      const cx = s / 2, cy = s / 2, k = s / 208, B = this.boost, F = this.flash, I = 0.3 + 0.1 * Math.sin(t * 0.7), E = Math.min(1, Math.max(B, this.talk * 0.9, I) + F * 0.5);   // I: idle swell, the halo is never flat
       const o = this.pad, S = this.S;
       xb.clearRect(-o, -o, S, S); xf.clearRect(-o, -o, S, S);
       xb.globalCompositeOperation = xf.globalCompositeOperation = "lighter";
@@ -401,26 +408,21 @@
     }
   }
 
-  // Animation loop. With prefers-reduced-motion the droid stays still while idle and only animates
-  // during user-initiated interaction (hover / press / waiting for an answer), then settles to a still frame.
+  // Animation loop: the droid is always alive (float, sway, wave halo) from page load, no hover needed.
   const Loop = {
     scenes: new Set(), raf: 0, t0: performance.now(), last: 0,
     set(sc, on) {
       if (on) this.scenes.add(sc); else this.scenes.delete(sc);
-      if (on && REDUCED) sc.draw(0.9, 0);
       this.kick();
     },
-    wanted() { for (const s of this.scenes) if (!REDUCED || s.active()) return true; return false; },
+    wanted() { return this.scenes.size > 0; },
     kick() { if (!this.raf && !document.hidden && this.wanted()) this.raf = requestAnimationFrame(this.tick); },
     tick(now) {
       Loop.raf = 0;
       const t = (now - Loop.t0) / 1000;
       const dt = Math.min(0.05, Loop.last ? t - Loop.last : 0.016);
       Loop.last = t;
-      Loop.scenes.forEach((s) => {
-        if (!REDUCED || s.active()) { s.draw(t, dt); s.settled = false; }
-        else if (!s.settled) { s.boost = 0; s.flash = 0; s.draw(0.9, 0); s.settled = true; }
-      });
+      Loop.scenes.forEach((s) => s.draw(t, dt));
       if (!Loop.wanted()) Loop.last = 0;
       Loop.kick();
     },
@@ -453,7 +455,7 @@
     launcher.type = "button";
     launcher.setAttribute("aria-expanded", "false");
     launcher.setAttribute("aria-controls", "evd-panel");
-    launcher.innerHTML = `<span class="evd-badge"></span><span class="evd-stage"></span>`;
+    launcher.innerHTML = `<span class="evd-stage"></span><span class="evd-bubble" aria-hidden="true"></span>`;
     root.appendChild(launcher);
     document.body.appendChild(root);
     const stage = $(".evd-stage", launcher);
@@ -470,6 +472,17 @@
     launcher.addEventListener("focus", () => { ensureBuilt(); boost(true); });
     launcher.addEventListener("blur", () => boost(false));
     // ---- перетаскивание и «пинок»: смещение > порога = полёт с инерцией и отскоком от краёв; короткий тап = открыть чат
+    // облачко «EVA · Ассистент»: рядом с дроидом, за радиусом кольца; сторона выбирается так, чтобы не обрезаться краем экрана
+    const bubble = $(".evd-bubble", launcher);
+    const updateBubble = () => {
+      const r = launcher.getBoundingClientRect(), vw = document.documentElement.clientWidth, need = bubble.offsetWidth + 16;
+      const roomL = r.left, roomR = vw - r.right;
+      let right = r.left + r.width / 2 < vw / 2;                       // дроид у левого края -> облачко справа
+      if (!right && roomL < need && roomR > roomL) right = true;
+      if (right && roomR < need && roomL > roomR) right = false;
+      bubble.classList.toggle("is-right", right);
+    };
+    launcher.addEventListener("evd-layout", updateBubble);
     let pos = null, drag = null, flyRaf = 0, suppressClick = 0;
     const clampN = (v, a, b) => Math.min(b, Math.max(a, v));
     const bounds = () => {
@@ -480,6 +493,7 @@
       pos = { x, y };
       launcher.classList.add("is-free");
       launcher.style.left = x.toFixed(1) + "px"; launcher.style.top = y.toFixed(1) + "px";
+      updateBubble();
     };
     const savePos = () => {
       if (!pos) return;
@@ -514,9 +528,11 @@
       const b = pos ? null : document.getElementById("evl-consent");
       if (b) {
         const r = b.getBoundingClientRect(), vw = document.documentElement.clientWidth, sz = launcher.offsetWidth || 208;
-        if (r.width > 0 && r.right > vw - 10 - sz - 4) lift = Math.max(0, document.documentElement.clientHeight - r.top);   // зазор над плашкой = базовый отступ (2–10px)
+        if (r.width > 0 && r.right > vw - 24 - sz) lift = Math.max(0, document.documentElement.clientHeight - r.top);   // зазор над плашкой = базовый отступ (2–10px)
       }
+      lift = Math.min(lift, Math.max(0, document.documentElement.clientHeight - (launcher.offsetWidth || 208) - 28));   // не выше экрана
       launcher.style.setProperty("--evd-lift", lift.toFixed(0) + "px");
+      updateBubble();
     };
     new MutationObserver(updateLift).observe(document.body, { childList: true });
     launcher.addEventListener("pointerdown", (e) => {
@@ -559,7 +575,7 @@
     };
     launcher.addEventListener("pointerup", endDrag);
     launcher.addEventListener("pointercancel", endDrag);
-    try { const p = JSON.parse(store.sget("evd_pos") || "null"); if (p && isFinite(p.fx) && isFinite(p.fy)) { const b = bounds(); place(b.minX + clampN(p.fx, 0, 1) * (b.maxX - b.minX), b.minY + clampN(p.fy, 0, 1) * (b.maxY - b.minY)); } } catch (_) { /* ignore */ }
+    try { const p = JSON.parse(store.sget("evd_pos") || "null"); if (p && isFinite(p.fx) && isFinite(p.fy)) { const b = bounds(); place(Math.max(6, b.minX + clampN(p.fx, 0, 1) * (b.maxX - b.minX)), Math.max(6, b.minY + clampN(p.fy, 0, 1) * (b.maxY - b.minY))); } } catch (_) { /* ignore */ }
     updateLift();
 
     let opening = 0;
@@ -582,19 +598,12 @@
     }, { passive: true });
 
     applyLauncherText();
-    if (!store.sget("evd_badge")) {
-      setTimeout(() => {
-        if (isOpen) return;
-        const b = $(".evd-badge", launcher);
-        b.classList.add("is-visible");
-        store.sset("evd_badge", "1");
-        setTimeout(() => b.classList.remove("is-visible"), 6000);
-      }, 3500);
-    }
+    updateBubble();
   }
   function applyLauncherText() {
-    $(".evd-badge", launcher).textContent = T[lang].badge;
+    $(".evd-bubble", launcher).textContent = T[lang].bubble;
     launcher.setAttribute("aria-label", T[lang].open);
+    launcher.dispatchEvent(new Event("evd-layout"));
   }
 
   // ------------------------------------------------------------------ panel
@@ -693,12 +702,20 @@
   }
   function setLang(l) {
     if (!T[l] || l === lang) return;
+    stopSpeak();                       // сразу обрываем озвучку приветствия на прежнем языке
     lang = l;
     store.set("evd_lang", l);
     applyLauncherText();
     renderTexts();
-    addWelcome();
+    const wm = addWelcome();
     if (l === "et") { loadEtManifest(); preloadWelcome("et"); }
+    // переключение языка = жест пользователя: приветствие на новом языке сразу звучит тем же голосом EVA.
+    // Фокус на поле ввода не ставится (на телефоне клавиатура не выпрыгивает).
+    if (isOpen && CAN_SPEAK && wm && wm._text) {
+      greeted = true;
+      primeAudio();
+      speak(wm.querySelector('[data-act="speak"]'), wm._text);
+    }
   }
 
   // ------------------------------------------------------------------ open / close
@@ -781,7 +798,11 @@
   function pickVoice(l) {
     let vs = [];
     try { vs = speechSynthesis.getVoices() || []; } catch (_) { /* ignore */ }
-    const by = (p) => vs.find((v) => v.lang && v.lang.toLowerCase().replace("_", "-").startsWith(p));
+    const FEM = /female|woman|zira|samantha|milena|irina|svetlana|katja|tuuli|mari|aria|jenny|libby|sonia|hedda|helena|google/i;   // голос EVA — женский
+    const by = (p) => {
+      const a = vs.filter((v) => v.lang && v.lang.toLowerCase().replace("_", "-").startsWith(p));
+      return a.find((v) => FEM.test(v.name)) || a[0];
+    };
     return by(VOICE_LANG[l].toLowerCase()) || by(l) || (l === "et" ? by("fi") : null) || null;
   }
   function labelAct(b) {
@@ -925,7 +946,7 @@
     primeAudio();
     ttsCtrl = typeof AbortController !== "undefined" ? new AbortController() : null;
     const signal = ttsCtrl ? ttsCtrl.signal : undefined;
-    const timer = setTimeout(() => { if (ttsCtrl) ttsCtrl.abort(); }, 12000);
+    const timer = setTimeout(() => { if (ttsCtrl) ttsCtrl.abort(); }, 20000);
     // воспроизвести url; onFail вызывается при ошибке загрузки/декодирования или отказе play() (автоплей)
     const playUrl = (url, onFail) => {
       if (token !== speakToken) return null;
