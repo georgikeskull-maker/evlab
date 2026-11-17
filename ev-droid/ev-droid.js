@@ -36,8 +36,9 @@
       badge: "⚡ EV AI-insener • Küsi aku kohta",
       open: "Ava EVLAB AI-insener", close: "Sulge",
       status: "Online • Tallinn & Harjumaa",
+      title: "EVA · Digitaalne insener",
       placeholder: "Nt: Hyundai Kona 2020, 110 000 km...",
-      welcome: "Tere! Olen EVLAB digitaalne insener. Räägin hea meelega, kuidas me elektriautode akusid kontrollime ja mis kuulub aruandesse, või aitan valida sobiva kontrolli. Küsi häälega või kirjuta!",
+      welcome: "Tere! Mina olen EVA, sinu digitaalne insener. Räägin hea meelega, kuidas me elektriautode akusid kontrollime ja mis kuulub aruandesse, või aitan valida sobiva kontrolli. Küsi häälega või kirjuta!",
       chips: [
         ["📅 Broneeri kontroll", "#book"],
         ["🔋 Mis on SoH?", "Mis on SoH ja kuidas seda mõõdetakse?"],
@@ -54,14 +55,14 @@
       mic: "Häälsisend", send: "Saada", micBig: "Räägi", orType: "või kirjuta allpool",
       copy: "Kopeeri", copied: "Kopeeritud", speak: "Kuula vastust", stopSpeak: "Peata kuulamine",
       bTitle: "Broneeri aku kontroll", bSub: "Võtame ühendust 15 minuti jooksul (E–L 9–20).",
-      bCar: "Auto mudel ja aasta", bCarPh: "nt. Tesla Model 3 2020",
+      bCar: "Sisesta auto reg-number või mark ja mudel", bCarPh: "Nt: 123 ABC või Hyundai Kona 2020",
       bContact: "Telefon või Telegram", bContactPh: "+372 5... või @kasutaja",
       bService: "Teenus",
       services: ["Ekspresstest (65 €)", "Dünaamiline koormusaudit (135 €)", "Ei tea veel — nõu"],
       bSubmit: "SAADA PÄRING", bCancel: "Tagasi", bSending: "Saadan...",
       bOk: "✓ Päring saadetud! Võtame peagi ühendust.",
       bOkChat: "Aitäh! Päring on vastu võetud — insener võtab ühendust telefoni või Telegrami teel.",
-      bErrCar: "Sisesta auto mudel.", bErrContact: "Sisesta telefoninumber või @telegram.",
+      bErrCar: "Sisesta auto reg-number või mark ja mudel.", bErrContact: "Sisesta telefoninumber või @telegram.",
       bWait: "Päring on juba saadetud — võtame peagi ühendust!",
       bFail: `Ei õnnestunud saata. Palun helista ${CFG.phone}.`,
     },
@@ -69,8 +70,9 @@
       badge: "⚡ EV AI-инженер • Проверка батареи",
       open: "Открыть AI-инженера EVLAB", close: "Закрыть",
       status: "Online • Таллинн и Харьюмаа",
+      title: "EVA · Цифровой инженер",
       placeholder: "Напр.: Tesla Model 3 2020, 130 000 км...",
-      welcome: "Привет! Я цифровой инженер EVLAB. Могу рассказать, как мы проверяем батареи электромобилей, что входит в отчёт или помочь выбрать подходящую проверку. Спрашивайте голосом или текстом!",
+      welcome: "Привет! Я Ева, ваш цифровой инженер. Могу рассказать, как мы проверяем батареи электромобилей, что входит в отчёт, или помочь выбрать подходящую проверку. Спрашивайте голосом или текстом!",
       chips: [
         ["📅 Записаться", "#book"],
         ["🔋 Что такое SoH?", "Что такое SoH и как его измеряют?"],
@@ -87,14 +89,14 @@
       mic: "Голосовой ввод", send: "Отправить", micBig: "Говорить", orType: "или напишите ниже",
       copy: "Копировать", copied: "Скопировано", speak: "Озвучить", stopSpeak: "Остановить",
       bTitle: "Запись на проверку батареи", bSub: "Перезвоним или напишем в течение 15 минут (Пн–Сб 9–20).",
-      bCar: "Модель и год авто", bCarPh: "напр. Tesla Model 3 2020",
+      bCar: "Укажите госномер авто или марку и модель", bCarPh: "Напр.: 123 ABC или Tesla Model 3 2020",
       bContact: "Телефон или Telegram", bContactPh: "+372 5... или @username",
       bService: "Услуга",
       services: ["Экспресс-тест (65 €)", "Динамический нагрузочный аудит (135 €)", "Пока не знаю — нужна консультация"],
       bSubmit: "ОТПРАВИТЬ ЗАЯВКУ", bCancel: "Назад", bSending: "Отправляю...",
       bOk: "✓ Заявка отправлена! Скоро свяжемся.",
       bOkChat: "Спасибо! Заявка принята — инженер свяжется с вами по телефону или в Telegram.",
-      bErrCar: "Укажите модель авто.", bErrContact: "Укажите телефон или @telegram.",
+      bErrCar: "Укажите госномер авто или марку и модель.", bErrContact: "Укажите телефон или @telegram.",
       bWait: "Заявка уже отправлена — скоро свяжемся!",
       bFail: `Не удалось отправить. Пожалуйста, позвоните ${CFG.phone}.`,
     },
@@ -102,8 +104,9 @@
       badge: "⚡ EV AI-engineer • Battery check",
       open: "Open EVLAB AI engineer", close: "Close",
       status: "Online • Tallinn & Harjumaa",
+      title: "EVA · Digital Engineer",
       placeholder: "E.g.: VW ID.4 2021, 95 000 km...",
-      welcome: "Hi! I'm EVLAB's digital engineer. I can explain how we check EV batteries, what goes into the report, or help you pick the right check. Ask me by voice or text!",
+      welcome: "Hi! I’m EVA, your digital engineer. I’ll gladly explain how we test EV batteries, what’s included in the report, or help you pick the right inspection. Ask by voice or text!",
       chips: [
         ["📅 Book a check", "#book"],
         ["🔋 What is SoH?", "What is SoH and how is it measured?"],
@@ -120,14 +123,14 @@
       mic: "Voice input", send: "Send", micBig: "Tap to speak", orType: "or just type below",
       copy: "Copy", copied: "Copied", speak: "Read aloud", stopSpeak: "Stop",
       bTitle: "Book a battery check", bSub: "We'll get back to you within 15 minutes (Mon–Sat 9–20).",
-      bCar: "Car model and year", bCarPh: "e.g. Tesla Model 3 2020",
+      bCar: "Enter license plate or car make & model", bCarPh: "e.g. 123 ABC or Tesla Model 3 2020",
       bContact: "Phone or Telegram", bContactPh: "+372 5... or @username",
       bService: "Service",
       services: ["Express test (65 €)", "Dynamic load audit (135 €)", "Not sure yet — advise me"],
       bSubmit: "SEND REQUEST", bCancel: "Back", bSending: "Sending...",
       bOk: "✓ Request sent! We'll contact you shortly.",
       bOkChat: "Thank you! Your request is in — an engineer will contact you by phone or Telegram.",
-      bErrCar: "Please enter the car model.", bErrContact: "Please enter a phone number or @telegram.",
+      bErrCar: "Please enter the license plate or car make & model.", bErrContact: "Please enter a phone number or @telegram.",
       bWait: "Your request was already sent — we'll be in touch soon!",
       bFail: `Could not send. Please call ${CFG.phone}.`,
     },
@@ -460,8 +463,8 @@
 
     // Same "power-up" for mouse hover (desktop) and finger hold (touch); press/click adds a burst.
     const boost = (on) => { launchScene.boostOn(on); launcher.classList.toggle("is-boost", on); };
-    launcher.addEventListener("pointerenter", () => { boost(true); ensureBuilt(); if (lang === "et") loadEtManifest(); });
-    launcher.addEventListener("pointerdown", () => { boost(true); launchScene.press(); ensureBuilt(); });
+    launcher.addEventListener("pointerenter", () => { boost(true); ensureBuilt(); preloadWelcome(lang, true); });
+    launcher.addEventListener("pointerdown", () => { boost(true); launchScene.press(); ensureBuilt(); preloadWelcome(lang, true); });
     launcher.addEventListener("pointerleave", () => { if (!drag && !flyRaf) { boost(false); launchScene.hover(0, 0); } });
     launcher.addEventListener("pointercancel", () => boost(false));
     launcher.addEventListener("focus", () => { ensureBuilt(); boost(true); });
@@ -617,7 +620,7 @@
     panel.innerHTML = `
 <div class="evd-head">
   <div class="evd-avatar"></div>
-  <div class="evd-title"><b id="evd-title">EVLAB.EE · AI</b><span class="evd-status"><i></i><span data-t="status"></span></span></div>
+  <div class="evd-title"><b id="evd-title" data-t="title"></b><span class="evd-status"><i></i><span data-t="status"></span></span></div>
   <div class="evd-ctrls">
     <button type="button" class="evd-lang" data-lang="et">ET</button>
     <button type="button" class="evd-lang" data-lang="ru">RU</button>
@@ -695,7 +698,7 @@
     applyLauncherText();
     renderTexts();
     addWelcome();
-    if (l === "et") loadEtManifest();
+    if (l === "et") { loadEtManifest(); preloadWelcome("et"); }
   }
 
   // ------------------------------------------------------------------ open / close
@@ -716,7 +719,6 @@
       setTimeout(() => headScene.boostOn(false), 300);
       setMood("scan", 900);
       if (lang === "et") loadEtManifest();
-      setTimeout(() => input.focus({ preventScroll: true }), 350);
       if (typeof window.gtag === "function") window.gtag("event", "evd_open", { lang });
     } else {
       stopSpeak();
@@ -831,7 +833,7 @@
   let etItems = null, etItemsP = null, etVer = "";
   function loadEtManifest() {
     if (!etItemsP) {
-      etItemsP = fetch(ASSET("audio/manifest.json?v=3"))
+      etItemsP = fetch(ASSET("audio/manifest.json?v=4"))
         .then((r) => (r.ok ? r.json() : null))
         .then((j) => { etItems = (j && j.items) || {}; etVer = (j && j.v) || ""; return etItems; })
         .catch(() => { etItems = {}; return etItems; });
@@ -842,11 +844,34 @@
     if (l !== "et") return null;
     const items = etItems || (await loadEtManifest());
     const it = items[fnv1a(plainText(text).replace(/\s+/g, " "))];
-    return it && it.file ? ASSET("audio/" + it.file + (etVer ? "?v=" + etVer : "")) : null;
+    if (!(it && it.file)) return null;
+    const url = ASSET("audio/" + it.file + (etVer ? "?v=" + etVer : ""));
+    return blobCache.get("static\n" + url) || url;        // уже предзагружен -> blob: старт без сети
   }
-  async function fetchAudio(text, l, signal) {
+  // Предзагрузка приветствия, чтобы тап по дроиду начинал звук мгновенно:
+  //  ET — готовый MP3 грузится сразу после загрузки страницы (blob в памяти);
+  //  RU/EN — живой /api/tts, поэтому грузим только по намерению (наведение/касание дроида), а не у каждого посетителя.
+  function preloadWelcome(l, intent) {
+    try {
+      if (l === "et") {
+        return staticAudioUrl(T.et.welcome, "et").then((url) => {
+          if (!url || url.indexOf("blob:") === 0) return null;
+          const key = "static\n" + url;
+          return fetch(url).then((r) => (r.ok ? r.blob() : null)).then((b) => { if (b) blobCache.set(key, URL.createObjectURL(b)); }).catch(() => { /* ignore */ });
+        }).catch(() => { /* ignore */ });
+      }
+      if (intent && AUDIO) return fetchAudio(T[l].welcome.slice(0, 1500), l).catch(() => { /* ignore */ });
+    } catch (_) { /* ignore */ }
+    return null;
+  }
+  const pendingAudio = new Map();                   // запросы /api/tts в полёте: предзагрузка и тап не дублируют запрос
+  function fetchAudio(text, l, signal) {
     const key = l + "\n" + text;
-    if (blobCache.has(key)) return blobCache.get(key);
+    if (blobCache.has(key)) return Promise.resolve(blobCache.get(key));
+    if (!pendingAudio.has(key)) pendingAudio.set(key, fetchAudioNet(key, text, l, signal).finally(() => pendingAudio.delete(key)));
+    return pendingAudio.get(key);
+  }
+  async function fetchAudioNet(key, text, l, signal) {
     const r = await fetch(TTS_URL(), {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text, lang: l }), signal,
@@ -854,7 +879,8 @@
     if (!r.ok) throw new Error("tts " + r.status);
     const url = URL.createObjectURL(await r.blob());
     blobCache.set(key, url);
-    if (blobCache.size > 12) { const k = blobCache.keys().next().value; URL.revokeObjectURL(blobCache.get(k)); blobCache.delete(k); }
+    const dyn = [...blobCache.keys()].filter((k) => k.indexOf("static\n") !== 0);
+    if (dyn.length > 12) { URL.revokeObjectURL(blobCache.get(dyn[0])); blobCache.delete(dyn[0]); }
     return url;
   }
   // Тихий резерв: браузерный синтезатор (без сообщений об ошибках)
@@ -1194,6 +1220,9 @@
       book: () => { toggle(true); openSheet(true); },
     };
     window.evToggleChat = () => toggle(!isOpen);   // backwards compatibility with the old widget
+    // ET: готовое приветствие подгружается сразу после загрузки страницы (тап по дроиду стартует звук без задержки)
+    const warm = () => setTimeout(() => preloadWelcome(lang, false), 300);
+    if (document.readyState === "complete") warm(); else window.addEventListener("load", warm, { once: true });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();

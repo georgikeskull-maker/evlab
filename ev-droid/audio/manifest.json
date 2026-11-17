@@ -1,79 +1,79 @@
 {
- "voice": "TartuNLP albert",
+ "voice": "TartuNLP mari",
  "speed": 1,
  "lang": "et",
  "generated": "2026-11-17",
- "v": "albert-20261117",
+ "v": "mari-20261117",
  "items": {
-  "30392892": {
-   "file": "et-30392892.mp3",
+  "3e91af42": {
+   "file": "et-3e91af42.mp3",
    "name": "welcome",
-   "text": "Tere! Olen EVLAB digitaalne insener. Räägin hea meelega, kuidas me elektriautode akusid kontrollime ja mis kuulub aruandesse, või aitan valida sobiva kontrolli. Küsi häälega või kirjuta!",
-   "spoken": "Tere! Olen ee-vee-lab digitaalne insener. Räägin hea meelega, kuidas me elektriautode akusid kontrollime ja mis kuulub aruandesse, või aitan valida sobiva kontrolli. Küsi häälega või kirjuta!",
-   "bytes": 110550
+   "text": "Tere! Mina olen EVA, sinu digitaalne insener. Räägin hea meelega, kuidas me elektriautode akusid kontrollime ja mis kuulub aruandesse, või aitan valida sobiva kontrolli. Küsi häälega või kirjuta!",
+   "spoken": "Tere! Mina olen Eeva, sinu digitaalne insener. Räägin hea meelega, kuidas me elektriautode akusid kontrollime ja mis kuulub aruandesse, või aitan valida sobiva kontrolli. Küsi häälega või kirjuta!",
+   "bytes": 114938
   },
   "2775d1e0": {
    "file": "et-2775d1e0.mp3",
    "name": "error",
    "text": "⚠️ AI-insener on hetkel kättesaamatu. Helista +372 5551 6666.",
    "spoken": "AI-insener on hetkel kättesaamatu. Helista plussi kolm seitse kaks, viis viis viis üks, kuus kuus kuus kuus.",
-   "bytes": 65201
+   "bytes": 64156
   },
   "145dc768": {
    "file": "et-145dc768.mp3",
    "name": "faq-soh",
    "text": "SoH (State of Health) näitab, kui palju aku mahutavusest on alles võrreldes uuega. Usaldusväärne SoH saadakse BMS-i andmetest ja koormustestist — mitte armatuurlaua protsendist. EVLAB mõõdab seda kohapeal ja annab PDF-sertifikaadi.",
    "spoken": "ess-oo-haa (steit of helss) näitab, kui palju aku mahutavusest on alles võrreldes uuega. Usaldusväärne ess-oo-haa saadakse bee-emm-ess-i andmetest ja koormustestist — mitte armatuurlaua protsendist. ee-vee-lab mõõdab seda kohapeal ja annab pee-dee-eff-sertifikaadi.",
-   "bytes": 144195
+   "bytes": 137717
   },
   "cd7ff691": {
    "file": "et-cd7ff691.mp3",
    "name": "faq-soh-offline",
    "text": "SoH (State of Health) näitab, kui palju aku mahutavusest on alles võrreldes uuega. Usaldusväärne SoH saadakse BMS-i andmetest ja koormustestist — mitte armatuurlaua protsendist. EVLAB mõõdab seda kohapeal ja annab PDF-sertifikaadi. (võrguühenduseta vastus) AI-insener on hetkel kättesaamatu. Helista +372 5551 6666.",
    "spoken": "ess-oo-haa (steit of helss) näitab, kui palju aku mahutavusest on alles võrreldes uuega. Usaldusväärne ess-oo-haa saadakse bee-emm-ess-i andmetest ja koormustestist — mitte armatuurlaua protsendist. ee-vee-lab mõõdab seda kohapeal ja annab pee-dee-eff-sertifikaadi. (võrguühenduseta vastus) AI-insener on hetkel kättesaamatu. Helista plussi kolm seitse kaks, viis viis viis üks, kuus kuus kuus kuus.",
-   "bytes": 217547
+   "bytes": 210024
   },
   "83c06f56": {
    "file": "et-83c06f56.mp3",
    "name": "faq-delta",
    "text": "ΔV on suurima ja väikseima elemendi pinge vahe. Orienteeruvalt: 4–15 mV — tehase tasakaal, 16–30 mV — lubatud tööhälve, üle 50 mV — viitab nõrgale elemendile. Kõige ausam pilt tekib koormuse all, seda kontrollime 135 € koormusauditis.",
    "spoken": "delta vee on suurima ja väikseima elemendi pinge vahe. Orienteeruvalt: neli kuni viisteist millivolti — tehase tasakaal, kuusteist kuni kolmkümmend millivolti — lubatud tööhälve, üle viiekümne millivolti — viitab nõrgale elemendile. Kõige ausam pilt tekib koormuse all, seda kontrollime ükssada kolmkümmend viis eurot koormusauditis.",
-   "bytes": 174915
+   "bytes": 167392
   },
   "ffd48527": {
    "file": "et-ffd48527.mp3",
    "name": "faq-delta-offline",
    "text": "ΔV on suurima ja väikseima elemendi pinge vahe. Orienteeruvalt: 4–15 mV — tehase tasakaal, 16–30 mV — lubatud tööhälve, üle 50 mV — viitab nõrgale elemendile. Kõige ausam pilt tekib koormuse all, seda kontrollime 135 € koormusauditis. (võrguühenduseta vastus) AI-insener on hetkel kättesaamatu. Helista +372 5551 6666.",
    "spoken": "delta vee on suurima ja väikseima elemendi pinge vahe. Orienteeruvalt: neli kuni viisteist millivolti — tehase tasakaal, kuusteist kuni kolmkümmend millivolti — lubatud tööhälve, üle viiekümne millivolti — viitab nõrgale elemendile. Kõige ausam pilt tekib koormuse all, seda kontrollime ükssada kolmkümmend viis eurot koormusauditis. (võrguühenduseta vastus) AI-insener on hetkel kättesaamatu. Helista plussi kolm seitse kaks, viis viis viis üks, kuus kuus kuus kuus.",
-   "bytes": 248058
+   "bytes": 239699
   },
   "ba188f81": {
    "file": "et-ba188f81.mp3",
    "name": "faq-range",
    "text": "Reaalne sõiduulatus ≈ kasutatav mahtuvus (sõltub SoH-st) jagatud tegeliku kuluga. Talvel ja kiirteel on kulu oluliselt suurem kui WLTP-normis, seega vähendab ka väike SoH langus ulatust märgatavalt.",
    "spoken": "Reaalne sõiduulatus umbes kasutatav mahtuvus (sõltub ess-oo-haa-st) jagatud tegeliku kuluga. Talvel ja kiirteel on kulu oluliselt suurem kui vee-ell-tee-pee-normis, seega vähendab ka väike ess-oo-haa langus ulatust märgatavalt.",
-   "bytes": 123715
+   "bytes": 126014
   },
   "8444aab0": {
    "file": "et-8444aab0.mp3",
    "name": "faq-range-offline",
    "text": "Reaalne sõiduulatus ≈ kasutatav mahtuvus (sõltub SoH-st) jagatud tegeliku kuluga. Talvel ja kiirteel on kulu oluliselt suurem kui WLTP-normis, seega vähendab ka väike SoH langus ulatust märgatavalt. (võrguühenduseta vastus) AI-insener on hetkel kättesaamatu. Helista +372 5551 6666.",
    "spoken": "Reaalne sõiduulatus umbes kasutatav mahtuvus (sõltub ess-oo-haa-st) jagatud tegeliku kuluga. Talvel ja kiirteel on kulu oluliselt suurem kui vee-ell-tee-pee-normis, seega vähendab ka väike ess-oo-haa langus ulatust märgatavalt. (võrguühenduseta vastus) AI-insener on hetkel kättesaamatu. Helista plussi kolm seitse kaks, viis viis viis üks, kuus kuus kuus kuus.",
-   "bytes": 196858
+   "bytes": 198530
   },
   "a36ff5b9": {
    "file": "et-a36ff5b9.mp3",
    "name": "faq-price",
    "text": "65 € ekspresstest: BMS-i andmed, SoH ja elementide pinged ~15 minutiga koos PDF-sertifikaadiga. 135 € koormusaudit: lisaks dünaamiline koormustest, mis paljastab nõrgad elemendid ja peidetud vead. Tuleme kohale Tallinnas ja Harjumaal.",
    "spoken": "kuuskümmend viis eurot ekspresstest: bee-emm-ess-i andmed, ess-oo-haa ja elementide pinged umbes viieteistkümne minutiga koos pee-dee-eff-sertifikaadiga. ükssada kolmkümmend viis eurot koormusaudit: lisaks dünaamiline koormustest, mis paljastab nõrgad elemendid ja peidetud vead. Tuleme kohale Tallinnas ja Harjumaal.",
-   "bytes": 162377
+   "bytes": 160705
   },
   "44cb9d78": {
    "file": "et-44cb9d78.mp3",
    "name": "faq-price-offline",
    "text": "65 € ekspresstest: BMS-i andmed, SoH ja elementide pinged ~15 minutiga koos PDF-sertifikaadiga. 135 € koormusaudit: lisaks dünaamiline koormustest, mis paljastab nõrgad elemendid ja peidetud vead. Tuleme kohale Tallinnas ja Harjumaal. (võrguühenduseta vastus) AI-insener on hetkel kättesaamatu. Helista +372 5551 6666.",
    "spoken": "kuuskümmend viis eurot ekspresstest: bee-emm-ess-i andmed, ess-oo-haa ja elementide pinged umbes viieteistkümne minutiga koos pee-dee-eff-sertifikaadiga. ükssada kolmkümmend viis eurot koormusaudit: lisaks dünaamiline koormustest, mis paljastab nõrgad elemendid ja peidetud vead. Tuleme kohale Tallinnas ja Harjumaal. (võrguühenduseta vastus) AI-insener on hetkel kättesaamatu. Helista plussi kolm seitse kaks, viis viis viis üks, kuus kuus kuus kuus.",
-   "bytes": 235520
+   "bytes": 233012
   }
  }
 }

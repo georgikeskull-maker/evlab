@@ -143,9 +143,9 @@
 .evd-avatar { position: relative; width: 64px; height: 64px; flex: none; margin: -6px -4px -6px 0; }
 .evd-title { min-width: 0; flex: 1; }
 .evd-title b {
-  display: block; font-size: 13px; letter-spacing: .14em; text-transform: uppercase;
+  display: block; font-size: 15px; letter-spacing: .02em; line-height: 1.2; text-transform: none;
   color: #fff; text-shadow: none; font-weight: 800;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 .evd-status { display: block; font-size: 11px; color: var(--evd-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .evd-status i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--evd-ok); box-shadow: 0 0 6px var(--evd-ok); margin-right: 5px; vertical-align: 1px; }
@@ -226,13 +226,15 @@
   .evd-panel { right: 0; bottom: 0; width: 100%; height: 100vh; height: 100dvh; border-radius: 0; border-left: 0; border-right: 0; background: radial-gradient(110% 30% at 50% 0%, rgba(45, 212, 191, .13), transparent 70%), linear-gradient(165deg, rgba(15, 23, 42, .95), rgba(7, 13, 28, .97)); }
   /* JS (visualViewport) sets --evd-vh / --evd-vt while the panel is open, so the keyboard never covers the input */
   .evd-root.evd-vv .evd-panel { top: var(--evd-vt, 0px); bottom: auto; height: var(--evd-vh); }
-  .evd-title b { font-size: 12px; letter-spacing: .1em; }
+  .evd-title b { font-size: 13.5px; letter-spacing: .01em; }
   .evd-avatar { width: 56px; height: 56px; }
   /* iOS Safari zooms the page on focus when the font is < 16px */
   .evd-input input, .evd-field input, .evd-field select { font-size: 16px; }
 }
-@media (max-width: 400px) {
-  .evd-avatar { width: 44px; height: 44px; margin: -4px -2px -4px 0; }  /* mini-avatar stays; shrinks to make room for 40px controls */
+@media (max-width: 420px) {
+  .evd-avatar { width: 38px; height: 38px; margin: -2px 0 -2px 0; }  /* mini-avatar stays; shrinks so the assistant name fits */
+  .evd-head { gap: 6px; padding-left: 10px; padding-right: 8px; }
+  .evd-title b { font-size: 13px; }
 }
 /* touch targets >= 40px on phones / touch screens */
 @media (max-width: 640px), (pointer: coarse) {
@@ -244,6 +246,12 @@
   .evd-review a { min-height: 40px; display: flex; align-items: center; justify-content: center; padding: 6px; }
   .evd-submit, .evd-cancel { height: 44px; }
 }
+/* narrow phones: slightly tighter header controls so the assistant name "EVA · …" stays readable */
+@media (max-width: 420px) {
+  .evd-lang, .evd-icon { min-width: 35px; height: 38px; padding: 0 4px; }
+  .evd-ctrls { gap: 2px; }
+}
+@media (max-width: 370px) { .evd-avatar { display: none; } }   /* very small phones: name first */
 /* Reduced motion (e.g. Windows "Animation effects" off): no idle looping animation (float, blink, LED loops)
    and no panel scale/slide; hover/press glow still responds (short transitions), canvas animates only
    while the user interacts — see Loop in ev-droid.js. */
