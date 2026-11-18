@@ -361,7 +361,7 @@
             <p class="text-slate-400 text-sm mt-3">Tuleme kokkulepitud ajaks kohale auto asukohta üle Eesti. Tulemused ja ametlik raport väljastatakse kohapeal.</p>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
+        <div id="teenused" class="scroll-mt-24 grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
             <div class="p-8 rounded-2xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition">
                 <div>
                     <div class="flex justify-between items-start">
@@ -557,11 +557,11 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1">Auto mark & mudel</label>
-                        <input type="text" required placeholder="nt. Nissan Leaf, Tesla 3" id="orderCar" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-500">
+                        <input type="text" required placeholder="nt. Tesla 3" id="orderCar" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-500">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1">Asukoht / Linnaosa</label>
-                        <input type="text" required placeholder="nt. Mustamäe / Peetri" id="orderLoc" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-500">
+                        <input type="text" required placeholder="nt. Mustamäe" id="orderLoc" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-500">
                     </div>
                 </div>
 
@@ -896,7 +896,7 @@
             let data = (typeof CERTIFICATE_REGISTRY !== 'undefined') ? CERTIFICATE_REGISTRY[certKey] : null;
 
             if (data) {
-                renderVerifiedCard(data);
+                renderVerifiedCard(data, true);   // запись из зашитого в страницу реестра = демонстрационный пример
                 return;
             }
 
@@ -943,18 +943,30 @@
             }
         }
 
-        function renderVerifiedCard(data) {
+        function renderVerifiedCard(data, isDemo) {
             const resultBox = document.getElementById('verifyResult');
             const isHealthy = data.health === "HEALTHY";
             const borderGlow = isHealthy ? "border-emerald-500/80 glow-emerald" : "border-amber-500/80";
-            const statusBadgeBg = isHealthy ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40" : "bg-amber-500/20 text-amber-400 border-amber-500/40";
-            const statusText = isHealthy ? "AMETLIKULT VERIFITSEERITUD · HEAS SEISUKORRAS" : "VERIFITSEERITUD · HOIATUS: DEFEKT TUVASTATUD";
+            const statusBadgeBg = isDemo ? "bg-fuchsia-500/20 text-fuchsia-200 border-fuchsia-500/50" : (isHealthy ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40" : "bg-amber-500/20 text-amber-400 border-amber-500/40");
+            const iconTone = isDemo ? "bg-fuchsia-500/20 text-fuchsia-300" : (isHealthy ? "bg-emerald-500/20 text-emerald-400" : "bg-amber-500/20 text-amber-400");
+            const statusText = isDemo ? "NÄIDIS / DEMO · TESTANDMED" : (isHealthy ? "AMETLIKULT VERIFITSEERITUD · HEAS SEISUKORRAS" : "VERIFITSEERITUD · HOIATUS: DEFEKT TUVASTATUD");
+            const demoBanner = isDemo ? `
+                    <div role="note" class="mb-5 flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 px-4 py-3 rounded-xl bg-fuchsia-500/10 border border-fuchsia-500/50 text-fuchsia-200 text-xs">
+                        <span class="inline-flex w-fit items-center px-2.5 py-1 rounded-md bg-fuchsia-500/25 border border-fuchsia-400/60 text-fuchsia-100 text-[11px] font-extrabold uppercase tracking-widest">NÄIDIS / DEMO</span>
+                        <span>See on demonstreeriv näidis testandmetega, <strong>mitte päris sõiduki ajalugu</strong> ega kehtiv sertifikaat. / This is a demo with test data, not a real vehicle history or a valid certificate.</span>
+                    </div>` : '';
+            const validBadge = isDemo
+                ? `<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/40 text-fuchsia-200 text-xs font-semibold">NÄIDIS / DEMO · ei ole kehtiv sertifikaat</div>`
+                : `<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
+                            Sertifikaat Kinnitatud · ✓ ${certText().valid}
+                        </div>`;
 
             resultBox.innerHTML = `
-                <div class="rounded-2xl bg-slate-950 p-6 sm:p-8 border-2 ${borderGlow} shadow-2xl transition-all">
+                <div class="rounded-2xl bg-slate-950 p-6 sm:p-8 border-2 ${isDemo ? 'border-fuchsia-500/70' : borderGlow} shadow-2xl transition-all">
+                    ${demoBanner}
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl ${isHealthy ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'} flex items-center justify-center shrink-0">
+                            <div class="w-10 h-10 rounded-xl ${iconTone} flex items-center justify-center shrink-0">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                                 </svg>
@@ -1026,14 +1038,12 @@
                             <div class="font-mono text-slate-400 text-[11px] break-all">${data.hash}</div>
                             <div class="text-slate-500 text-[11px] mt-0.5">Standard: ${data.standard}</div>
                         </div>
-                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
-                            Sertifikaat Kinnitatud · ✓ ${certText().valid}
-                        </div>
+                        ${validBadge}
                     </div>
                     <div id="certPdfSlot" class="mt-5 empty:hidden"></div>
                 </div>
             `;
-            loadCertPdf(data.cert_id);
+            if (!isDemo) loadCertPdf(data.cert_id);   // у демо-примеров PDF нет
         }
 
         // Кнопка «Скачать PDF»: ссылка берётся отдельным узким RPC (без контактов). Нет PDF / нет ответа — кнопки нет, ссылок-пустышек не бывает.
@@ -1133,6 +1143,14 @@
             const modal = document.getElementById('bookingModal');
             if (modal) modal.classList.add('hidden');
         }
+        // пока модалка заказа открыта, плавающий виджет EVA скрыт (CSS: .evl-modal-open .evd-launcher) и не перекрывает текст формы
+        (function () {
+            const modal = document.getElementById('bookingModal');
+            if (!modal || !('MutationObserver' in window)) return;
+            const sync = () => document.documentElement.classList.toggle('evl-modal-open', !modal.classList.contains('hidden'));
+            new MutationObserver(sync).observe(modal, { attributes: true, attributeFilter: ['class'] });
+            sync();
+        })();
 
   async function handleOrderSubmit(e) {
             e.preventDefault();
@@ -1233,7 +1251,7 @@
             }
         });
     </script>
-<link rel="stylesheet" href="ev-droid/ev-droid.css?v=20">
+<link rel="stylesheet" href="ev-droid/ev-droid.css?v=21">
 <script src="evlab-consent.js?v=3" defer></script>
 <script src="ev-droid/ev-droid.js?v=20" defer></script>
 </body>
