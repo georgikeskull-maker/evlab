@@ -545,6 +545,12 @@
       updateBubble();
     };
     new MutationObserver(updateLift).observe(document.body, { childList: true });
+    // у футера дроид плавно прячется (не перекрывает ссылки); уходит, когда в экран зашли ~100px футера
+    const footerEl = document.querySelector("footer");
+    if (footerEl && "IntersectionObserver" in window) {
+      new IntersectionObserver((es) => launcher.classList.toggle("is-away", es[es.length - 1].isIntersecting),
+        { rootMargin: "0px 0px -100px 0px", threshold: 0 }).observe(footerEl);
+    }
     launcher.addEventListener("pointerdown", (e) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
       stopFly();

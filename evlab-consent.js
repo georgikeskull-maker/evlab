@@ -4,39 +4,45 @@
   'use strict';
 
   var API = 'https://evlab-engine-254944045596.europe-north1.run.app';
-  var TERMS_VERSION = '2026-11-16';
+  var TERMS_VERSION = '2026-11-18';
 
   var TERMS = {
     et: {
-      tab: 'ET', title: 'Diagnostika tingimused ja vastutuse piirang',
+      tab: 'ET', title: "Teenuse osutamise tingimused ja vastutuse piirang",
       sub: 'GVKFORGE OÜ / EVLAB',
       items: [
-        ['1. Diagnostika ulatus ja tehniline vastutus', 'Kõrgepingeaku (HV) diagnostika teostatakse sõiduki tootja poolt ettenähtud standardse diagnostikapordi (OBD-II või teenindusport) kaudu ilma sõiduki sõlmi lahti võtmata. GVKFORGE OÜ ei vastuta sõiduki varjatud tehniliste rikete või veakoodide eest, mis ilmnevad tavapärase koormustesti käigus.'],
-        ['2. Proovisõit ja kindlustus', 'Koormustesti (proovisõidu) ajal juhib sõidukit reeglina sõiduki omanik või müüja esindaja. Juhul kui proovisõitu teostab kliendi soovil EVLAB spetsialist, kinnitab tellija, et sõidukil on kehtiv kohustuslik liikluskindlustus ning sõiduk on tehniliselt korras.'],
-        ['3. Andmete täpsus', 'EVLAB raport põhineb testimise hetkel sõiduki juhtmoodulitest (BMS) loetud andmetel ning peegeldab aku seisukorda mõõtmise hetkel.']
+        ["1. Teenuse sisu ja diagnostikaraport", "EVLAB teostab elektri- ja hübriidsõidukite kõrgepingeaku (HV) mitteinvasiivset diagnostikat läbi tootja diagnostikapordi (OBD-II) ning väljastab kliendile digitaalse PDF-raporti koos autentsuse kontrolli QR-koodiga. Raport põhineb sõiduki juhtmoodulitest (BMS) mõõtmise hetkel loetud andmetel."],
+        ["2. Tasumine, tühistamine ja taganemisõiguse piirang", "Teenuse eest tasumine toimub vastavalt kehtivale hinnakirjale arve alusel või kohapeal. Vastavalt võlaõigusseaduse (VÕS) § 53 lg 4 p 1 ei kohaldu 14-päevane taganemisõigus pärast seda, kui diagnostikateenus on täielikult osutatud ja raport on kliendile väljastatud. Broneeringu tühistamisel vähem kui 2 tundi enne kokkulepitud aega on GVKFORGE OÜ-l õigus nõuda väljakutsetasu hüvitamist."],
+        ["3. Vastutuse piirang ja ostueelne kontroll", "GVKFORGE OÜ ei vastuta sõiduki varjatud tehniliste rikete eest, mis ilmnevad tavapärase testimise käigus. EVLAB raport ei kujuta endast garantiid sõiduki tulevase töökindluse, aku edasise degradeerumise ega teiste sõlmede korrasoleku kohta. Sõiduki ostuotsuse teeb klient iseseisvalt ning GVKFORGE OÜ ei vastuta ostu-müügitehingust tulenevate nõuete eest."],
+        ["4. Andmekaitse (GDPR)", "Raporti koostamiseks ja QR-koodi kaudu autentsuse kontrollimiseks töötleb GVKFORGE OÜ tellija kontaktandmeid ja sõiduki andmeid (VIN-kood, registreerimisnumber, telemeetria) vastavalt kehtivatele andmekaitsenõuetele ega edasta neid kolmandatele isikutele."]
       ],
+      safety: ["Ohutusreeglid ja juriidiline protokoll", "/ohutus.html"],
       note: 'Märkeruudu märkimisel salvestame kinnituse aja, IP-aadressi, brauseri andmed ja kirje ID ning koostame sellest PDF-akti (säilitame 7 aastat). Kinnitus on elektrooniline, mitte digiallkiri.',
       close: 'Sulge'
     },
     ru: {
-      tab: 'RU', title: 'Условия проведения диагностики и ответственность',
+      tab: 'RU', title: "Условия оказания услуг и ограничение ответственности",
       sub: 'GVKFORGE OÜ / EVLAB',
       items: [
-        ['1. Порядок диагностики и техническая ответственность', 'Диагностика высоковольтной батареи (ВВБ) проводится через штатный диагностический разъём автомобиля (OBD-II или сервисный порт) без разборки узлов. GVKFORGE OÜ не несёт ответственности за скрытые неисправности электроники или батареи, проявившиеся в ходе штатного нагрузочного теста.'],
-        ['2. Дорожный тест и страховка', 'Во время дорожного нагрузочного теста автомобилем, как правило, управляет владелец или представитель продавца. Если по просьбе заказчика за руль садится специалист EVLAB, заказчик подтверждает наличие действующего обязательного дорожного страхования (liikluskindlustus) и техническую исправность автомобиля.'],
-        ['3. Актуальность данных', 'Отчёт EVLAB формируется на основании телеметрии блоков управления (BMS) на момент проведения замера и отражает фактическое состояние батареи в момент теста.']
+        ["1. Содержание услуги и диагностический отчёт", "EVLAB выполняет неинвазивную диагностику высоковольтной батареи (HV) электромобилей и гибридов через штатный диагностический разъём (OBD-II) и выдаёт клиенту цифровой PDF-отчёт с QR-кодом проверки подлинности. Отчёт отражает данные блоков управления (BMS) на момент проведения замера."],
+        ["2. Оплата, отмена выезда и ограничение права на возврат", "Оплата услуги производится согласно действующему прейскуранту по счёту или на месте. Согласно § 53 ч. 4 п. 1 Обязательственно-правового закона Эстонии (VÕS), 14-дневное право на отказ не применяется после того, как услуга оказана в полном объёме и отчёт передан клиенту. При отмене выезда менее чем за 2 часа до согласованного времени GVKFORGE OÜ вправе потребовать компенсацию выездного сбора."],
+        ["3. Ограничение ответственности и предпокупочная проверка", "GVKFORGE OÜ не несёт ответственности за скрытые технические неисправности автомобиля, проявившиеся в ходе штатного тестирования. Отчёт EVLAB не является гарантией будущей надёжности автомобиля, дальнейшей деградации батареи или исправности иных узлов. Решение о покупке автомобиля клиент принимает самостоятельно; GVKFORGE OÜ не отвечает за претензии, вытекающие из сделки купли-продажи."],
+        ["4. Защита данных (GDPR)", "Для формирования отчёта и проверки его подлинности по QR-коду GVKFORGE OÜ обрабатывает контактные данные заказчика и данные автомобиля (VIN-код, регистрационный номер, телеметрию) в соответствии с требованиями GDPR и не передаёт их третьим лицам."]
       ],
+      safety: ["Правила безопасности и юридический протокол", "/ohutus.html"],
       note: 'При отметке галочки мы сохраняем время подтверждения, IP-адрес, данные браузера и ID записи и формируем из них PDF-акт (хранится 7 лет). Подтверждение электронное, это не цифровая подпись.',
       close: 'Закрыть'
     },
     en: {
-      tab: 'EN', title: 'Diagnostics terms and limitation of liability',
+      tab: 'EN', title: "Terms of Service and Limitation of Liability",
       sub: 'GVKFORGE OÜ / EVLAB · courtesy translation, the Estonian version prevails',
       items: [
-        ['1. Scope of diagnostics and technical liability', "High-voltage (HV) battery diagnostics are performed through the vehicle's standard diagnostic port (OBD-II or service port), as provided by the manufacturer, without disassembling any vehicle components. GVKFORGE OÜ is not liable for hidden technical faults or fault codes that appear during a normal load test."],
-        ['2. Test drive and insurance', "During the load test (test drive), the vehicle is normally driven by the vehicle owner or the seller's representative. If an EVLAB specialist drives at the client's request, the client confirms that the vehicle has valid compulsory motor insurance (liikluskindlustus) and is in sound technical condition."],
-        ['3. Data accuracy', 'The EVLAB report is based on data read from the vehicle’s control modules (BMS) at the time of testing and reflects the condition of the battery at the moment of measurement.']
+        ["1. Scope of Service and Diagnostic Report", "EVLAB performs non-invasive high-voltage (HV) battery diagnostics for electric and hybrid vehicles via the manufacturer's diagnostic port (OBD-II) and issues a digital PDF report with a QR authenticity verification code. The report reflects data read from the vehicle's control modules (BMS) at the time of measurement."],
+        ["2. Payment, Cancellation, and Limitation of Right of Withdrawal", "Payment is made according to the valid price list by invoice or on-site. Pursuant to § 53 (4) 1) of the Estonian Law of Obligations Act (VÕS), the 14-day right of withdrawal does not apply once the diagnostic service has been fully performed and the report has been delivered to the client. If an appointment is cancelled less than 2 hours prior to the scheduled time, GVKFORGE OÜ reserves the right to charge a call-out fee."],
+        ["3. Limitation of Liability and Pre-Purchase Inspection", "GVKFORGE OÜ is not liable for pre-existing hidden technical faults that manifest during standard testing. The EVLAB report does not constitute a warranty regarding future vehicle reliability, subsequent battery degradation, or the condition of other components. Any vehicle purchase decision is made solely by the client, and GVKFORGE OÜ bears no liability for claims arising from a sale and purchase transaction."],
+        ["4. Data Protection (GDPR)", "To generate the report and enable QR code authenticity verification, GVKFORGE OÜ processes the client's contact details and vehicle data (VIN, registration plate, telemetry) in compliance with GDPR and does not share them with third parties."]
       ],
+      safety: ["Safety Rules and Legal Protocol", "/ohutus.html"],
       note: 'When you tick the box we store the time of confirmation, your IP address, browser data and a record ID, and generate a PDF act from them (kept for 7 years). The confirmation is electronic, not a digital signature.',
       close: 'Close'
     }
@@ -120,6 +126,8 @@
       '#evl-terms .evl-sub{color:#64748b;font-size:12px;margin-bottom:12px}' +
       '#evl-terms h4{margin:14px 0 4px;color:#fff;font-size:14px}' +
       '#evl-terms p{margin:0}' +
+      '#evl-terms .evl-safety{margin-top:14px}' +
+      '#evl-terms .evl-safety a{color:#2dd4bf}' +
       '#evl-terms .evl-note{margin-top:14px;padding:10px 12px;border:1px solid #1e293b;border-radius:10px;background:#0f172a;color:#94a3b8;font-size:12px}' +
       '#evl-terms .evl-tabs{display:flex;gap:6px;margin:10px 0 4px}' +
       '#evl-terms .evl-tabs button{min-height:36px;min-width:52px;border-radius:8px;border:1px solid #334155;background:#111a2e;color:#fff;font:600 13px Inter,system-ui,sans-serif;cursor:pointer}' +
@@ -137,6 +145,7 @@
       return '<button type="button" data-l="' + k + '" aria-pressed="' + (k === lang) + '">' + TERMS[k].tab + '</button>';
     }).join('');
     var items = T.items.map(function (it) { return '<h4>' + esc(it[0]) + '</h4><p>' + esc(it[1]) + '</p>'; }).join('');
+    if (T.safety) items += '<p class="evl-safety"><a href="' + esc(T.safety[1]) + '" target="_blank" rel="noopener">' + esc(T.safety[0]) + '</a></p>';
     termsEl.querySelector('.evl-box').innerHTML =
       '<button type="button" class="evl-x" aria-label="' + esc(T.close) + '">×</button>' +
       '<h3 id="evl-terms-h">' + esc(T.title) + '</h3><div class="evl-sub">' + esc(T.sub) + ' · v' + TERMS_VERSION + '</div>' +

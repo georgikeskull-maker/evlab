@@ -87,6 +87,7 @@
 .evd-launcher.is-dragging { cursor: grabbing; }
 .evd-launcher:focus-visible { outline: 2px solid var(--evd-cyan); outline-offset: -8px; border-radius: 50%; }
 .evd-root.is-open .evd-launcher { opacity: 0; transform: scale(.6) translateY(20px); pointer-events: none; }
+.evd-launcher.is-away { opacity: 0; transform: scale(.7) translateY(24px); pointer-events: none; }   /* плавно уходит, когда в экран заходит футер */
 /* bubble "EVA · Assistant": always visible, beside the droid and outside the particle halo; clickable (bubbles up to the launcher) */
 .evd-bubble {
   position: absolute; top: 28%; right: calc(100% + 14px);
