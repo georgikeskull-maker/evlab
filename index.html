@@ -582,7 +582,7 @@
 
                 <label class="flex items-start gap-2.5 text-[11px] text-slate-300 leading-snug cursor-pointer">
                     <input type="checkbox" required id="orderConsent" class="mt-0.5 w-4 h-4 shrink-0 accent-sky-500 cursor-pointer">
-                    <span id="orderConsentText">Nõustun <a href="/tingimused.html" target="_blank" rel="noopener" class="text-teal-300 underline underline-offset-2 hover:text-teal-200">teenuse osutamise tingimustega</a> ja olen tutvunud GVKFORGE OÜ <a href="/privaatsuspoliitika.html" target="_blank" rel="noopener" class="text-teal-300 underline underline-offset-2 hover:text-teal-200">privaatsuspoliitikaga</a></span>
+                    <span id="orderConsentText">Nõustun <a href="/tingimused.html" target="_blank" rel="noopener" class="text-teal-300 underline underline-offset-2 hover:text-teal-200">teenuse osutamise tingimustega</a> ja <a href="/ohutus.html" target="_blank" rel="noopener" class="text-teal-300 underline underline-offset-2 hover:text-teal-200">ohutusreeglitega</a> ning olen tutvunud GVKFORGE OÜ <a href="/privaatsuspoliitika.html" target="_blank" rel="noopener" class="text-teal-300 underline underline-offset-2 hover:text-teal-200">privaatsuspoliitikaga</a></span>
                 </label>
 
                 <div class="pt-2 flex flex-col gap-2">
@@ -688,6 +688,8 @@
                 <a href="/privaatsuspoliitika.html" class="hover:text-teal-300 underline decoration-slate-600 underline-offset-2">Privaatsuspoliitika</a>
                 <span class="text-slate-600 mx-1.5">|</span>
                 <a href="/tingimused.html" class="hover:text-teal-300 underline decoration-slate-600 underline-offset-2">Tingimused</a>
+                <span class="text-slate-600 mx-1.5">|</span>
+                <a href="/ohutus.html" class="hover:text-teal-300 underline decoration-slate-600 underline-offset-2">Ohutus</a>
                 <span class="text-slate-600 mx-1.5">|</span>
                 <a href="https://search.google.com/local/writereview?placeid=ChIJaVmZeWhHImsRCgSnqqRQpMc" target="_blank" rel="noopener" class="hover:text-teal-300 underline decoration-slate-600 underline-offset-2">Vaata Google Kaardil / Jäta arvustus</a>
                 <span class="text-slate-600 mx-1.5">|</span>
@@ -1066,9 +1068,9 @@
         }
 
         const ORDER_CONSENT = {
-            et: ['Nõustun ', 'teenuse osutamise tingimustega', ' ja olen tutvunud GVKFORGE OÜ ', 'privaatsuspoliitikaga', ''],
-            ru: ['Я принимаю ', 'условия оказания услуг', ' и ознакомлен с ', 'Политикой конфиденциальности', ' GVKFORGE OÜ'],
-            en: ['I accept the ', 'Terms of Service', ' and acknowledge the GVKFORGE OÜ ', 'Privacy Policy', '']
+            et: ['Nõustun ', 'teenuse osutamise tingimustega', ' ja ', 'ohutusreeglitega', ' ning olen tutvunud GVKFORGE OÜ ', 'privaatsuspoliitikaga', ''],
+            ru: ['Я принимаю ', 'условия оказания услуг', ' и ', 'Правила безопасности', ', а также ознакомлен с ', 'Политикой конфиденциальности', ' GVKFORGE OÜ'],
+            en: ['I accept the ', 'Terms of Service', ' and ', 'Safety Rules', ', and acknowledge the GVKFORGE OÜ ', 'Privacy Policy', '']
         };
         const TERMS_OK_KEY = 'evl_terms_ok';
         const lsGet = (k) => { try { return localStorage.getItem(k); } catch (_) { return null; } };
@@ -1086,7 +1088,7 @@
                 a.href = href; a.target = '_blank'; a.rel = 'noopener'; a.className = cls; a.textContent = text;
                 return a;
             };
-            box.append(t[0], link('/tingimused.html', t[1]), t[2], link('/privaatsuspoliitika.html', t[3]), t[4]);
+            box.append(t[0], link('/tingimused.html', t[1]), t[2], link('/ohutus.html' + (lang === 'et' ? '' : '#' + lang), t[3]), t[4], link('/privaatsuspoliitika.html', t[5]), t[6]);
         }
         // Предвыбор: баннер принят ('granted') или условия уже принимались при прошлой заявке. Ручной выбор пользователя не трогаем.
         function syncOrderConsent() {
