@@ -915,7 +915,7 @@
                         vehicle: {
                             model: row.vehicle_model,
                             plate: row.plate_display,
-                            vin: row.vin,
+                            vin: (row.vin && String(row.vin).trim()) ? String(row.vin).trim() : 'MÄÄRAMATA',
                             mileage: row.mileage
                         },
                         kpi: {
@@ -946,10 +946,13 @@
         function renderVerifiedCard(data, isDemo) {
             const resultBox = document.getElementById('verifyResult');
             const isHealthy = data.health === "HEALTHY";
+            const isWarn = data.health === "WARNING";   // тест на месте, без движения: жёлтый статус
+            const dMv = Number(data.kpi.delta_mv);
+            const deltaTone = !isFinite(dMv) || dMv <= 15 ? 'text-emerald-400' : (dMv <= 30 ? 'text-amber-400' : 'text-rose-400');   // 0-15 норма, 16-30 допустимо, >30 критично
             const borderGlow = isHealthy ? "border-emerald-500/80 glow-emerald" : "border-amber-500/80";
             const statusBadgeBg = isDemo ? "bg-fuchsia-500/20 text-fuchsia-200 border-fuchsia-500/50" : (isHealthy ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40" : "bg-amber-500/20 text-amber-400 border-amber-500/40");
             const iconTone = isDemo ? "bg-fuchsia-500/20 text-fuchsia-300" : (isHealthy ? "bg-emerald-500/20 text-emerald-400" : "bg-amber-500/20 text-amber-400");
-            const statusText = isDemo ? "NÄIDIS / DEMO · TESTANDMED" : (isHealthy ? "AMETLIKULT VERIFITSEERITUD · HEAS SEISUKORRAS" : "VERIFITSEERITUD · HOIATUS: DEFEKT TUVASTATUD");
+            const statusText = isDemo ? "NÄIDIS / DEMO · TESTANDMED" : (isHealthy ? "AMETLIKULT VERIFITSEERITUD · HEAS SEISUKORRAS" : (isWarn ? "VERIFITSEERITUD · HOIATUS: TEST TEHTUD PAIGAL, SÕITMATA" : "VERIFITSEERITUD · HOIATUS: DEFEKT TUVASTATUD"));
             const demoBanner = isDemo ? `
                     <div role="note" class="mb-5 flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 px-4 py-3 rounded-xl bg-fuchsia-500/10 border border-fuchsia-500/50 text-fuchsia-200 text-xs">
                         <span class="inline-flex w-fit items-center px-2.5 py-1 rounded-md bg-fuchsia-500/25 border border-fuchsia-400/60 text-fuchsia-100 text-[11px] font-extrabold uppercase tracking-widest">NÄIDIS / DEMO</span>
@@ -1017,7 +1020,7 @@
                         </div>
                         <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
                             <span class="text-[10px] uppercase font-bold text-slate-400">Pingelang (ΔV)</span>
-                            <div class="text-xl font-extrabold ${isHealthy ? 'text-emerald-400' : 'text-rose-400'} mt-0.5">${data.kpi.delta_mv} mV</div>
+                            <div class="text-xl font-extrabold ${deltaTone} mt-0.5">${data.kpi.delta_mv} mV</div>
                             <span class="text-[11px] text-slate-400">Nõrgim: ${data.kpi.weakest_cell}</span>
                         </div>
                         <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
