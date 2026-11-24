@@ -1046,8 +1046,10 @@
                     </div>
                     <div id="certPdfSlot" class="mt-5 empty:hidden"></div>
                 </div>
+                <div id="certHistory" class="hidden mt-5"></div>
             `;
             if (!isDemo) loadCertPdf(data.cert_id);   // у демо-примеров PDF нет
+            if (!isDemo) loadCertHistory(data.cert_id);   // история этапов по автомобилю (ниже карточки)
         }
 
         // Кнопка «Скачать PDF»: ссылка берётся отдельным узким RPC (без контактов). Нет PDF / нет ответа — кнопки нет, ссылок-пустышек не бывает.
@@ -1068,6 +1070,84 @@
                 a.textContent = certText().pdf;
                 slot.appendChild(a);
             } catch (e) { console.warn('pdf link:', e); }
+        }
+
+        // История проверок по автомобилю (RPC get_certificate_history, sql/007). Ошибка, нет функции,
+        // один сертификат или пустой ответ — блок просто не показывается; текущая карточка не затрагивается.
+        const CERT_HISTORY_PDF_PREFIX = 'https://iemzkpzzbvamjajrmegn.supabase.co/storage/';
+        function testTypeLabel(mode) {
+            const m = String(mode || '').toUpperCase();
+            if (m.includes('DÜNAAMILINE') || m.includes('DYNAMIC')) return 'Dünaamiline koormustest';
+            if (m.includes('STAATILINE') || m.includes('STATIC')) return 'Staatiline ekspresstest';
+            return mode ? String(mode) : 'Diagnostika';
+        }
+        async function loadCertHistory(certId) {
+            const box = document.getElementById('certHistory');
+            if (!box) return;
+            box.classList.add('hidden');
+            box.textContent = '';
+            try {
+                const { data: rows, error } = await supabaseClient.rpc('get_certificate_history', { search_query: String(certId) });
+                if (error || !Array.isArray(rows) || rows.length < 2) return;   // один сертификат — блок не нужен
+                const wrap = document.createElement('div');
+                wrap.className = 'rounded-2xl bg-slate-950 p-5 sm:p-6 border border-slate-800';
+                const h = document.createElement('h4');
+                h.className = 'text-sm font-bold text-white mb-1';
+                h.textContent = 'Kõik kontrollid selle sõiduki kohta';
+                wrap.appendChild(h);
+                const sub = document.createElement('p');
+                sub.className = 'text-xs text-slate-400 mb-4';
+                sub.textContent = 'Selle sõiduki kõik sertifikaadid (registrimärgi või VIN-koodi järgi), uuemad ees.';
+                wrap.appendChild(sub);
+                const ul = document.createElement('ul');
+                ul.className = 'space-y-2';
+                rows.forEach((r) => {
+                    const isCurrent = String(r.cert_id) === String(certId);
+                    const li = document.createElement('li');
+                    li.className = 'flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 rounded-xl border ' +
+                        (isCurrent ? 'border-sky-500/70 bg-sky-500/10' : 'border-slate-800 bg-slate-900/60');
+                    const info = document.createElement('div');
+                    info.className = 'text-xs text-slate-300 space-y-0.5';
+                    const when = r.created_at ? new Date(r.created_at) : null;
+                    const dateTxt = (when && !isNaN(when))
+                        ? when.toLocaleDateString('et-EE') + ' ' + when.toLocaleTimeString('et-EE', { hour: '2-digit', minute: '2-digit' })
+                        : '—';
+                    const line1 = document.createElement('div');
+                    line1.className = 'font-semibold text-white';
+                    line1.textContent = dateTxt + ' · ' + testTypeLabel(r.test_mode);
+                    const line2 = document.createElement('div');
+                    line2.textContent = 'Sertifikaat ' + (r.cert_id || '—') +
+                        (r.mileage ? ' · läbisõit ' + r.mileage : '') +
+                        (r.soh != null && isFinite(Number(r.soh)) ? ' · SoH ' + Number(r.soh).toFixed(1) + '%' : '');
+                    info.appendChild(line1);
+                    info.appendChild(line2);
+                    li.appendChild(info);
+                    const right = document.createElement('div');
+                    right.className = 'shrink-0 text-xs';
+                    if (isCurrent) {
+                        const b = document.createElement('span');
+                        b.className = 'inline-flex px-2.5 py-1 rounded-md bg-sky-500/20 text-sky-200 border border-sky-500/50 font-bold';
+                        b.textContent = 'Praegu vaadatav';
+                        right.appendChild(b);
+                    } else if (r.pdf_url && String(r.pdf_url).startsWith(CERT_HISTORY_PDF_PREFIX)) {
+                        const a = document.createElement('a');
+                        a.href = r.pdf_url; a.target = '_blank'; a.rel = 'noopener'; a.setAttribute('download', '');
+                        a.className = 'inline-flex px-3 py-1.5 rounded-lg bg-sky-500/20 text-sky-200 border border-sky-500/40 font-semibold hover:brightness-110';
+                        a.textContent = '📄 PDF';
+                        right.appendChild(a);
+                    } else {
+                        const n = document.createElement('span');
+                        n.className = 'text-slate-500';
+                        n.textContent = 'PDF puudub';
+                        right.appendChild(n);
+                    }
+                    li.appendChild(right);
+                    ul.appendChild(li);
+                });
+                wrap.appendChild(ul);
+                box.appendChild(wrap);
+                box.classList.remove('hidden');
+            } catch (e) { console.warn('cert history:', e); }
         }
 
         function renderTamperedCard() {
