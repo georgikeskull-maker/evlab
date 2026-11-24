@@ -1026,8 +1026,8 @@
                         </div>
                         <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
                             <span class="text-[10px] uppercase font-bold text-slate-400">Reaalne sõiduulatus</span>
-                            <div class="text-xl font-extrabold text-sky-400 mt-0.5">${data.kpi.range_summer} km</div>
-                            <span class="text-[11px] text-slate-400">Talvel (-10°C): ~${data.kpi.range_winter} km</span>
+                            <div class="text-xl font-extrabold text-sky-400 mt-0.5">${Number(data.kpi.range_summer) > 0 ? data.kpi.range_summer + ' km' : '—'}</div>
+                            <span class="text-[11px] text-slate-400">${Number(data.kpi.range_winter) > 0 ? 'Talvel (-10°C, hinnang): ~' + data.kpi.range_winter + ' km' : 'Talvel: andmed puuduvad'}</span>
                         </div>
                     </div>
 
